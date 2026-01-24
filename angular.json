@@ -35,7 +35,7 @@
               "src/styles.scss"
             ],
             "outputPath": {
-              "base": "public",
+              "base": "dist",
               "browser": ""
             }
           },
@@ -53,7 +53,8 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "serviceWorker": "ngsw-config.json"
             },
             "development": {
               "optimization": false,
