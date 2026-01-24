@@ -1,13 +1,14 @@
-@use "./app/shared/styles/colors";
+@use './app/shared/styles/colors';
 
 @font-face {
-  font-family: "Neue Regrade";
-  src: url("./assets/fonts/Neue Regrade Variable.ttf") format("ttf");
+  font-family: 'Neue Regrade';
+  src: url('./assets/fonts/Neue Regrade Variable.ttf') format('ttf');
 }
 
 body {
   background-color: colors.$black-0;
   color: colors.$white-0;
-  font-family: "Neue Regrade", sans-serif;
-  font-weight: 500;
+  font-family: 'Neue Regrade', sans-serif;
+  font-weight: 400;
+  touch-action: manipulation;
 }
