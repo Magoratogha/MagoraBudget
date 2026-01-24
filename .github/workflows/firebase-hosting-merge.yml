@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cschleiden/replace-tokens@v1.3
-          with:
-            files: '["**/firebase-options.ts"]'
-          env:
-            FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        with:
+          files: '["**/firebase-options.ts"]'
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
