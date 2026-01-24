@@ -1,8 +1,8 @@
 <nav>
   @for (item of items(); track item.label) {
-    <div>
+    <a [routerLink]="item.route" routerLinkActive="active">
       <i class="bi" [ngClass]="item.icon"></i>
       <small>{{ item.label }}</small>
-    </div>
+    </a>
   }
 </nav>
