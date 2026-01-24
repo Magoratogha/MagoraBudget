@@ -31,7 +31,11 @@
             ],
             "styles": [
               "src/styles.scss"
-            ]
+            ],
+            "outputPath": {
+              "base": "public",
+              "browser": ""
+            }
           },
           "configurations": {
             "production": {
