@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+@use "./app/shared/styles/colors";
+
+@font-face {
+  font-family: "Neue Regrade";
+  src: url("./assets/fonts/Neue Regrade Variable.ttf") format("ttf");
+}
+
+body {
+  background-color: colors.$black-0;
+  color: colors.$white-0;
+  font-family: "Neue Regrade", sans-serif;
+  font-weight: 500;
+}

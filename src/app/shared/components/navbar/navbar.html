@@ -1,0 +1,8 @@
+<nav>
+  @for (item of items(); track item.label) {
+    <div>
+      <i class="bi" [ngClass]="item.icon"></i>
+      <small>{{ item.label }}</small>
+    </div>
+  }
+</nav>
