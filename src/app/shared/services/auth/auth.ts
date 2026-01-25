@@ -1,12 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  Auth as FireAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  user,
-} from '@angular/fire/auth';
+import { Auth as FireAuth, GoogleAuthProvider, signInWithPopup, signOut, user, } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +11,20 @@ export class Auth {
   private _user = toSignal(user(this._auth), { initialValue: null });
 
   async login() {
-    const result = await signInWithPopup(this._auth, this._provider);
-    return GoogleAuthProvider.credentialFromResult(result);
+    try {
+      const result = await signInWithPopup(this._auth, this._provider);
+      return GoogleAuthProvider.credentialFromResult(result);
+    } catch (error) {
+      console.error('Log in error: ' + error);
+      return null;
+    }
   }
 
   async logout() {
     try {
       await signOut(this._auth);
     } catch (error) {
-      console.error('Sign out error: ' + error);
+      console.error('Log out error: ' + error);
     }
   }
 
