@@ -1,0 +1,7 @@
+@use '../styles/colors';
+
+@mixin side-panel() {
+  width: 70dvw;
+  color: inherit;
+  background-color: colors.$black-1;
+}

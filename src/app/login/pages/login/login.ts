@@ -16,9 +16,6 @@ export class Login implements OnInit {
   }
 
   public async login() {
-    const credential = await this.auth.login();
-    if (credential) {
-      await this.router.navigate(['/']);
-    }
+    await this.auth.login();
   }
 }

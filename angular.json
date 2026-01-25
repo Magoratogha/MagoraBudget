@@ -34,6 +34,9 @@
               "node_modules/bootstrap-icons/font/bootstrap-icons.min.css",
               "src/styles.scss"
             ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.js"
+            ],
             "outputPath": {
               "base": "dist",
               "browser": ""
