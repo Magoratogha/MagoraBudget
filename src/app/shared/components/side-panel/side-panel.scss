@@ -1,0 +1,12 @@
+@use '../../styles/mixins';
+
+.offcanvas {
+  @include mixins.side-panel();
+}
+
+.profile-picture {
+  height: 120px;
+  width: 120px;
+  font-size: 3rem;
+  border-radius: 16px;
+}
