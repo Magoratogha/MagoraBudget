@@ -8,5 +8,4 @@ import { Component, signal } from '@angular/core';
 })
 export class Loader {
   isVisible = signal(false);
-  count = signal(0);
 }

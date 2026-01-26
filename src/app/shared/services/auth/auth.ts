@@ -25,11 +25,11 @@ export class Auth {
           await this._fireStore.addNewUser(result.user);
         }
         this._overlay.hideLoader();
-        await this._router.navigate(['home']);
+        this._router.navigate(['/home']);
       }
-    } catch (error) {
-      console.error('Log in error: ' + error);
-      throw error;
+    } catch (e) {
+      this._logError(e);
+      throw e;
     } finally {
       this._overlay.hideLoader();
     }
@@ -40,10 +40,11 @@ export class Auth {
       this._overlay.showLoader();
       this._overlay.closeSidePanel();
       await signOut(this._auth);
-      await this._router.navigate(['/']);
-    } catch (error) {
-      console.error('Log out error: ' + error);
-      throw error;
+      this._overlay.hideLoader();
+      this._router.navigate(['/login']);
+    } catch (e) {
+      this._logError(e);
+      throw e;
     } finally {
       this._overlay.hideLoader();
     }
@@ -51,5 +52,9 @@ export class Auth {
 
   public getLoggedUser() {
     return this._user();
+  }
+
+  private _logError(error: any) {
+    console.error('Auth error: ' + error);
   }
 }

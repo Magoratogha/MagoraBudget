@@ -15,7 +15,7 @@ export class Login implements OnInit {
   ngOnInit() {
   }
 
-  public async login() {
-    await this.auth.login();
+  public login() {
+    this.auth.login();
   }
 }
