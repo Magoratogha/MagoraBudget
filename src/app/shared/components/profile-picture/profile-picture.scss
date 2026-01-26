@@ -1,0 +1,6 @@
+@use '../../styles/colors';
+
+.profile-picture {
+  border: 1px solid colors.$white-0;
+  padding: 4px;
+}
