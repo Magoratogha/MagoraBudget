@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { SidePanel } from '../../components';
+import { Loader, SidePanel } from '../../components';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Overlay {
   private _sidePanel: SidePanel | null = null;
+  private _loader: Loader | null = null;
 
-  public initSidePanel(component: SidePanel) {
-    this._sidePanel = component;
+  public initOverlays(sidePanel: SidePanel, loader: Loader) {
+    this._sidePanel = sidePanel;
+    this._loader = loader;
   }
 
   public openSidePanel() {
@@ -17,5 +19,13 @@ export class Overlay {
 
   public closeSidePanel() {
     this._sidePanel?.close();
+  }
+
+  public showLoader() {
+    this._loader?.isVisible.set(true);
+  }
+
+  public hideLoader() {
+    this._loader?.isVisible.set(false);
   }
 }

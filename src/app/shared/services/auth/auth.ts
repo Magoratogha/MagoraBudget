@@ -16,6 +16,7 @@ export class Auth {
 
   async login() {
     try {
+      this._overlay.showLoader();
       const result = await signInWithPopup(this._auth, this._provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
       if (credential) {
@@ -23,16 +24,21 @@ export class Auth {
       }
     } catch (error) {
       console.error('Log in error: ' + error);
+    } finally {
+      this._overlay.hideLoader();
     }
   }
 
   async logout() {
     try {
+      this._overlay.showLoader();
       this._overlay.closeSidePanel();
       await signOut(this._auth);
       await this._router.navigate(['/']);
     } catch (error) {
       console.error('Log out error: ' + error);
+    } finally {
+      this._overlay.hideLoader();
     }
   }
 

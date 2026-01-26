@@ -1,4 +1,5 @@
 @use './app/shared/styles/colors';
+@use './app/shared/styles/mixins';
 
 @font-face {
   font-family: 'Neue Regrade';
@@ -15,4 +16,8 @@ body {
 
 small {
   font-size: 0.75em;
+}
+
+.offcanvas-backdrop.show {
+  @include mixins.overlay-background();
 }

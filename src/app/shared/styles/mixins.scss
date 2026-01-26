@@ -5,3 +5,14 @@
   color: inherit;
   background-color: colors.$black-1;
 }
+
+@mixin overlay-background() {
+  background-color: black;
+  opacity: 0.8;
+}
+
+@mixin overlay-background-blur() {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px)
+}
