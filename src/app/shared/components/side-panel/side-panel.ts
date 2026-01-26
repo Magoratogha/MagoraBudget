@@ -1,10 +1,13 @@
 import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { Offcanvas } from 'bootstrap';
 import { Auth } from '../../services';
+import { ProfilePicture } from '../profile-picture/profile-picture';
 
 @Component({
   selector: 'app-side-panel',
-  imports: [],
+  imports: [
+    ProfilePicture
+  ],
   templateUrl: './side-panel.html',
   styleUrl: './side-panel.scss',
 })

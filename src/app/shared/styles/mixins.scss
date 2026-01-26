@@ -1,7 +1,7 @@
 @use '../styles/colors';
 
 @mixin side-panel() {
-  width: 70dvw;
+  width: 80dvw;
   color: inherit;
   background-color: colors.$black-1;
 }

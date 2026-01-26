@@ -12,11 +12,11 @@ import { Auth, Overlay } from './shared/services';
 })
 export class App implements AfterViewInit {
   @ViewChild(SidePanel) sidePanel!: SidePanel;
-  overlayService = inject(Overlay)
-  authService = inject(Auth)
+  overlay = inject(Overlay)
+  auth = inject(Auth)
   NAVBAR_ITEMS = NAVBAR_ITEMS;
 
   ngAfterViewInit() {
-    this.overlayService.initSidePanel(this.sidePanel);
+    this.overlay.initSidePanel(this.sidePanel);
   }
 }
