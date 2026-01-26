@@ -24,6 +24,7 @@ export class Auth {
         if (result.user.metadata.creationTime === result.user.metadata.lastSignInTime) {
           await this._fireStore.addNewUser(result.user);
         }
+        this._overlay.hideLoader();
         await this._router.navigate(['home']);
       }
     } catch (error) {

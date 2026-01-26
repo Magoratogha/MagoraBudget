@@ -25,10 +25,12 @@ export class Overlay {
   public showLoader() {
     this._loader?.isVisible.set(true);
     this._loaderCallCount++;
+    this._loader?.count.set(this._loaderCallCount);
   }
 
   public hideLoader() {
     this._loaderCallCount--;
+    this._loader?.count.set(this._loaderCallCount);
     if (this._loaderCallCount === 0) {
       this._loader?.isVisible.set(false);
     }
