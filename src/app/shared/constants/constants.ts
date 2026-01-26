@@ -6,3 +6,7 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
   { label: 'Cuentas', icon: 'bi-bank', route: '/accounts' },
   { label: 'Pendientes', icon: 'bi-card-checklist', route: '/pending' },
 ];
+
+export const FIREBASE_COLLECTION_NAMES = {
+  USERS: 'users'
+};

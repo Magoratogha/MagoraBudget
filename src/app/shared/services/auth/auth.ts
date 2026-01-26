@@ -3,12 +3,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Auth as FireAuth, GoogleAuthProvider, signInWithPopup, signOut, user, } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Overlay } from '../overlay/overlay';
+import { FireStore } from '../fire-store/fire-store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
   private _auth: FireAuth = inject(FireAuth);
+  private _fireStore = inject(FireStore);
   private _provider = new GoogleAuthProvider();
   private _user = toSignal(user(this._auth), { initialValue: null });
   private _router = inject(Router);
@@ -18,8 +20,10 @@ export class Auth {
     try {
       this._overlay.showLoader();
       const result = await signInWithPopup(this._auth, this._provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      if (credential) {
+      if (result.user) {
+        if (result.user.metadata.creationTime === result.user.metadata.lastSignInTime) {
+          await this._fireStore.addNewUser(result.user);
+        }
         await this._router.navigate(['home']);
       }
     } catch (error) {
