@@ -16,6 +16,7 @@ jobs:
           files: '["**/firebase-options.ts"]'
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_RECAPTCHA_KEY: ${{ secrets.FIREBASE_RECAPTCHA_KEY }}
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

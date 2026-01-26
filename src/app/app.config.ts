@@ -3,16 +3,27 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { FIREBASE_CONFIG } from '../../firebase-options';
+import { FIREBASE_CONFIG, RECAPTCHA_CONFIG } from '../../firebase-options';
 import { provideServiceWorker } from '@angular/service-worker';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { initializeAppCheck, provideAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
+
+declare global {
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
+
+if (location.hostname === 'localhost') {
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+}
+
+const firebaseApp = initializeApp(FIREBASE_CONFIG);
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(FIREBASE_CONFIG)),
+    provideFirebaseApp(() => firebaseApp),
     provideAuth(() => {
       const auth = getAuth();
       if (location.hostname === 'localhost') {
@@ -27,6 +38,10 @@ export const appConfig: ApplicationConfig = {
       }
       return firestore;
     }),
+    provideAppCheck(() => initializeAppCheck(firebaseApp, {
+      provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_CONFIG.reCaptchaKey),
+      isTokenAutoRefreshEnabled: true
+    })),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',

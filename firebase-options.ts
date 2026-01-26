@@ -7,3 +7,7 @@ export const FIREBASE_CONFIG = {
   appId: "1:8607872971:web:903dcb1aa2b4a91a5b284e",
   measurementId: "G-CP1T28B9DR"
 };
+
+export const RECAPTCHA_CONFIG = {
+  reCaptchaKey: "#{FIREBASE_RECAPTCHA_KEY}#",
+}
