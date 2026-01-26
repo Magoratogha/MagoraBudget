@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angula
 import { Offcanvas } from 'bootstrap';
 import { Auth } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
+import { APP_VERSION_STRING } from '../../../../../version-info';
 
 @Component({
   selector: 'app-side-panel',
@@ -14,6 +15,7 @@ import { ProfilePicture } from '../profile-picture/profile-picture';
 export class SidePanel implements AfterViewInit {
   @ViewChild('offCanvas') offCanvasRef!: ElementRef;
   auth = inject(Auth);
+  APP_VERSION = APP_VERSION_STRING;
   private _offCanvasInstance: Offcanvas | undefined;
 
   ngAfterViewInit() {
