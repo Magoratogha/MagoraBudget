@@ -28,6 +28,7 @@ export class Auth {
       }
     } catch (error) {
       console.error('Log in error: ' + error);
+      throw error;
     } finally {
       this._overlay.hideLoader();
     }
@@ -41,6 +42,7 @@ export class Auth {
       await this._router.navigate(['/']);
     } catch (error) {
       console.error('Log out error: ' + error);
+      throw error;
     } finally {
       this._overlay.hideLoader();
     }

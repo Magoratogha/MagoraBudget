@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Auth } from '../../../shared/services';
+import { APP_VERSION_STRING } from '../../../../../version-info';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +10,7 @@ import { Auth } from '../../../shared/services';
 })
 export class Login implements OnInit {
   auth = inject(Auth);
+  APP_VERSION = APP_VERSION_STRING;
 
   ngOnInit() {
   }

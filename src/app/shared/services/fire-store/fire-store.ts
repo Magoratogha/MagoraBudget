@@ -32,6 +32,7 @@ export class FireStore {
       await operation();
     } catch (e) {
       console.error('DB operation error: ' + e);
+      throw e;
     } finally {
       this._overlay.hideLoader();
     }
