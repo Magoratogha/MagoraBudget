@@ -1,0 +1,8 @@
+@use '../../../shared/styles/colors';
+
+.account {
+  background-color: colors.$black-1;
+  padding: 8px;
+  height: 60px;
+  border-radius: 8px;
+}
