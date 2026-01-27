@@ -7,7 +7,7 @@
 }
 
 @mixin bottom-sheet() {
-  height: 96dvh;
+  height: 100dvh;
   color: inherit;
   background-color: colors.$black-1;
   border-radius: 40px 40px 0 0;
