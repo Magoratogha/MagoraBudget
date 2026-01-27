@@ -2,7 +2,32 @@
 
 .account {
   background-color: colors.$black-1;
-  padding: 8px;
-  height: 60px;
+  padding: 16px;
   border-radius: 8px;
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  .progress {
+    height: 24px;
+    border-radius: 8px;
+    background-color: colors.$black-2;
+
+    &.debt {
+      background-color: colors.$red;
+    }
+
+    &-bar {
+      background-color: colors.$green;
+    }
+
+  }
+
+  .hints {
+    small {
+      width: 33%;
+      text-align: center;
+    }
+  }
 }
