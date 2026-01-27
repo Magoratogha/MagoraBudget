@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Loader, SidePanel } from '../../components';
+import { Injectable, Type } from '@angular/core';
+import { BottomSheet, Loader, SidePanel } from '../../components';
 
 @Injectable({
   providedIn: 'root',
@@ -7,10 +7,12 @@ import { Loader, SidePanel } from '../../components';
 export class Overlay {
   private _sidePanel: SidePanel | null = null;
   private _loader: Loader | null = null;
+  private _bottomSheet: BottomSheet | null = null;
 
-  public initOverlays(sidePanel: SidePanel, loader: Loader) {
+  public initOverlays(sidePanel: SidePanel, loader: Loader, bottomSheet: BottomSheet) {
     this._sidePanel = sidePanel;
     this._loader = loader;
+    this._bottomSheet = bottomSheet;
   }
 
   public openSidePanel() {
@@ -19,6 +21,14 @@ export class Overlay {
 
   public closeSidePanel() {
     this._sidePanel?.close();
+  }
+
+  public openBottomSheet(innerComponent: Type<any>) {
+    this._bottomSheet?.open(innerComponent);
+  }
+
+  public closeBottomSheet() {
+    this._bottomSheet?.close();
   }
 
   public showLoader() {

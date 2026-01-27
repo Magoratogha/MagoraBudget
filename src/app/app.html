@@ -2,7 +2,8 @@
   <router-outlet/>
 </div>
 @if (auth.getLoggedUser()) {
-  <app-navbar [items]="NAVBAR_ITEMS"></app-navbar>
+  <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"></app-navbar>
 }
 <app-side-panel></app-side-panel>
+<app-bottom-sheet></app-bottom-sheet>
 <app-loader></app-loader>

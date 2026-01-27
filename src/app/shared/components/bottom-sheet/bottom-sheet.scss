@@ -1,0 +1,9 @@
+@use '../../styles/mixins';
+
+.offcanvas {
+  @include mixins.bottom-sheet();
+}
+
+.close-button {
+  font-size: 2.5rem;
+}

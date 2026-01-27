@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { Account } from '../../components';
+import { Account, EditAccount } from '../../components';
 import { Overlay } from '../../../shared/services';
 import { Account as IAccount, AccountType } from '../../models';
 import { CurrencyPipe } from '@angular/common';
@@ -29,5 +29,9 @@ export class Accounts implements OnInit {
       { id: '4', label: 'Vacation Fund', type: AccountType.SavingsGoal, balance: 3000, quota: 10000, ownerId: 'user1' },
     ]);
     this._overlay.hideLoader();
+  }
+
+  addNewAccount() {
+    this._overlay.openBottomSheet(EditAccount);
   }
 }
