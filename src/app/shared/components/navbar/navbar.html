@@ -1,8 +1,15 @@
 <nav>
-  @for (item of items(); track item.label) {
+  @for (item of leftSideItems(); track item) {
     <a [routerLink]="item.route" routerLinkActive="active">
-      <i class="bi" [ngClass]="item.icon"></i>
-      <small>{{ item.label }}</small>
+      <i class="d-flex bi" [ngClass]="item.icon"></i>
+    </a>
+  }
+  <div class="create-button" (click)="createButtonClicked.emit()">
+    <i class="d-flex bi bi-plus"></i>
+  </div>
+  @for (item of rightSideItems(); track item) {
+    <a [routerLink]="item.route" routerLinkActive="active">
+      <i class="d-flex bi" [ngClass]="item.icon"></i>
     </a>
   }
 </nav>
