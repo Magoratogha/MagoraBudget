@@ -1,7 +1,17 @@
 @use '../../styles/mixins';
+@use '../../styles/variables';
 
 .offcanvas {
   @include mixins.bottom-sheet();
+
+  &-body {
+    padding-top: variables.$bottom-sheet-top-padding;
+    padding-bottom: variables.$bottom-sheet-bottom-padding;
+  }
+
+  .header {
+    height: variables.$bottom-sheet-header-height;
+  }
 }
 
 .close-button {
@@ -12,4 +22,5 @@
   align-items: center;
   justify-content: center;
   font-size: 2rem;
+
 }

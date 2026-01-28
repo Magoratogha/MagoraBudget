@@ -12,6 +12,46 @@
         }
       }
     </div>
-    <h1 class="mt-4 pt-2">{{ ACCOUNT_TYPE_INFO_MAP[form.get('type')?.value!].label }}</h1>
+    <h1 class="my-4 py-2">{{ ACCOUNT_TYPE_INFO_MAP[form.get('type')?.value!].label }}</h1>
+    <mat-form-field>
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Cuenta de Ahorros Bancolombia" formControlName="label">
+      <mat-icon class="material-icons-outlined" matPrefix>label</mat-icon>
+    </mat-form-field>
+    <mat-form-field>
+      @switch (form.get('type')?.value) {
+        @case (AccountType.Savings) {
+          <mat-label>Cuál es el saldo actual?</mat-label>
+        }
+        @case (AccountType.CreditCard)
+        @case (AccountType.Debt) {
+          <mat-label>Cuánto debes a día de hoy?</mat-label>
+        }
+        @case (AccountType.SavingsGoal) {
+          <mat-label>Cuánto llevas ahorrado?</mat-label>
+        }
+      }
+      <input matInput placeholder="123.456.789" formControlName="balance">
+      <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
+    </mat-form-field>
+    @if (form.get('type')?.value !== AccountType.Savings) {
+      <mat-form-field>
+        @switch (form.get('type')?.value) {
+          @case (AccountType.CreditCard) {
+            <mat-label>Cuánto cupo tiene la tarjeta?</mat-label>
+          }
+          @case (AccountType.Debt) {
+            <mat-label>Cuál es el valor total de la deuda?</mat-label>
+          }
+          @case (AccountType.SavingsGoal) {
+            <mat-label>Cuánto quieres ahorrar?</mat-label>
+          }
+        }
+        <input matInput placeholder="123.456.789" formControlName="quota">
+        <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
+      </mat-form-field>
+    }
   </div>
 </form>
+
+<button class="btn btn-light w-100" [class.btn-outline-light]="!form.valid" [disabled]="!form.valid">Guardar</button>

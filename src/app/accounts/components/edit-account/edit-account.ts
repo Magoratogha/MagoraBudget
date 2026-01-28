@@ -4,17 +4,23 @@ import { NgClass } from '@angular/common';
 import { Account, AccountType } from '../../models';
 import { Auth } from '../../../shared/services';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-account',
   imports: [
     NgClass,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
   ],
   templateUrl: './edit-account.html',
   styleUrl: './edit-account.scss',
   host: {
-    class: 'w-100'
+    class: 'inner-bottom-sheet-component'
   }
 })
 export class EditAccount {
@@ -30,13 +36,16 @@ export class EditAccount {
     id: new FormControl('', []),
     label: new FormControl('', [Validators.required]),
     type: new FormControl(AccountType.Savings, [Validators.required]),
-    balance: new FormControl(0, [Validators.required]),
-    quota: new FormControl(0, []),
+    balance: new FormControl(null, [Validators.required]),
+    quota: new FormControl(null, []),
     ownerId: new FormControl(this._auth.getLoggedUser()!.uid, [Validators.required])
   })
 
   changeAccountType(accountType: AccountType): void {
-    this.form.get('type')?.setValue(accountType);
+    this.form.reset({
+      type: accountType,
+      ownerId: this._auth.getLoggedUser()!.uid
+    });
   }
 
 }
