@@ -20,7 +20,7 @@ nav {
     align-items: center;
     justify-content: center;
     padding: 12px;
-    border-radius: 16px;
+    border-radius: calc(100% / 3);
     color: inherit;
     text-decoration: inherit;
 
@@ -39,9 +39,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: colors.$white-0;
-    color: colors.$black-1;
-    border-radius: 18px;
+    border-radius: calc(100% / 3);
     font-size: 2rem;
   }
 }

@@ -1,7 +1,9 @@
 <div class="offcanvas offcanvas-bottom" tabindex="-1" #offCanvas>
   <div class="offcanvas-body d-flex dvh-100 flex-column pt-3 pb-4 align-items-center">
     <div class="d-flex w-100 justify-content-end">
-      <i class="bi bi-x close-button d-flex" (click)="close(false)"></i>
+      <button type="button" class="btn btn-light close-button" (click)="close(false)">
+        <i class="bi bi-x d-flex"></i>
+      </button>
     </div>
     @if (innerComponent()) {
       <ng-container *ngComponentOutlet="innerComponent()" />
