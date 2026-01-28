@@ -15,3 +15,14 @@
   bottom: 0;
   left: 0;
 }
+
+.app-logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 50dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
