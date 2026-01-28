@@ -2,7 +2,7 @@
   <div class="account w-100 d-flex flex-column gap-3">
     <div class="d-flex gap-2 justify-content-between">
       <div class="d-flex align-items-center gap-2">
-        <i class="d-flex bi" [ngClass]="ACCOUNT_TYPE_ICON_MAP[account()!.type]"></i>
+        <i class="d-flex bi" [ngClass]="ACCOUNT_TYPE_INFO_MAP[account()!.type].iconClass"></i>
         <span>{{ account()?.label }}</span>
       </div>
       <span><b>{{ account()?.balance | currency : 'USD' : 'symbol' : '1.0-0' }}</b></span>

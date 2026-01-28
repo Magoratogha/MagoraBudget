@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { Account as IAccount, AccountType } from '../../models';
-import { ACCOUNT_TYPE_ICON_MAP } from '../../constants';
+import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
 
 @Component({
@@ -14,7 +14,7 @@ import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
   styleUrl: './account.scss',
 })
 export class Account {
-  ACCOUNT_TYPE_ICON_MAP = ACCOUNT_TYPE_ICON_MAP;
+  ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   AccountType = AccountType;
 
   account = input<IAccount>();

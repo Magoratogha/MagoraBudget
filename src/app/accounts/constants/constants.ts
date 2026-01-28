@@ -1,8 +1,8 @@
 import { AccountType } from '../models';
 
-export const ACCOUNT_TYPE_ICON_MAP: Record<AccountType, string> = {
-  [AccountType.Savings]: 'bi-cash-coin',
-  [AccountType.CreditCard]: 'bi-credit-card',
-  [AccountType.Debt]: 'bi-currency-exchange',
-  [AccountType.SavingsGoal]: 'bi-piggy-bank',
+export const ACCOUNT_TYPE_INFO_MAP: Record<AccountType, { iconClass: string, label: string }> = {
+  [AccountType.Savings]: { iconClass: 'bi-cash-coin', label: 'Cuenta Bancaria' },
+  [AccountType.CreditCard]: { iconClass: 'bi-credit-card', label: 'Tarjeta de Crédito' },
+  [AccountType.Debt]: { iconClass: 'bi-currency-exchange', label: 'Deuda' },
+  [AccountType.SavingsGoal]: { iconClass: 'bi-piggy-bank', label: 'Meta de Ahorro' },
 }

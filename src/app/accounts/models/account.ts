@@ -1,7 +1,7 @@
 import { AccountType } from './account-type';
 
 export interface Account {
-  id: string;
+  id?: string;
   label: string;
   type: AccountType;
   balance: number;

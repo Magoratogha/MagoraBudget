@@ -1,1 +1,17 @@
-<p>edit-account works!</p>
+<form [formGroup]="form">
+  <div class="d-flex flex-column w-100 align-items-center justify-content-center">
+    <div class="btn-group btn-group-lg" role="group">
+      @for (type of Object.keys(AccountType); track AccountType) {
+        @if (!isNaN(Number(type))) {
+          <input type="radio" class="btn-check" [id]="type" autocomplete="off" [value]="Number(type)"
+                 formControlName="type">
+          <label class="btn btn-outline-light d-flex align-items-center justify-content-center gap-1" [for]="type"
+                 (click)="changeAccountType(Number(type))">
+            <i class="d-flex bi" [ngClass]="$any(ACCOUNT_TYPE_INFO_MAP)[type].iconClass"></i>
+          </label>
+        }
+      }
+    </div>
+    <h1 class="mt-4 pt-2">{{ ACCOUNT_TYPE_INFO_MAP[form.get('type')?.value!].label }}</h1>
+  </div>
+</form>
