@@ -7,6 +7,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { onlyNumbersValidator } from '../../../shared/utils';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-edit-account',
@@ -15,7 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
+    MatIconModule,
+    NgxMaskDirective
   ],
   templateUrl: './edit-account.html',
   styleUrl: './edit-account.scss',
@@ -36,8 +39,8 @@ export class EditAccount {
     id: new FormControl('', []),
     label: new FormControl('', [Validators.required]),
     type: new FormControl(AccountType.Savings, [Validators.required]),
-    balance: new FormControl(null, [Validators.required]),
-    quota: new FormControl(null, []),
+    balance: new FormControl(null, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
+    quota: new FormControl(null, [Validators.min(0), onlyNumbersValidator()]),
     ownerId: new FormControl(this._auth.getLoggedUser()!.uid, [Validators.required])
   })
 
