@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BottomSheet, Loader, Navbar, SidePanel } from './shared/components';
+import { BottomSheet, Loader, Navbar, ProfilePicture, SidePanel } from './shared/components';
 import { NAVBAR_ITEMS } from './shared/constants';
 import { Auth, Overlay } from './shared/services';
 import { EditTransaction } from './transactions/components';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, SidePanel, Loader, BottomSheet],
+  imports: [RouterOutlet, Navbar, SidePanel, Loader, BottomSheet, ProfilePicture],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

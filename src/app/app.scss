@@ -3,3 +3,9 @@
 .container {
   margin-bottom: variables.$navbar-height;
 }
+
+app-profile-picture {
+  position: fixed;
+  top: 0;
+  right: 0.75rem;
+}

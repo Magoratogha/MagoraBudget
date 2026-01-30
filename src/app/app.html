@@ -1,9 +1,13 @@
-<div class="container py-3">
+<app-profile-picture
+  radius="50%"
+  [size]="40"
+  (click)="overlay.openSidePanel()"/>
+<div class="container py-4">
   <router-outlet/>
 </div>
 @if (auth.getLoggedUser()) {
-  <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"></app-navbar>
+  <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
 }
-<app-side-panel></app-side-panel>
-<app-bottom-sheet></app-bottom-sheet>
-<app-loader></app-loader>
+<app-side-panel/>
+<app-bottom-sheet/>
+<app-loader/>
