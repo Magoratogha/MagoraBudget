@@ -1,11 +1,13 @@
 @use './shared/styles/variables';
 
 .container {
+  margin-top: -30px;
   padding-bottom: calc(1.5rem + #{ variables.$navbar-height });
 }
 
 app-profile-picture {
-  position: fixed;
-  top: 0;
-  right: 0.75rem;
+  display: flex;
+  width: 100%;
+  padding-right: 0.75rem;
+  justify-content: flex-end;
 }

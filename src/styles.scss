@@ -51,6 +51,13 @@ small {
   font-weight: 500;
 }
 
+.btn-light[disabled] {
+  background-color: colors.$black-2;
+  border-color: colors.$black-2;
+  color: colors.$white-3;
+  opacity: 1;
+}
+
 mat-form-field {
   width: 100%;
 }

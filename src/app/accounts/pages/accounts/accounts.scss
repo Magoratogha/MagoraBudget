@@ -1,0 +1,9 @@
+@use '../../../shared/styles/colors';
+
+.negative {
+  color: colors.$warn-red;
+}
+
+.positive {
+  color: colors.$warn-green;
+}

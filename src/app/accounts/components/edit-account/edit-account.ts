@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { NgClass } from '@angular/common';
 import { Account, AccountType } from '../../models';
@@ -26,7 +26,7 @@ import { NgxMaskDirective } from 'ngx-mask';
     class: 'inner-bottom-sheet-component'
   }
 })
-export class EditAccount {
+export class EditAccount implements OnInit {
   ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   Object = Object;
   Number = Number;
@@ -38,12 +38,24 @@ export class EditAccount {
   AccountType = AccountType;
   account = input<Account>();
   form = new FormGroup({
-    label: new FormControl('', [Validators.required]),
-    type: new FormControl(AccountType.Cash, [Validators.required]),
-    balance: new FormControl(null, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
-    quota: new FormControl(null, [Validators.min(0), onlyNumbersValidator()]),
-    ownerId: new FormControl(this._auth.getLoggedUser()!.uid, [Validators.required])
+    label: new FormControl<string>('', [Validators.required]),
+    type: new FormControl<AccountType>(AccountType.Cash, [Validators.required]),
+    balance: new FormControl<number>(NaN, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
+    quota: new FormControl<number>(NaN, [Validators.min(0), onlyNumbersValidator()]),
+    ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   })
+
+  ngOnInit(): void {
+    if (this.account()) {
+      this.form.setValue({
+        label: this.account()?.label || '',
+        type: this.account()?.type || AccountType.Cash,
+        balance: this.account()?.balance ? Math.abs(this.account()!.balance) : NaN,
+        quota: this.account()?.quota ? Math.abs(this.account()!.quota as number) : NaN,
+        ownerId: this.account()?.ownerId || this._auth.getLoggedUser()!.uid
+      });
+    }
+  }
 
   changeAccountType(accountType: AccountType): void {
     this.form.reset({
@@ -78,7 +90,11 @@ export class EditAccount {
           accountToSave.balance = accountToSave.balance * (-1);
           accountToSave.quota = accountToSave.quota! * (-1);
         }
-        await this._fireStore.addAccount(accountToSave);
+        if (this.account()?.id) {
+          await this._fireStore.editAccount(this.account()!.id!, accountToSave);
+        } else {
+          await this._fireStore.addAccount(accountToSave);
+        }
       } catch (e) {
         console.error('Error saving account: ', e);
       } finally {
@@ -86,5 +102,9 @@ export class EditAccount {
         this._overlay.closeBottomSheet(true);
       }
     }
+  }
+
+  cancel() {
+    this._overlay.closeBottomSheet();
   }
 }

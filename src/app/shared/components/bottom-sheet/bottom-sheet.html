@@ -6,7 +6,7 @@
       </button>
     </div>
     @if (innerComponent()) {
-      <ng-container *ngComponentOutlet="innerComponent()" />
+      <ng-container *ngComponentOutlet="innerComponent(); inputs: innerComponentInputs()"/>
     }
   </div>
 </div>

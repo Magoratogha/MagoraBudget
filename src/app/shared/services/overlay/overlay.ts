@@ -23,8 +23,8 @@ export class Overlay {
     this._sidePanel?.close();
   }
 
-  public openBottomSheet(innerComponent: Type<any>) {
-    this._bottomSheet?.open(innerComponent);
+  public openBottomSheet(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }) {
+    this._bottomSheet?.open(innerComponent, innerComponentInputs);
     return this._bottomSheet?.bottomSheetClosed;
   }
 

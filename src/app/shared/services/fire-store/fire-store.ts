@@ -38,6 +38,16 @@ export class FireStore {
     }
   }
 
+  public async editAccount(accountId: string, account: Account): Promise<void> {
+    try {
+      this._cleanWhiteSpaces(account);
+      await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account);
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
   public async getUserAccounts(userId: string) {
     try {
       const q = query(

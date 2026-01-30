@@ -17,20 +17,23 @@ export class BottomSheet implements AfterViewInit{
   auth = inject(Auth);
   bottomSheetClosed = new Subject<boolean>();
   innerComponent = signal<Type<any> | null>(null);
+  innerComponentInputs = signal<{ [key: string]: any } | undefined>(undefined);
   private _offCanvasInstance: Offcanvas | undefined;
 
   ngAfterViewInit() {
     this._offCanvasInstance = new Offcanvas(this.offCanvasRef.nativeElement);
   }
 
-  open(innerComponent: Type<any>): void {
+  open(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }): void {
     this.innerComponent.set(innerComponent);
+    this.innerComponentInputs.set(innerComponentInputs);
     this._offCanvasInstance?.show();
   }
 
   close(triggerCallback: boolean = false) {
     this._offCanvasInstance?.hide();
     this.innerComponent.set(null);
+    this.innerComponentInputs.set(undefined);
     this.bottomSheetClosed.next(triggerCallback);
   }
 }

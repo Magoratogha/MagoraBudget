@@ -2,14 +2,15 @@ import { Component, computed, DestroyRef, inject, OnInit, signal, WritableSignal
 import { Account, EditAccount } from '../../components';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
 import { Account as IAccount } from '../../models';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-accounts',
   imports: [
     Account,
-    CurrencyPipe
+    CurrencyPipe,
+    NgClass
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',

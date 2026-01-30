@@ -1,6 +1,7 @@
 <div class="w-100 d-flex align-items-center justify-content-center flex-column pb-2">
   <span>Saldo neto</span>
-  <h1 class="display-1 fw-semibold">{{ globalBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
+  <h1 class="display-1 fw-semibold"
+      [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">{{ globalBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
 </div>
 @for (account of accounts(); track account.id) {
   <app-account [account]="account"></app-account>

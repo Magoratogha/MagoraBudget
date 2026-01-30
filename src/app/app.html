@@ -1,6 +1,3 @@
-<div class="container pt-4">
-  <router-outlet/>
-</div>
 @if (auth.getLoggedUser()) {
   <app-profile-picture
     radius="50%"
@@ -8,6 +5,9 @@
     (click)="overlay.openSidePanel()"/>
   <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
 }
+<div class="container pt-4">
+  <router-outlet/>
+</div>
 <app-side-panel/>
 <app-bottom-sheet/>
 <app-loader/>
