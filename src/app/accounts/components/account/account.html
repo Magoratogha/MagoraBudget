@@ -7,7 +7,7 @@
       </div>
       <span><b>{{ account()?.balance | currency : 'USD' : 'symbol' : '1.0-0' }}</b></span>
     </div>
-    @if (account()?.type !== AccountType.Savings) {
+    @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
       <div class="progress" [class.debt]="account()?.type !== AccountType.SavingsGoal">
         <div class="progress-bar progress-bar-striped" [style.width.%]="parsedBalancePercent()"></div>
       </div>

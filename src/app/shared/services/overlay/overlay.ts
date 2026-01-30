@@ -25,10 +25,11 @@ export class Overlay {
 
   public openBottomSheet(innerComponent: Type<any>) {
     this._bottomSheet?.open(innerComponent);
+    return this._bottomSheet?.bottomSheetClosed;
   }
 
-  public closeBottomSheet() {
-    this._bottomSheet?.close();
+  public closeBottomSheet(triggerCallback: boolean = false) {
+    this._bottomSheet?.close(triggerCallback);
   }
 
   public showLoader() {

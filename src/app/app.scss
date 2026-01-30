@@ -1,7 +1,7 @@
 @use './shared/styles/variables';
 
 .container {
-  margin-bottom: variables.$navbar-height;
+  padding-bottom: calc(1.5rem + #{ variables.$navbar-height });
 }
 
 app-profile-picture {

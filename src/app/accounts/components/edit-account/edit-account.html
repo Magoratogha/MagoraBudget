@@ -15,11 +15,14 @@
     </div>
     <mat-form-field>
       <mat-label>Nombre</mat-label>
-      <input matInput placeholder="Cuenta de Ahorros Bancolombia" formControlName="label">
+      <input matInput [placeholder]="labelPlaceholder" formControlName="label">
       <mat-icon class="material-icons-outlined" matPrefix>label</mat-icon>
     </mat-form-field>
     <mat-form-field>
       @switch (form.get('type')?.value) {
+        @case (AccountType.Cash) {
+          <mat-label>Cuánto efectivo tienes?</mat-label>
+        }
         @case (AccountType.Savings) {
           <mat-label>Cuál es el saldo actual?</mat-label>
         }
@@ -34,7 +37,7 @@
       <input matInput placeholder="123.456.789" formControlName="balance" mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
       <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
     </mat-form-field>
-    @if (form.get('type')?.value !== AccountType.Savings) {
+    @if (form.get('type')?.value !== AccountType.Savings && form.get('type')?.value !== AccountType.Cash) {
       <mat-form-field>
         @switch (form.get('type')?.value) {
           @case (AccountType.CreditCard) {
@@ -54,4 +57,4 @@
   </div>
 </form>
 
-<button class="btn btn-light w-100" [class.btn-outline-light]="!form.valid" [disabled]="!form.valid">Guardar</button>
+<button class="btn btn-light w-100" [class.btn-outline-light]="!form.valid" [disabled]="!form.valid" (click)="saveAccount()">Guardar</button>

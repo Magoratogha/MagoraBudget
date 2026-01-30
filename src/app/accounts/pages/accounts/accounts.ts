@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Account, EditAccount } from '../../components';
-import { Overlay } from '../../../shared/services';
-import { Account as IAccount, AccountType } from '../../models';
+import { Auth, FireStore, Overlay } from '../../../shared/services';
+import { Account as IAccount } from '../../models';
 import { CurrencyPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-accounts',
@@ -18,20 +19,29 @@ export class Accounts implements OnInit {
   globalBalance = computed(() => {
     return this.accounts().reduce((total, account) => total + account.balance, 0);
   });
-  private _overlay = inject(Overlay)
+  private _overlay = inject(Overlay);
+  private _fireStore = inject(FireStore);
+  private _auth = inject(Auth);
+  private _destroyRef = inject(DestroyRef);
 
-  ngOnInit(): void {
-    this._overlay.showLoader();
-    this.accounts.set([
-      { id: '1', label: 'Personal Account', type: AccountType.Savings, balance: 5000, ownerId: 'user1' },
-      { id: '2', label: 'Credit Card', type: AccountType.CreditCard, balance: -3000, quota: 10000, ownerId: 'user1' },
-      { id: '3', label: 'Car Loan', type: AccountType.Debt, balance: -15000, quota: 40000, ownerId: 'user1' },
-      { id: '4', label: 'Vacation Fund', type: AccountType.SavingsGoal, balance: 3000, quota: 10000, ownerId: 'user1' },
-    ]);
-    this._overlay.hideLoader();
+  async ngOnInit(): Promise<void> {
+    try {
+      this._overlay.showLoader();
+      const accounts = await this._fireStore.getUserAccounts(this._auth.getLoggedUser()!.uid)
+      this.accounts.set(accounts);
+    } catch (e) {
+      console.error('Error loading accounts: ' + e);
+    } finally {
+      this._overlay.hideLoader();
+    }
   }
 
   addNewAccount() {
-    this._overlay.openBottomSheet(EditAccount);
+    this._overlay.openBottomSheet(EditAccount)?.pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(async (shouldFetchData) => {
+        if (shouldFetchData) {
+          await this.ngOnInit();
+        }
+      });
   }
 }

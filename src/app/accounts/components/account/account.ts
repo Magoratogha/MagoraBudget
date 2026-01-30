@@ -29,7 +29,7 @@ export class Account {
   });
   quota = computed(() => {
     if (this.account()?.type === AccountType.CreditCard || this.account()?.type === AccountType.Debt) {
-      return (this.account()!.quota as number) * -1;
+      return this.account()!.quota;
     }
     if (this.account()?.type === AccountType.SavingsGoal) {
       return 0

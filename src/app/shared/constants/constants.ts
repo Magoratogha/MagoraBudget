@@ -8,5 +8,6 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
 ];
 
 export const FIREBASE_COLLECTION_NAMES = {
-  USERS: 'users'
+  USERS: 'users',
+  ACCOUNTS: 'accounts',
 };

@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, inject, output, signal, Type, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, signal, Type, ViewChild } from '@angular/core';
 import { Auth } from '../../services';
 import { Offcanvas } from 'bootstrap';
 import { NgComponentOutlet } from '@angular/common';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-bottom-sheet',
@@ -14,7 +15,7 @@ import { NgComponentOutlet } from '@angular/common';
 export class BottomSheet implements AfterViewInit{
   @ViewChild('offCanvas') offCanvasRef!: ElementRef;
   auth = inject(Auth);
-  bottomSheetClosed = output<boolean>();
+  bottomSheetClosed = new Subject<boolean>();
   innerComponent = signal<Type<any> | null>(null);
   private _offCanvasInstance: Offcanvas | undefined;
 
@@ -27,9 +28,9 @@ export class BottomSheet implements AfterViewInit{
     this._offCanvasInstance?.show();
   }
 
-  close(shouldTriggerDataFetch: boolean = false) {
+  close(triggerCallback: boolean = false) {
     this._offCanvasInstance?.hide();
     this.innerComponent.set(null);
-    this.bottomSheetClosed.emit(shouldTriggerDataFetch);
+    this.bottomSheetClosed.next(triggerCallback);
   }
 }
