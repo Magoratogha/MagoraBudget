@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { BottomSheet, Loader, SidePanel } from '../../components';
+import { BottomSheet, Loader, Modal, SidePanel } from '../../components';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +8,13 @@ export class Overlay {
   private _sidePanel: SidePanel | null = null;
   private _loader: Loader | null = null;
   private _bottomSheet: BottomSheet | null = null;
+  private _modal: Modal | null = null;
 
-  public initOverlays(sidePanel: SidePanel, loader: Loader, bottomSheet: BottomSheet) {
+  public initOverlays(sidePanel: SidePanel, loader: Loader, bottomSheet: BottomSheet, modal: Modal) {
     this._sidePanel = sidePanel;
     this._loader = loader;
     this._bottomSheet = bottomSheet;
+    this._modal = modal;
   }
 
   public openSidePanel() {
@@ -30,6 +32,15 @@ export class Overlay {
 
   public closeBottomSheet(triggerCallback: boolean = false) {
     this._bottomSheet?.close(triggerCallback);
+  }
+
+  public openModal(title: string, description?: string) {
+    this._modal?.open(title, description);
+    return this._modal?.modalClosed;
+  }
+
+  public closeModal(triggerCallback: boolean = false) {
+    this._modal?.close(triggerCallback);
   }
 
   public showLoader() {

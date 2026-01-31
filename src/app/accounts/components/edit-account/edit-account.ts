@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, OnInit } from '@angular/core';
 import {
   ACCOUNT_TYPE_INFO_MAP,
   BALANCE_FIELD_WORDING_MAP,
@@ -14,7 +14,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { onlyNumbersValidator } from '../../../shared/utils';
 import { NgxMaskDirective } from 'ngx-mask';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
+import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
 
 @Component({
   selector: 'app-edit-account',
@@ -40,6 +42,7 @@ export class EditAccount implements OnInit {
   private _auth = inject(Auth);
   private _fireStore = inject(FireStore);
   private _overlay = inject(Overlay);
+  private _destroyRef = inject(DestroyRef);
 
   AccountType = AccountType;
   account = input<Account>();
@@ -104,16 +107,21 @@ export class EditAccount implements OnInit {
   }
 
   async deleteAccount() {
-    // TODO: Add confirmation dialog
-    try {
-      this._overlay.showLoader();
-      await this._fireStore.deleteAccount(this.account()!.id!);
-    } catch (e) {
-      console.error('Error deleting account: ', e);
-    } finally {
-      this._overlay.hideLoader();
-      this._overlay.closeBottomSheet(true);
-    }
+    this._overlay.openModal(WARNING_MODAL_DELETE_WORDING.title, WARNING_MODAL_DELETE_WORDING.description)
+      ?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
+      .subscribe(async (shouldDelete) => {
+        if (shouldDelete) {
+          try {
+            this._overlay.showLoader();
+            await this._fireStore.deleteAccount(this.account()!.id!);
+          } catch (e) {
+            console.error('Error deleting account: ', e);
+          } finally {
+            this._overlay.hideLoader();
+            this._overlay.closeBottomSheet(true);
+          }
+        }
+      });
   }
 
   cancel() {

@@ -4,6 +4,7 @@ import { Auth, FireStore, Overlay } from '../../../shared/services';
 import { Account as IAccount } from '../../models';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-accounts',
@@ -38,7 +39,7 @@ export class Accounts implements OnInit {
   }
 
   addNewAccount() {
-    this._overlay.openBottomSheet(EditAccount)?.pipe(takeUntilDestroyed(this._destroyRef))
+    this._overlay.openBottomSheet(EditAccount)?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldFetchData) => {
         if (shouldFetchData) {
           await this.refreshAccounts();

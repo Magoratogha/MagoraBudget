@@ -11,3 +11,8 @@ export const FIREBASE_COLLECTION_NAMES = {
   USERS: 'users',
   ACCOUNTS: 'accounts',
 };
+
+export const WARNING_MODAL_DELETE_WORDING = {
+  title: 'Estás seguro?',
+  description: 'Esta operación no se puede revertir.',
+}
