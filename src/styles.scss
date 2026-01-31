@@ -73,3 +73,20 @@ mat-form-field {
 p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
   user-select: none;
 }
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #{ colors.$red };
+  --bs-btn-border-color: #{ colors.$red };
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #{ colors.$red-active };
+  --bs-btn-hover-border-color: #{ colors.$red-active };
+  --bs-btn-focus-shadow-rgb: 225, 83, 97;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #{ colors.$red-active };
+  --bs-btn-active-border-color: #{ colors.$red-active };
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #{ colors.$red };
+  --bs-btn-disabled-border-color: #{ colors.$red };
+}

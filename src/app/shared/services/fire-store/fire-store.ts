@@ -1,6 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from "@angular/fire/auth";
-import { addDoc, collection, doc, Firestore, getDocs, orderBy, query, setDoc, where } from '@angular/fire/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  Firestore,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  where
+} from '@angular/fire/firestore';
 import { FIREBASE_COLLECTION_NAMES } from '../../constants';
 import { Account } from '../../../accounts/models';
 
@@ -42,6 +53,15 @@ export class FireStore {
     try {
       this._cleanWhiteSpaces(account);
       await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account);
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public async deleteAccount(accountId: string): Promise<void> {
+    try {
+      await deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId));
     } catch (e) {
       this._logError(e);
       throw e;

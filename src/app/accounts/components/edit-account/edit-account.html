@@ -40,5 +40,8 @@
 
 <div class="d-flex flex-column gap-2">
   <button class="btn btn-light w-100" [disabled]="!form.valid" (click)="saveAccount()">Guardar</button>
+  @if (account()?.id) {
+    <button class="btn btn-danger w-100" (click)="deleteAccount()">Eliminar</button>
+  }
   <button class="btn btn-outline-light w-100" (click)="cancel()">Cancelar</button>
 </div>

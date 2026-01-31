@@ -103,6 +103,19 @@ export class EditAccount implements OnInit {
     }
   }
 
+  async deleteAccount() {
+    // TODO: Add confirmation dialog
+    try {
+      this._overlay.showLoader();
+      await this._fireStore.deleteAccount(this.account()!.id!);
+    } catch (e) {
+      console.error('Error deleting account: ', e);
+    } finally {
+      this._overlay.hideLoader();
+      this._overlay.closeBottomSheet(true);
+    }
+  }
+
   cancel() {
     this._overlay.closeBottomSheet();
   }
