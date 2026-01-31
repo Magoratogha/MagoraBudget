@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input } from '@angular/core';
+import { Component, computed, DestroyRef, inject, input, output } from '@angular/core';
 import { Account as IAccount, AccountType } from '../../models';
 import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
@@ -19,6 +19,7 @@ import { Overlay } from '../../../shared/services';
 export class Account {
   ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   AccountType = AccountType;
+  accountUpdated = output();
   private _overlay = inject(Overlay)
   private _destroyRef = inject(DestroyRef);
 
@@ -59,8 +60,9 @@ export class Account {
   edit() {
     this._overlay.openBottomSheet(EditAccount, { account: this.account() })
       ?.pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(async (shouldFetchData) => {
+      .subscribe((shouldFetchData) => {
         if (shouldFetchData) {
+          this.accountUpdated.emit();
         }
       });
   }

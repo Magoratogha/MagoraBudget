@@ -1,5 +1,10 @@
-import { Component, inject, input, OnInit } from '@angular/core';
-import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
+import { Component, computed, inject, input, OnInit } from '@angular/core';
+import {
+  ACCOUNT_TYPE_INFO_MAP,
+  BALANCE_FIELD_WORDING_MAP,
+  LABEL_FIELD_WORDING_MAP,
+  QUOTA_FIELD_WORDING_MAP
+} from '../../constants';
 import { NgClass } from '@angular/common';
 import { Account, AccountType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
@@ -9,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { onlyNumbersValidator } from '../../../shared/utils';
 import { NgxMaskDirective } from 'ngx-mask';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit-account',
@@ -43,7 +49,17 @@ export class EditAccount implements OnInit {
     balance: new FormControl<number>(NaN, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
     quota: new FormControl<number>(NaN, [Validators.min(0), onlyNumbersValidator()]),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
-  })
+  });
+  selectedAccountType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
+  labelPlaceholder = computed(() => {
+    return LABEL_FIELD_WORDING_MAP[this.selectedAccountType()!];
+  });
+  balanceLabelAndPlaceholder = computed(() => {
+    return BALANCE_FIELD_WORDING_MAP[this.selectedAccountType()!];
+  });
+  quotaLabelAndPlaceholder = computed(() => {
+    return QUOTA_FIELD_WORDING_MAP[this.selectedAccountType()!];
+  });
 
   ngOnInit(): void {
     if (this.account()) {
@@ -62,23 +78,6 @@ export class EditAccount implements OnInit {
       type: accountType,
       ownerId: this._auth.getLoggedUser()!.uid
     });
-  }
-
-  get labelPlaceholder(): string {
-    switch (this.form.controls.type.value) {
-      case AccountType.Cash:
-        return 'Billetera';
-      case AccountType.Savings:
-        return 'Cuenta de ahorros Bancolombia';
-      case AccountType.CreditCard:
-        return 'Tarjeta de crédito Davivienda';
-      case AccountType.Debt:
-        return 'Libranza Banco de Bogotá';
-      case AccountType.SavingsGoal:
-        return 'Ahorro para viaje';
-      default:
-        return '';
-    }
   }
 
   async saveAccount() {

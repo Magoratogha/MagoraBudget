@@ -1,9 +1,9 @@
 <form [formGroup]="form">
   <div class="d-flex flex-column w-100 align-items-center justify-content-center">
+    <h1 class="display-4 fw-normal mt-3">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
     @if (account()?.id) {
       <span class="edit-warning">Editando</span>
     }
-    <h1 class="display-4 fw-normal mt-3">{{ ACCOUNT_TYPE_INFO_MAP[form.get('type')?.value!].label }}</h1>
     <div class="btn-group btn-group-lg mt-4 mb-5" role="group">
       @for (type of Object.keys(AccountType); track type) {
         @if (!isNaN(Number(type))) {
@@ -17,43 +17,21 @@
       }
     </div>
     <mat-form-field>
-      <mat-label>Nombre</mat-label>
-      <input matInput [placeholder]="labelPlaceholder" formControlName="label">
+      <mat-label>{{ labelPlaceholder().label }}</mat-label>
+      <input matInput [placeholder]="labelPlaceholder().placeholder" formControlName="label">
       <mat-icon class="material-icons-outlined" matPrefix>label</mat-icon>
     </mat-form-field>
     <mat-form-field>
-      @switch (form.get('type')?.value) {
-        @case (AccountType.Cash) {
-          <mat-label>Cuánto efectivo tienes?</mat-label>
-        }
-        @case (AccountType.Savings) {
-          <mat-label>Cuál es el saldo actual?</mat-label>
-        }
-        @case (AccountType.CreditCard)
-        @case (AccountType.Debt) {
-          <mat-label>Cuánto debes a día de hoy?</mat-label>
-        }
-        @case (AccountType.SavingsGoal) {
-          <mat-label>Cuánto llevas ahorrado?</mat-label>
-        }
-      }
-      <input matInput placeholder="123.456.789" formControlName="balance" mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
+      <mat-label>{{ balanceLabelAndPlaceholder().label }}</mat-label>
+      <input matInput [placeholder]="balanceLabelAndPlaceholder().placeholder" formControlName="balance"
+             mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
       <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
     </mat-form-field>
-    @if (form.get('type')?.value !== AccountType.Savings && form.get('type')?.value !== AccountType.Cash) {
+    @if (selectedAccountType() !== AccountType.Savings && selectedAccountType() !== AccountType.Cash) {
       <mat-form-field>
-        @switch (form.get('type')?.value) {
-          @case (AccountType.CreditCard) {
-            <mat-label>Cuánto cupo tiene la tarjeta?</mat-label>
-          }
-          @case (AccountType.Debt) {
-            <mat-label>Cuál es el valor total de la deuda?</mat-label>
-          }
-          @case (AccountType.SavingsGoal) {
-            <mat-label>Cuánto quieres ahorrar?</mat-label>
-          }
-        }
-        <input matInput placeholder="123.456.789" formControlName="quota" mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
+        <mat-label>{{ quotaLabelAndPlaceholder()!.label }}</mat-label>
+        <input matInput [placeholder]="quotaLabelAndPlaceholder()!.placeholder" formControlName="quota"
+               mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
         <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
       </mat-form-field>
     }

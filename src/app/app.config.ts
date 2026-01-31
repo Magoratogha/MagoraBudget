@@ -2,11 +2,16 @@ import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_CONFIG, RECAPTCHA_CONFIG } from '../../firebase-options';
 import { provideServiceWorker } from '@angular/service-worker';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
-import { connectFirestoreEmulator, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import {
+  connectFirestoreEmulator,
+  initializeFirestore,
+  persistentLocalCache,
+  provideFirestore
+} from '@angular/fire/firestore';
 import { initializeAppCheck, provideAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
@@ -19,13 +24,11 @@ if (location.hostname === 'localhost') {
   self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
 }
 
-const firebaseApp = initializeApp(FIREBASE_CONFIG);
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideFirebaseApp(() => firebaseApp),
+    provideFirebaseApp(() => initializeApp(FIREBASE_CONFIG)),
     provideAuth(() => {
       const auth = getAuth();
       if (location.hostname === 'localhost') {
@@ -34,13 +37,15 @@ export const appConfig: ApplicationConfig = {
       return auth;
     }),
     provideFirestore(() => {
-      const firestore = getFirestore();
+      const firestore = initializeFirestore(getApp(), {
+        localCache: persistentLocalCache()
+      });
       if (location.hostname === 'localhost') {
         connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
       }
       return firestore;
     }),
-    provideAppCheck(() => initializeAppCheck(firebaseApp, {
+    provideAppCheck(() => initializeAppCheck(getApp(), {
       provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_CONFIG.reCaptchaKey),
       isTokenAutoRefreshEnabled: true
     })),

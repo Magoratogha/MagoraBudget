@@ -41,8 +41,12 @@ export class Accounts implements OnInit {
     this._overlay.openBottomSheet(EditAccount)?.pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldFetchData) => {
         if (shouldFetchData) {
-          await this.ngOnInit();
+          await this.refreshAccounts();
         }
       });
+  }
+
+  async refreshAccounts() {
+    await this.ngOnInit();
   }
 }
