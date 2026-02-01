@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, signal, ViewChild } from '@angular/core';
-import { Modal as BSModal } from 'bootstrap';
+import { Offcanvas } from 'bootstrap';
 import { Subject } from 'rxjs';
+import { ACCOUNT_TYPE_INFO_MAP } from '../../../accounts/constants';
 
 @Component({
   selector: 'app-modal',
@@ -9,24 +10,26 @@ import { Subject } from 'rxjs';
   styleUrl: './modal.scss',
 })
 export class Modal implements AfterViewInit {
-  @ViewChild('modal') modalRef!: ElementRef;
+  @ViewChild('offCanvas') offCanvasRef!: ElementRef;
   modalClosed = new Subject<boolean>();
   title = signal<string>('');
   description = signal<string | undefined>(undefined);
-  private _bsModalInstance: BSModal | undefined;
+  private _offCanvasInstance: Offcanvas | undefined;
 
   ngAfterViewInit() {
-    this._bsModalInstance = new BSModal(this.modalRef.nativeElement);
+    this._offCanvasInstance = new Offcanvas(this.offCanvasRef.nativeElement);
   }
 
   open(title: string, description?: string): void {
     this.title.set(title);
     this.description.set(description);
-    this._bsModalInstance?.show();
+    this._offCanvasInstance?.show();
   }
 
   close(triggerCallback: boolean = false) {
-    this._bsModalInstance?.hide();
+    this._offCanvasInstance?.hide();
     this.modalClosed.next(triggerCallback);
   }
+
+  protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
 }

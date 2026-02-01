@@ -46,10 +46,8 @@ small {
   }
 }
 
-.modal-backdrop.fade {
-  &.show {
-    @include mixins.overlay-background();
-  }
+.offcanvas.modal-dialog + .offcanvas-backdrop {
+  z-index: 2040;
 }
 
 .btn-check:checked + .btn,
@@ -95,13 +93,4 @@ p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #{ colors.$red };
   --bs-btn-disabled-border-color: #{ colors.$red };
-}
-
-.modal {
-  --bs-modal-color: #{ colors.$white-0 };
-  --bs-modal-bg: #{ colors.$black-1 };
-  --bs-modal-border-width: 0;
-  --bs-modal-border-radius: 8px;
-  --bs-modal-header-border-width: 0;
-  --bs-modal-footer-border-width: 0;
 }

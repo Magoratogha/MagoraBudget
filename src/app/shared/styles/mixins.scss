@@ -1,4 +1,5 @@
 @use '../styles/colors';
+@use '../styles/variables';
 
 @mixin side-panel() {
   width: 80dvw;
@@ -11,6 +12,25 @@
   color: inherit;
   background-color: colors.$black-1;
   border-radius: 40px 40px 0 0;
+
+  &-body {
+    padding-top: variables.$bottom-sheet-top-padding;
+    padding-bottom: variables.$bottom-sheet-bottom-padding;
+  }
+
+  .header {
+    height: variables.$bottom-sheet-header-height;
+  }
+
+  .close-button {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
 }
 
 @mixin overlay-background() {

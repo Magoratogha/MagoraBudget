@@ -3,24 +3,4 @@
 
 .offcanvas {
   @include mixins.bottom-sheet();
-
-  &-body {
-    padding-top: variables.$bottom-sheet-top-padding;
-    padding-bottom: variables.$bottom-sheet-bottom-padding;
-  }
-
-  .header {
-    height: variables.$bottom-sheet-header-height;
-  }
-}
-
-.close-button {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-
 }
