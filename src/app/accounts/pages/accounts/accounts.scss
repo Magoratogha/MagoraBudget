@@ -15,10 +15,10 @@ i.bi-arrow-clockwise {
 
 .balance-wrapper {
   width: 100%;
-  position: relative;
   margin-bottom: 1.5rem;
-
-  .chip-badge-sm {
-    position: absolute;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
