@@ -1,1 +1,42 @@
-<p>edit-transaction works!</p>
+<form [formGroup]="form" class="d-flex flex-column w-100 align-items-center justify-content-center">
+  <h1 class="display-4 text-center">Transacción</h1>
+  <div class="btn-group mt-3" role="group">
+    @for (type of Object.keys(TransactionType); track type) {
+      @if (!isNaN(Number(type))) {
+        <input type="radio" class="btn-check" [id]="type" autocomplete="off" [value]="Number(type)"
+               formControlName="type">
+        <label class="btn btn-outline-light d-flex align-items-center justify-content-center gap-1"
+               [for]="type" (click)="changeAccountType(Number(type))">
+          <i class="d-flex bi"
+             [ngClass]="$any(TRANSACTION_TYPE_INFO_MAP)[type].iconClass"></i>{{ $any(TRANSACTION_TYPE_INFO_MAP)[type].label }}
+        </label>
+      }
+    }
+  </div>
+  <input class="mt-5" formControlName="amount" mask="separator.0" thousandSeparator="." inputmode="numeric"
+         pattern="[0-9]*">
+
+  <app-date-picker (valueChanged)="form.controls.date.setValue($event)"/>
+
+  <mat-form-field floatLabel="auto">
+    <mat-label>Cuenta</mat-label>
+    <select matNativeControl formControlName="originAccountId">
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+  </mat-form-field>
+
+  <mat-form-field floatLabel="auto">
+    <mat-label>A la cuenta</mat-label>
+    <select matNativeControl formControlName="targetAccountId">
+      <option value="volvo">Volvo</option>
+      <option value="saab">Saab</option>
+      <option value="mercedes">Mercedes</option>
+      <option value="audi">Audi</option>
+    </select>
+  </mat-form-field>
+
+  {{ form.value | json }}
+</form>

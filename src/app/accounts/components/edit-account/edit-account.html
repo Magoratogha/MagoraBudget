@@ -1,6 +1,6 @@
 <form [formGroup]="form">
   <div class="d-flex flex-column w-100 align-items-center justify-content-center">
-    <h1 class="display-4 mt-3 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
+    <h1 class="display-4 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
     @if (account()?.id) {
       <div class="chip-badge">Editando</div>
     }

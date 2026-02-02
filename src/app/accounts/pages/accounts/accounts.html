@@ -5,7 +5,7 @@
         [ngClass]="{ positive: availableBalance() > 0, negative: availableBalance() < 0 }">{{ availableBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
   </div>
   <div class="balance-wrapper">
-    <div class="chip-badge-sm">Neto</div>
+    <div class="chip-badge-sm">Saldo neto</div>
     <h1 class="display-4 mb-0 font-monospace text-center"
         [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">{{ globalBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
   </div>
