@@ -8,6 +8,7 @@ html {
   height: 100%;
   @include mat.theme((
     color: material-theme-colors.$primary-palette,
+    typography: Roboto,
     density: 0,
   ));
 }
@@ -18,6 +19,7 @@ body {
   height: 100%;
   background-color: colors.$black-00;
   color: colors.$white-00;
+  font-family: Roboto, serif;
   font-weight: 400;
   touch-action: manipulation;
 }
@@ -36,11 +38,6 @@ small {
 
 .offcanvas.modal-dialog + .offcanvas-backdrop {
   z-index: 2040;
-}
-
-.btn-check:checked + .btn,
-.btn.btn-light {
-  font-weight: 500;
 }
 
 .btn-light[disabled] {
@@ -62,9 +59,8 @@ mat-form-field {
   justify-content: space-between;
 }
 
-p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
+p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text, .chip-badge, .chip-badge-sm {
   user-select: none;
-  word-break: break-all;
 }
 
 .btn-danger {
@@ -89,8 +85,9 @@ p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
 }
 
 .chip-badge, .chip-badge-sm {
-  font-family: var(--bs-font-monospace);
+  font-family: var(--bs-font-monospace), serif;
   background-color: colors.$black-04;
+  font-size: 1rem;
   padding: 4px 8px;
   border-radius: 4px;
 
@@ -105,4 +102,5 @@ p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
 
 .chip-badge-sm {
   padding: 2px 6px;
+  font-size: 0.75rem;
 }

@@ -14,7 +14,13 @@
     border-radius: 8px;
     background-color: colors.$black-03;
 
-    &.debt {
+    &.\32 {
+      .progress-bar {
+        background-color: colors.$red;
+      }
+    }
+
+    &.\33 {
       background-color: colors.$red;
     }
 
@@ -25,7 +31,7 @@
   }
 
   .title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .hints {

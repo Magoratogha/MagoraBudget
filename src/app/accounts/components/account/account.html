@@ -1,15 +1,16 @@
 <div class="d-flex w-100 justify-content-center py-2" (click)="edit()">
   <div class="account w-100 d-flex flex-column gap-3">
-    <div class="d-flex gap-2 justify-content-between gap-3">
+    <div class="d-flex gap-2 justify-content-between align-items-center gap-3">
       <div class="d-flex align-items-center gap-3">
         <i class="d-flex bi" [ngClass]="ACCOUNT_TYPE_INFO_MAP[account()!.type].iconClass"></i>
-        <span class="title fw-normal">{{ account()?.label }}</span>
+        <span class="title">{{ account()?.label }}</span>
       </div>
-      <span class="chip-badge" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
-        {{ account()?.balance | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
+      <div class="chip-badge" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
+        {{ balance() | currency : 'USD' : 'symbol' : '1.0-0' }}
+      </div>
     </div>
     @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
-      <div class="progress" [class.debt]="account()?.type !== AccountType.SavingsGoal">
+      <div class="progress" [ngClass]="account()!.type.toString()">
         <div class="progress-bar" [style.width.%]="parsedBalancePercent()"></div>
       </div>
       <div class="d-flex justify-content-between hints">

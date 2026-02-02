@@ -1,8 +1,8 @@
 <form [formGroup]="form">
   <div class="d-flex flex-column w-100 align-items-center justify-content-center">
-    <h1 class="display-4 fw-normal mt-3 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
+    <h1 class="display-4 mt-3 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
     @if (account()?.id) {
-      <span class="chip-badge">Editando</span>
+      <div class="chip-badge">Editando</div>
     }
     <div class="btn-group btn-group-lg mt-4 mb-5" role="group">
       @for (type of Object.keys(AccountType); track type) {

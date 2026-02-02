@@ -24,36 +24,57 @@ export class Account {
   private _destroyRef = inject(DestroyRef);
 
   account = input<IAccount>();
+  balance = computed(() => {
+    switch (this.account()?.type) {
+      case AccountType.Debt:
+      case AccountType.CreditCard:
+        return Math.abs(this.account()!.balance as number)
+      case AccountType.Cash:
+      case AccountType.Savings:
+      case AccountType.SavingsGoal:
+      default:
+        return this.account()!.balance as number;
+    }
+  });
   target = computed(() => {
-    if (this.account()?.type === AccountType.CreditCard || this.account()?.type === AccountType.Debt) {
-      return 0;
+    switch (this.account()?.type) {
+      case AccountType.Debt:
+        return 0;
+      case AccountType.CreditCard:
+        return Math.abs(this.account()!.quota as number);
+      case AccountType.SavingsGoal:
+        return this.account()!.quota as number;
+      case AccountType.Cash:
+      case AccountType.Savings:
+      default:
+        return null;
     }
-    if (this.account()?.type === AccountType.SavingsGoal) {
-      return this.account()!.quota as number;
-    }
-    return null;
   });
   quota = computed(() => {
-    if (this.account()?.type === AccountType.CreditCard || this.account()?.type === AccountType.Debt) {
-      return this.account()!.quota;
+    switch (this.account()?.type) {
+      case AccountType.Debt:
+        return Math.abs(this.account()!.quota as number);
+      case AccountType.CreditCard:
+      case AccountType.SavingsGoal:
+        return 0;
+      case AccountType.Cash:
+      case AccountType.Savings:
+      default:
+        return null;
     }
-    if (this.account()?.type === AccountType.SavingsGoal) {
-      return 0
-    }
-    return null;
   });
   balancePercent = computed(() => {
-    if (this.account()?.type === AccountType.CreditCard || this.account()?.type === AccountType.Debt) {
-      const temp = (this.account()!.balance as number) / (this.account()!.quota as number);
-      if (temp > 1) {
-        return 0;
-      }
-      return 1 - temp;
+    switch (this.account()?.type) {
+      case AccountType.Debt:
+        return 1 - ((this.account()!.balance as number) / (this.account()!.quota as number));
+      case AccountType.CreditCard:
+      case AccountType.SavingsGoal:
+        return (this.account()!.balance as number) / (this.account()!.quota as number);
+      case AccountType.Cash:
+      case AccountType.Savings:
+      default:
+        return null;
     }
-    if (this.account()?.type === AccountType.SavingsGoal) {
-      return (this.account()!.balance as number) / (this.account()!.quota as number);
-    }
-    return null;
   });
   parsedBalancePercent = computed(() => (this.balancePercent() || 0) * 100);
 
