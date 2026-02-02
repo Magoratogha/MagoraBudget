@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, input, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, OnInit } from '@angular/core';
 import {
   ACCOUNT_TYPE_INFO_MAP,
   BALANCE_FIELD_WORDING_MAP,
@@ -8,15 +8,24 @@ import {
 import { NgClass } from '@angular/common';
 import { Account, AccountType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormGroupDirective, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { onlyNumbersValidator } from '../../../shared/utils';
+import { onlyNumbersValidator, quotaMinValueValidator } from '../../../shared/utils';
 import { NgxMaskDirective } from 'ngx-mask';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    const formHasError = form?.hasError('quotaLessThanBalance');
+    return !!((control && control.invalid || formHasError) && (control?.dirty || control?.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-edit-account',
@@ -26,7 +35,7 @@ import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    NgxMaskDirective
+    NgxMaskDirective,
   ],
   templateUrl: './edit-account.html',
   styleUrl: './edit-account.scss',
@@ -52,7 +61,7 @@ export class EditAccount implements OnInit {
     balance: new FormControl<number>(NaN, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
     quota: new FormControl<number>(NaN, [Validators.min(0), onlyNumbersValidator()]),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
-  });
+  }, [quotaMinValueValidator()]);
   selectedAccountType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
   labelPlaceholder = computed(() => {
     return LABEL_FIELD_WORDING_MAP[this.selectedAccountType()!];
@@ -63,6 +72,19 @@ export class EditAccount implements OnInit {
   quotaLabelAndPlaceholder = computed(() => {
     return QUOTA_FIELD_WORDING_MAP[this.selectedAccountType()!];
   });
+  quotaValueErrorStateMatcher = new QuotaValueErrorStateMatcher();
+
+  constructor() {
+    effect(() => {
+      if (this.selectedAccountType() === AccountType.Savings || this.selectedAccountType() === AccountType.Cash) {
+        this.form.controls.quota.removeValidators(Validators.required);
+      } else {
+        this.form.controls.quota.addValidators(Validators.required);
+      }
+      this.form.controls.quota.updateValueAndValidity();
+      this.form.updateValueAndValidity();
+    });
+  }
 
   ngOnInit(): void {
     if (this.account()) {

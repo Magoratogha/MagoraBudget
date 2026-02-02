@@ -1,9 +1,13 @@
-<div class="w-100 d-flex align-items-center justify-content-center flex-column pb-2">
-  <span>Saldo neto</span>
-  <div class="d-flex gap-2 w-100 align-items-center justify-content-center">
-    <h1 class="display-1 fw-semibold"
+<div class="w-100 d-flex align-items-center justify-content-center flex-column">
+  <div class="balance-wrapper">
+    <small class="chip-badge-sm">Disponible</small>
+    <h1 class="display-3 mb-0 pt-4 mt-1 font-monospace text-center"
+        [ngClass]="{ positive: availableBalance() > 0, negative: availableBalance() < 0 }">{{ availableBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
+  </div>
+  <div class="balance-wrapper">
+    <small class="chip-badge-sm">Neto</small>
+    <h1 class="display-3 mb-0 pt-4 mt-1 font-monospace text-center"
         [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">{{ globalBalance() | currency : 'USD' : 'symbol' : '1.0-0' }}</h1>
-    <i class="bi bi-arrow-clockwise d-flex" (click)="refreshAccounts()"></i>
   </div>
 </div>
 @for (account of accounts(); track account.id) {

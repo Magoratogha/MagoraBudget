@@ -6,3 +6,12 @@ export function onlyNumbersValidator(): ValidatorFn {
     return isValid ? null : { onlyNumbers: { value: control.value } };
   };
 }
+
+export function quotaMinValueValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const balance = control.get('balance');
+    const quota = control.get('quota');
+    const isValid = (quota?.value === null || isNaN(quota?.value) || quota?.value === '') || (quota && balance && quota?.value >= balance?.value);
+    return isValid ? null : { quotaLessThanBalance: { value: control.value } };
+  };
+}

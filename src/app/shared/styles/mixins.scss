@@ -4,13 +4,13 @@
 @mixin side-panel() {
   width: 80dvw;
   color: inherit;
-  background-color: colors.$black-1;
+  background-color: colors.$black-01;
 }
 
 @mixin bottom-sheet() {
   height: 100dvh;
   color: inherit;
-  background-color: colors.$black-1;
+  background-color: colors.$black-01;
   border-radius: 40px 40px 0 0;
 
   &-body {

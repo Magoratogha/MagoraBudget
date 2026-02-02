@@ -2,7 +2,7 @@
   <div class="d-flex flex-column w-100 align-items-center justify-content-center">
     <h1 class="display-4 fw-normal mt-3 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
     @if (account()?.id) {
-      <span class="edit-warning">Editando</span>
+      <span class="chip-badge">Editando</span>
     }
     <div class="btn-group btn-group-lg mt-4 mb-5" role="group">
       @for (type of Object.keys(AccountType); track type) {
@@ -31,6 +31,7 @@
       <mat-form-field>
         <mat-label>{{ quotaLabelAndPlaceholder()!.label }}</mat-label>
         <input matInput [placeholder]="quotaLabelAndPlaceholder()!.placeholder" formControlName="quota"
+               [errorStateMatcher]="quotaValueErrorStateMatcher"
                mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
         <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
       </mat-form-field>

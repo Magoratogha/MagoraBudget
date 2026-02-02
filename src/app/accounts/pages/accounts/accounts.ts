@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { Account, EditAccount } from '../../components';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
-import { Account as IAccount } from '../../models';
+import { Account as IAccount, AccountType } from '../../models';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
@@ -20,6 +20,15 @@ export class Accounts implements OnInit {
   accounts: WritableSignal<IAccount[]> = signal([]);
   globalBalance = computed(() => {
     return this.accounts().reduce((total, account) => total + account.balance, 0);
+  });
+  availableBalance = computed(() => {
+    return this.accounts().reduce((total, account) => {
+      if (account.type === AccountType.Savings || account.type === AccountType.Cash) {
+        return total + account.balance;
+      } else {
+        return total;
+      }
+    }, 0);
   });
   private _overlay = inject(Overlay);
   private _fireStore = inject(FireStore);

@@ -1,23 +1,21 @@
-<div class="d-flex w-100 justify-content-center py-2">
+<div class="d-flex w-100 justify-content-center py-2" (click)="edit()">
   <div class="account w-100 d-flex flex-column gap-3">
     <div class="d-flex gap-2 justify-content-between gap-3">
       <div class="d-flex align-items-center gap-3">
         <i class="d-flex bi" [ngClass]="ACCOUNT_TYPE_INFO_MAP[account()!.type].iconClass"></i>
-        <span class="title fw-bold">{{ account()?.label }}</span>
+        <span class="title fw-normal">{{ account()?.label }}</span>
       </div>
-      <div class="d-flex align-items-center gap-3">
-        <span class="balance-label">{{ account()?.balance | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
-        <i class="bi bi-pencil" (click)="edit()"></i>
-      </div>
+      <span class="chip-badge" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
+        {{ account()?.balance | currency : 'USD' : 'symbol' : '1.0-0' }}</span>
     </div>
     @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
       <div class="progress" [class.debt]="account()?.type !== AccountType.SavingsGoal">
         <div class="progress-bar" [style.width.%]="parsedBalancePercent()"></div>
       </div>
       <div class="d-flex justify-content-between hints">
-        <small class="text-start">{{ quota() | currency : 'USD' : 'symbol' : '1.0-0' }}</small>
-        <small>{{ balancePercent() | percent }}</small>
-        <small class="text-end">{{ target() | currency : 'USD' : 'symbol' : '1.0-0' }}</small>
+        <small class="text-start font-monospace">{{ quota() | currency : 'USD' : 'symbol' : '1.0-0' }}</small>
+        <small class="font-monospace">{{ balancePercent() | percent }}</small>
+        <small class="text-end font-monospace">{{ target() | currency : 'USD' : 'symbol' : '1.0-0' }}</small>
       </div>
     }
   </div>

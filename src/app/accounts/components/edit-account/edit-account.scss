@@ -1,14 +1,5 @@
-@use '../../../shared/styles/colors';
-
 .btn-group {
   i {
     font-size: 1.5rem;
   }
-}
-
-.edit-warning {
-  background-color: colors.$black-2;
-  border-radius: 4px;
-  font-weight: 500;
-  padding: 4px 8px 3px 8px;
 }

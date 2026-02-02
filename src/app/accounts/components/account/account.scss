@@ -1,7 +1,7 @@
 @use '../../../shared/styles/colors';
 
 .account {
-  background-color: colors.$black-1;
+  background-color: colors.$black-01;
   padding: 16px;
   border-radius: 8px;
 
@@ -12,7 +12,7 @@
   .progress {
     height: 24px;
     border-radius: 8px;
-    background-color: colors.$black-2;
+    background-color: colors.$black-03;
 
     &.debt {
       background-color: colors.$red;
@@ -33,12 +33,5 @@
       width: 33%;
       text-align: center;
     }
-  }
-
-  .balance-label {
-    background-color: colors.$black-2;
-    padding: 4px 8px 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
   }
 }

@@ -2,7 +2,7 @@
 @use '../../styles/variables';
 
 nav {
-  background-color: colors.$black-1;
+  background-color: colors.$black-01;
   width: 100dvw;
   height: variables.$navbar-height;
   position: fixed;
@@ -25,7 +25,7 @@ nav {
     text-decoration: inherit;
 
     &.active {
-      background-color: colors.$black-2;
+      background-color: colors.$black-04;
     }
 
     i {
