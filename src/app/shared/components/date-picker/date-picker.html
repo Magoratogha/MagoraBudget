@@ -1,2 +1,5 @@
-<input #datePicker type="date" [(ngModel)]="inputValue">
-<div class="chip-badge" (click)="openDatePicker()">12/20/2026</div>
+<input #datePicker type="date" (input)="onValueChange(datePicker.value)" [value]="stringValue()">
+<div class="chip-badge" (click)="openDatePicker()">
+  <i class="bi bi-calendar-week"></i>
+  {{ value() | date: 'dd/MM/yyyy' }}
+</div>

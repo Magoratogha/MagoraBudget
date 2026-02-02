@@ -13,30 +13,37 @@
       }
     }
   </div>
-  <input class="mt-5" formControlName="amount" mask="separator.0" thousandSeparator="." inputmode="numeric"
-         pattern="[0-9]*">
 
-  <app-date-picker (valueChanged)="form.controls.date.setValue($event)"/>
+  <app-money-input class="my-4 py-2" formControlName="amount"/>
+  <app-date-picker class="mb-4" formControlName="date"/>
 
   <mat-form-field floatLabel="auto">
     <mat-label>Cuenta</mat-label>
     <select matNativeControl formControlName="originAccountId">
-      <option value="volvo">Volvo</option>
-      <option value="saab">Saab</option>
-      <option value="mercedes">Mercedes</option>
-      <option value="audi">Audi</option>
+      <option label="-- Selecciona una cuenta --"></option>
+      @for (account of availableOriginAccounts(); track account.id) {
+        <option [value]="account.id">{{ account.label }}</option>
+      }
     </select>
   </mat-form-field>
 
-  <mat-form-field floatLabel="auto">
-    <mat-label>A la cuenta</mat-label>
-    <select matNativeControl formControlName="targetAccountId">
-      <option value="volvo">Volvo</option>
-      <option value="saab">Saab</option>
-      <option value="mercedes">Mercedes</option>
-      <option value="audi">Audi</option>
-    </select>
-  </mat-form-field>
-
-  {{ form.value | json }}
+  @if (selectedTransactionType() === TransactionType.Transfer) {
+    <mat-form-field floatLabel="auto">
+      <mat-label>A la cuenta</mat-label>
+      <select matNativeControl formControlName="targetAccountId">
+        <option label="-- Selecciona una cuenta --"></option>
+        @for (account of availableTargetAccounts(); track account.id) {
+          <option [value]="account.id">{{ account.label }}</option>
+        }
+      </select>
+    </mat-form-field>
+  }
 </form>
+
+<div class="d-flex flex-column gap-2">
+  <button class="btn btn-light w-100" [disabled]="!form.valid" (click)="save()">Guardar</button>
+  @if (transaction()?.id) {
+    <button class="btn btn-danger w-100" (click)="delete()">Eliminar</button>
+  }
+  <button class="btn btn-outline-light w-100" (click)="cancel()">Cancelar</button>
+</div>

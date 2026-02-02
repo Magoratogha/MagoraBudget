@@ -11,6 +11,6 @@
   </div>
 </div>
 @for (account of accounts(); track account.id) {
-  <app-account [account]="account" (accountUpdated)="refreshAccounts()"></app-account>
+  <app-account [account]="account"></app-account>
 }
 <button class="btn btn-light w-100 mt-3" (click)="addNewAccount()">Agregar nueva cuenta</button>

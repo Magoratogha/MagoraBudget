@@ -1,9 +1,8 @@
-import { Component, computed, DestroyRef, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { Account as IAccount, AccountType } from '../../models';
 import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
 import { EditAccount } from '../edit-account/edit-account';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Overlay } from '../../../shared/services';
 
 @Component({
@@ -21,7 +20,6 @@ export class Account {
   AccountType = AccountType;
   accountUpdated = output();
   private _overlay = inject(Overlay)
-  private _destroyRef = inject(DestroyRef);
 
   account = input<IAccount>();
   balance = computed(() => {
@@ -79,12 +77,6 @@ export class Account {
   parsedBalancePercent = computed(() => (this.balancePercent() || 0) * 100);
 
   edit() {
-    this._overlay.openBottomSheet(EditAccount, { account: this.account() })
-      ?.pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe((shouldFetchData) => {
-        if (shouldFetchData) {
-          this.accountUpdated.emit();
-        }
-      });
+    this._overlay.openBottomSheet(EditAccount, { account: this.account() });
   }
 }

@@ -1,10 +1,8 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { Account, EditAccount } from '../../components';
-import { Auth, FireStore, Overlay } from '../../../shared/services';
+import { FireStore, Overlay } from '../../../shared/services';
 import { Account as IAccount, AccountType } from '../../models';
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-accounts',
@@ -16,8 +14,11 @@ import { take } from 'rxjs';
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',
 })
-export class Accounts implements OnInit {
-  accounts: WritableSignal<IAccount[]> = signal([]);
+export class Accounts {
+  private _overlay = inject(Overlay);
+  private _fireStore = inject(FireStore);
+
+  accounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
   globalBalance = computed(() => {
     return this.accounts().reduce((total, account) => total + account.balance, 0);
   });
@@ -30,33 +31,8 @@ export class Accounts implements OnInit {
       }
     }, 0);
   });
-  private _overlay = inject(Overlay);
-  private _fireStore = inject(FireStore);
-  private _auth = inject(Auth);
-  private _destroyRef = inject(DestroyRef);
-
-  async ngOnInit(): Promise<void> {
-    try {
-      this._overlay.showLoader();
-      const accounts = await this._fireStore.getUserAccounts(this._auth.getLoggedUser()!.uid)
-      this.accounts.set(accounts);
-    } catch (e) {
-      console.error('Error loading accounts: ' + e);
-    } finally {
-      this._overlay.hideLoader();
-    }
-  }
 
   addNewAccount() {
-    this._overlay.openBottomSheet(EditAccount)?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
-      .subscribe(async (shouldFetchData) => {
-        if (shouldFetchData) {
-          await this.refreshAccounts();
-        }
-      });
-  }
-
-  async refreshAccounts() {
-    await this.ngOnInit();
+    this._overlay.openBottomSheet(EditAccount);
   }
 }

@@ -1,0 +1,11 @@
+input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+
+  &:focus, &:active, &:hover {
+    border: none;
+    outline: none;
+  }
+}

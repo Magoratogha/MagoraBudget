@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { User } from "@angular/fire/auth";
 import {
   addDoc,
@@ -6,7 +6,7 @@ import {
   deleteDoc,
   doc,
   Firestore,
-  getDocs,
+  onSnapshot,
   orderBy,
   query,
   setDoc,
@@ -20,6 +20,7 @@ import { Account } from '../../../accounts/models';
 })
 export class FireStore {
   private _db = inject(Firestore);
+  private _userAccounts = signal<Account[]>([]);
 
   public async addNewUser(user: User) {
     try {
@@ -68,7 +69,11 @@ export class FireStore {
     }
   }
 
-  public async getUserAccounts(userId: string) {
+  public getUserAccounts() {
+    return this._userAccounts.asReadonly();
+  }
+
+  public listenToUserAccounts(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS),
@@ -76,11 +81,16 @@ export class FireStore {
         orderBy('type', 'asc'),
         orderBy('label', 'asc')
       );
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Account[];
+      return onSnapshot(q, (querySnapshot) => {
+        const accounts: Account[] = [];
+        querySnapshot.forEach((doc) => {
+          accounts.push({
+            id: doc.id,
+            ...doc.data()
+          } as Account);
+        });
+        this._userAccounts.set(accounts);
+      });
     } catch (e) {
       this._logError(e);
       throw e;

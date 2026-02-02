@@ -1,8 +1,8 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export function onlyNumbersValidator(): ValidatorFn {
+export function onlyNumbersValidator(allowFalsyValues = true): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const isValid = /^\d+$/.test(control.value) || control.value === null || isNaN(control.value) || control.value === '';
+    const isValid = /^\d+$/.test(control.value) || (allowFalsyValues ? (control.value === null || isNaN(control.value) || control.value === '') : false);
     return isValid ? null : { onlyNumbers: { value: control.value } };
   };
 }
