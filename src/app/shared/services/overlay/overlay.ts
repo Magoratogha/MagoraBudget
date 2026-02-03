@@ -1,4 +1,4 @@
-import { Injectable, Type } from '@angular/core';
+import { ElementRef, Injectable, Type } from '@angular/core';
 import { BottomSheet, Loader, Modal, SidePanel } from '../../components';
 
 @Injectable({
@@ -9,6 +9,7 @@ export class Overlay {
   private _loader: Loader | null = null;
   private _bottomSheet: BottomSheet | null = null;
   private _modal: Modal | null = null;
+  private _autoFocusInputElement?: ElementRef<HTMLInputElement>;
 
   public initOverlays(sidePanel: SidePanel, loader: Loader, bottomSheet: BottomSheet, modal: Modal) {
     this._sidePanel = sidePanel;
@@ -50,4 +51,14 @@ export class Overlay {
   public hideLoader() {
     this._loader?.isVisible.set(false);
   }
+
+  public setAutoFocusInputElement(elementRef: ElementRef<HTMLInputElement>) {
+    this._autoFocusInputElement = elementRef;
+  }
+
+  public focusInputElement() {
+    setTimeout(() => {
+      this._autoFocusInputElement?.nativeElement.focus();
+    }, 600);
+  };
 }

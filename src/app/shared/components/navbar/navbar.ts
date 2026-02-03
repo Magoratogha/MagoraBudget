@@ -2,7 +2,7 @@ import { Component, computed, inject, input, OnDestroy, OnInit, output } from '@
 import { NavbarItem } from '../../models';
 import { NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Auth, FireStore } from '../../services';
+import { Auth, FireStore, Overlay } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
 
 @Component({
@@ -18,6 +18,7 @@ import { Unsubscribe } from '@firebase/firestore';
 export class Navbar implements OnInit, OnDestroy {
   private _fireStore = inject(FireStore);
   private _auth = inject(Auth);
+  public overlay = inject(Overlay);
   private _unsubscribeFunctions: Unsubscribe[] = [];
 
   items = input<NavbarItem[]>([]);
@@ -38,5 +39,10 @@ export class Navbar implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._unsubscribeFunctions.forEach((unsubscribe) => unsubscribe());
+  }
+
+  onCreateClick() {
+    this.createButtonClicked.emit();
+    this.overlay.focusInputElement();
   }
 }

@@ -1,6 +1,7 @@
-import { Component, computed, forwardRef, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, forwardRef, inject, signal, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Overlay } from '../../services';
 
 @Component({
   selector: 'app-money-input',
@@ -19,9 +20,15 @@ import { NgxMaskDirective } from 'ngx-mask';
   styleUrl: './money-input.scss',
   host: { style: 'width: 100%' }
 })
-export class MoneyInput implements ControlValueAccessor {
+export class MoneyInput implements ControlValueAccessor, AfterViewInit {
+  @ViewChild('textInput', { static: true }) textInput!: ElementRef<HTMLInputElement>;
   value = signal<number>(0);
   stringValue = computed(() => this.value.toString() || '');
+  private _overlay = inject(Overlay);
+
+  ngAfterViewInit() {
+    this._overlay.setAutoFocusInputElement(this.textInput);
+  }
 
   private _onChange: ((value: number) => void) | undefined;
   onTouched: (() => void | undefined) | undefined;
