@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
+import { Component, computed, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -19,17 +19,12 @@ import { NgxMaskDirective } from 'ngx-mask';
   styleUrl: './money-input.scss',
   host: { style: 'width: 100%' }
 })
-export class MoneyInput implements ControlValueAccessor, AfterViewInit {
-  @ViewChild('textInput', { static: true }) inputRef!: ElementRef;
+export class MoneyInput implements ControlValueAccessor {
   value = signal<number>(0);
   stringValue = computed(() => this.value.toString() || '');
 
   private _onChange: ((value: number) => void) | undefined;
   onTouched: (() => void | undefined) | undefined;
-
-  ngAfterViewInit(): void {
-    this.inputRef.nativeElement.focus({ preventScroll: true });
-  }
 
   onValueChange(value: string) {
     if (!value) {

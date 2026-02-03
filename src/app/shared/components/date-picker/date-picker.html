@@ -1,7 +1,5 @@
-<div class="w-100 d-flex justify-content-center align-items-center gap-0">
-  <div class="icon-wrapper d-flex justify-content-center align-items-center" (click)="openPicker()">
-    <i class="bi bi-calendar-week"></i>
-  </div>
+<div class="w-100 d-flex justify-content-center align-items-center gap-2">
+  <i class="bi bi-calendar-week"></i>
   <input #datePicker type="date" (input)="onValueChange(datePicker.value)" [value]="stringValue()"
          (blur)="onTouched!()" autocomplete="off">
 </div>

@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
+import { Component, computed, forwardRef, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import moment from 'moment';
 
@@ -20,7 +20,6 @@ import moment from 'moment';
   styleUrl: './date-picker.scss',
 })
 export class DatePicker implements ControlValueAccessor {
-  @ViewChild('datePicker', { static: true }) inputRef!: ElementRef;
   value = signal<Date>(new Date());
   stringValue = computed(() => moment(this.value()).format('YYYY-MM-DD'))
 
@@ -42,10 +41,5 @@ export class DatePicker implements ControlValueAccessor {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
-  }
-
-  openPicker() {
-    this.inputRef.nativeElement.showPicker();
-    this.onTouched!();
   }
 }

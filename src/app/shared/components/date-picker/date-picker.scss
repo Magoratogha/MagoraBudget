@@ -3,14 +3,13 @@
 input[type="date"] {
   background-color: colors.$black-04;
   color: colors.$white-00;
-  padding: 4px 8px 4px 0;
+  padding: 4px 8px;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
   font-size: 1rem;
   font-family: var(--bs-font-monospace), serif;
-  text-align: start;
-  max-width: 105px;
-  height: 32px;
+  text-align: center;
+  max-width: 120px;
 
   &:focus, &:active, &:hover {
     border: none;
@@ -29,13 +28,5 @@ input[type="date"] {
   &::-ms-calendar-picker-indicator {
     display: none;
   }
-}
-
-.icon-wrapper {
-  width: 32px;
-  height: 32px;
-  background-color: colors.$black-04;
-  border: none;
-  border-radius: 4px 0 0 4px;
 }
 
