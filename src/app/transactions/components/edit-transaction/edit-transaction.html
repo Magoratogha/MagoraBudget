@@ -19,7 +19,7 @@
 
   <mat-form-field floatLabel="auto">
     <mat-label>Cuenta</mat-label>
-    <select matNativeControl formControlName="originAccountId">
+    <select autocomplete="off" matNativeControl formControlName="originAccountId">
       <option label="-- Selecciona una cuenta --"></option>
       @for (account of availableOriginAccounts(); track account.id) {
         <option [value]="account.id">{{ account.label }}</option>
@@ -30,7 +30,7 @@
   @if (selectedTransactionType() === TransactionType.Transfer) {
     <mat-form-field floatLabel="auto">
       <mat-label>A la cuenta</mat-label>
-      <select matNativeControl formControlName="targetAccountId">
+      <select autocomplete="off" matNativeControl formControlName="targetAccountId">
         <option label="-- Selecciona una cuenta --"></option>
         @for (account of availableTargetAccounts(); track account.id) {
           <option [value]="account.id">{{ account.label }}</option>

@@ -1,5 +1,7 @@
-<input #datePicker type="date" (input)="onValueChange(datePicker.value)" [value]="stringValue()">
-<div class="chip-badge" (click)="openDatePicker()">
-  <i class="bi bi-calendar-week"></i>
-  {{ value() | date: 'dd/MM/yyyy' }}
+<div class="w-100 d-flex justify-content-center align-items-center gap-0">
+  <div class="icon-wrapper d-flex justify-content-center align-items-center" (click)="openPicker()">
+    <i class="bi bi-calendar-week"></i>
+  </div>
+  <input #datePicker type="date" (input)="onValueChange(datePicker.value)" [value]="stringValue()"
+         (blur)="onTouched!()" autocomplete="off">
 </div>

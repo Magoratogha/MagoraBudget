@@ -7,7 +7,7 @@
     <div class="btn-group btn-group-lg mt-4 mb-5" role="group">
       @for (type of Object.keys(AccountType); track type) {
         @if (!isNaN(Number(type))) {
-          <input type="radio" class="btn-check" [id]="type" autocomplete="off" [value]="Number(type)"
+          <input autocomplete="off" type="radio" class="btn-check" [id]="type" [value]="Number(type)"
                  formControlName="type">
           <label class="btn btn-outline-light d-flex align-items-center justify-content-center gap-1" [for]="type"
                  (click)="changeAccountType(Number(type))">
@@ -18,19 +18,21 @@
     </div>
     <mat-form-field>
       <mat-label>{{ labelPlaceholder().label }}</mat-label>
-      <input matInput [placeholder]="labelPlaceholder().placeholder" formControlName="label">
+      <input autocomplete="off" matInput [placeholder]="labelPlaceholder().placeholder" formControlName="label">
       <mat-icon class="material-icons-outlined" matPrefix>label</mat-icon>
     </mat-form-field>
     <mat-form-field>
       <mat-label>{{ balanceLabelAndPlaceholder().label }}</mat-label>
-      <input matInput [placeholder]="balanceLabelAndPlaceholder().placeholder" formControlName="balance"
+      <input autocomplete="off" matInput [placeholder]="balanceLabelAndPlaceholder().placeholder"
+             formControlName="balance"
              mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
       <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
     </mat-form-field>
     @if (selectedAccountType() !== AccountType.Savings && selectedAccountType() !== AccountType.Cash) {
       <mat-form-field>
         <mat-label>{{ quotaLabelAndPlaceholder()!.label }}</mat-label>
-        <input matInput [placeholder]="quotaLabelAndPlaceholder()!.placeholder" formControlName="quota"
+        <input autocomplete="off" matInput [placeholder]="quotaLabelAndPlaceholder()!.placeholder"
+               formControlName="quota"
                [errorStateMatcher]="quotaValueErrorStateMatcher"
                mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
         <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>

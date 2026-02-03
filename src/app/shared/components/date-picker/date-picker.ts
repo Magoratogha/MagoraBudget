@@ -1,14 +1,12 @@
 import { Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import moment from 'moment';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-date-picker',
   imports: [
     FormsModule,
-    ReactiveFormsModule,
-    DatePipe
+    ReactiveFormsModule
   ],
   providers: [
     {
@@ -17,6 +15,7 @@ import { DatePipe } from '@angular/common';
       multi: true
     }
   ],
+  host: { style: 'width: 100%' },
   templateUrl: './date-picker.html',
   styleUrl: './date-picker.scss',
 })
@@ -26,16 +25,11 @@ export class DatePicker implements ControlValueAccessor {
   stringValue = computed(() => moment(this.value()).format('YYYY-MM-DD'))
 
   private _onChange: ((value: Date) => void) | undefined;
-  private _onTouched: (() => void | undefined) | undefined;
+  onTouched: (() => void | undefined) | undefined;
 
   onValueChange(value: string) {
     this.value.set(moment(value, 'YYYY-MM-DD').toDate())
     this._onChange!(this.value());
-  }
-
-  openDatePicker() {
-    this.inputRef.nativeElement.showPicker();
-    this._onTouched!();
   }
 
   writeValue(value: Date): void {
@@ -47,6 +41,11 @@ export class DatePicker implements ControlValueAccessor {
   }
 
   registerOnTouched(fn: () => void): void {
-    this._onTouched = fn;
+    this.onTouched = fn;
+  }
+
+  openPicker() {
+    this.inputRef.nativeElement.showPicker();
+    this.onTouched!();
   }
 }
