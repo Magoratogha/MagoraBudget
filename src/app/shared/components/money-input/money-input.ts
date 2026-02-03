@@ -1,23 +1,14 @@
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  ElementRef,
-  forwardRef,
-  inject,
-  Renderer2,
-  signal,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
-import { focusAndOpenKeyboard } from '../../utils';
+import { AutoFocusDirective } from '../../directives';
 
 @Component({
   selector: 'app-money-input',
   imports: [
     FormsModule,
-    NgxMaskDirective
+    NgxMaskDirective,
+    AutoFocusDirective
   ],
   providers: [
     {
@@ -35,13 +26,10 @@ export class MoneyInput implements ControlValueAccessor, AfterViewInit {
   value = signal<number>(0);
   stringValue = computed(() => this.value.toString() || '');
 
-  private _renderer = inject(Renderer2);
-
   private _onChange: ((value: number) => void) | undefined;
   onTouched: (() => void | undefined) | undefined;
 
   ngAfterViewInit() {
-    focusAndOpenKeyboard(this.textInput.nativeElement, 1000);
   }
 
   onValueChange(value: string) {
