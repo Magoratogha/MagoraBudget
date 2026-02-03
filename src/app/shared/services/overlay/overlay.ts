@@ -59,6 +59,6 @@ export class Overlay {
   public focusInputElement() {
     setTimeout(() => {
       this._autoFocusInputElement?.nativeElement.focus();
-    }, 600);
+    }, 1000);
   };
 }
