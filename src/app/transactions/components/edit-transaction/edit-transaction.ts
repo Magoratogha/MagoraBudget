@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnInit, Signal } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, OnInit, Signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
@@ -51,6 +51,7 @@ export class EditTransaction implements OnInit {
   availableTargetAccounts = computed(() => {
     return this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId());
   });
+  offCanvasRef = input<ElementRef>();
 
   protected readonly Object = Object;
   protected readonly isNaN = isNaN;

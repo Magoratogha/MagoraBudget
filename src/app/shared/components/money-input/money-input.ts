@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  forwardRef,
+  input,
+  OnDestroy,
+  signal,
+  ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
 
@@ -19,17 +29,21 @@ import { NgxMaskDirective } from 'ngx-mask';
   styleUrl: './money-input.scss',
   host: { style: 'width: 100%' }
 })
-export class MoneyInput implements ControlValueAccessor, AfterViewInit {
+export class MoneyInput implements ControlValueAccessor, AfterViewInit, OnDestroy {
   @ViewChild('textInput', { static: true }) textInput!: ElementRef<HTMLInputElement>;
   value = signal<number>(0);
   stringValue = computed(() => this.value.toString() || '');
+  offCanvasRef = input<ElementRef>();
 
   ngAfterViewInit() {
-    setTimeout(() => {
+    this.textInput.nativeElement.onclick = () => {
+      this.textInput.nativeElement.focus({ preventScroll: true });
+    };
+
+    this.offCanvasRef()?.nativeElement.addEventListener('shown.bs.offcanvas', () => {
       const event = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
       this.textInput.nativeElement.dispatchEvent(event);
-      this.textInput.nativeElement.focus();
-    }, 600);
+    });
   }
 
   private _onChange: ((value: number) => void) | undefined;
@@ -54,5 +68,9 @@ export class MoneyInput implements ControlValueAccessor, AfterViewInit {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
+  }
+
+  ngOnDestroy(): void {
+    //this.offCanvasRef()?.nativeElement.removeEventListener('shown.bs.offcanvas');
   }
 }

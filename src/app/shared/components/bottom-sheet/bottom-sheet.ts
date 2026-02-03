@@ -26,7 +26,7 @@ export class BottomSheet implements AfterViewInit{
 
   open(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }): void {
     this.innerComponent.set(innerComponent);
-    this.innerComponentInputs.set(innerComponentInputs);
+    this.innerComponentInputs.set({ ...innerComponentInputs, offCanvasRef: this.offCanvasRef });
     this._offCanvasInstance?.show();
   }
 
