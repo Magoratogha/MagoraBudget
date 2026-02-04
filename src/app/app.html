@@ -1,14 +1,20 @@
-@if (auth.getLoggedUser()) {
-  <app-profile-picture
-    radius="50%"
-    [size]="40"
-    (click)="overlay.openSidePanel()"/>
-  <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
-}
-<div class="container pt-4">
-  <router-outlet/>
-</div>
-<app-side-panel/>
-<app-bottom-sheet/>
+<mat-drawer-container hasBackdrop>
+  <mat-drawer mode="over">
+    <app-side-panel/>
+  </mat-drawer>
+  <mat-drawer-content>
+    @if (auth.getLoggedUser()) {
+      <app-profile-picture
+        radius="50%"
+        [size]="40"
+        (click)="overlay.openSidePanel()"/>
+      <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
+    }
+    <div class="container pt-4">
+      <router-outlet/>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
 <app-loader/>
 <app-modal/>

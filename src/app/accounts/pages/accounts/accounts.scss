@@ -1,11 +1,11 @@
 @use '../../../shared/styles/colors';
 
 .negative {
-  color: colors.$warn-red;
+  color: colors.$red;
 }
 
 .positive {
-  color: colors.$warn-green;
+  color: colors.$green;
 }
 
 i.bi-arrow-clockwise {

@@ -1,14 +1,12 @@
 import { AfterViewInit, Component, computed, ElementRef, forwardRef, signal, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
-import { AutoFocusDirective } from '../../directives';
 
 @Component({
   selector: 'app-money-input',
   imports: [
     FormsModule,
-    NgxMaskDirective,
-    AutoFocusDirective
+    NgxMaskDirective
   ],
   providers: [
     {

@@ -1,32 +1,19 @@
-import { AfterViewInit, Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { Offcanvas } from 'bootstrap';
+import { Component, inject } from '@angular/core';
 import { Auth } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-side-panel',
   imports: [
-    ProfilePicture
+    ProfilePicture,
+    MatButtonModule
   ],
   templateUrl: './side-panel.html',
   styleUrl: './side-panel.scss',
 })
-export class SidePanel implements AfterViewInit {
-  @ViewChild('offCanvas') offCanvasRef!: ElementRef;
+export class SidePanel {
   auth = inject(Auth);
   APP_VERSION = APP_VERSION_STRING;
-  private _offCanvasInstance: Offcanvas | undefined;
-
-  ngAfterViewInit() {
-    this._offCanvasInstance = new Offcanvas(this.offCanvasRef.nativeElement);
-  }
-
-  open() {
-    this._offCanvasInstance?.show();
-  }
-
-  close() {
-    this._offCanvasInstance?.hide();
-  }
 }

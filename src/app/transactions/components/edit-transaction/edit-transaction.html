@@ -1,49 +1,49 @@
 <form [formGroup]="form" class="d-flex flex-column w-100 align-items-center justify-content-center">
-  <h1 class="display-4 text-center">Transacción</h1>
-  <div class="btn-group mt-3" role="group">
+  <h1 class="text-center">Transacción</h1>
+
+  <mat-button-toggle-group formControlName="type" hideSingleSelectionIndicator class="mb-4 mt-2">
     @for (type of Object.keys(TransactionType); track type) {
       @if (!isNaN(Number(type))) {
-        <input type="radio" class="btn-check" [id]="type" autocomplete="off" [value]="Number(type)"
-               formControlName="type">
-        <label class="btn btn-outline-light d-flex align-items-center justify-content-center gap-1"
-               [for]="type" (click)="changeAccountType(Number(type))">
-          <i class="d-flex bi"
-             [ngClass]="$any(TRANSACTION_TYPE_INFO_MAP)[type].iconClass"></i>{{ $any(TRANSACTION_TYPE_INFO_MAP)[type].label }}
-        </label>
+        <mat-button-toggle [value]="Number(type)">
+          <mat-icon class="material-symbols-rounded">{{ $any(TRANSACTION_TYPE_INFO_MAP)[type].iconClass }}</mat-icon>
+          {{ $any(TRANSACTION_TYPE_INFO_MAP)[type].label }}
+        </mat-button-toggle>
       }
     }
-  </div>
+  </mat-button-toggle-group>
 
-  <app-money-input class="mt-4 pb-3" formControlName="amount"/>
+  <app-money-input class="mb-3" formControlName="amount"/>
   <app-date-picker class="mb-4" formControlName="date"/>
 
-  <mat-form-field floatLabel="auto">
-    <mat-label>Cuenta</mat-label>
-    <select autocomplete="off" matNativeControl formControlName="originAccountId">
-      <option label="-- Selecciona una cuenta --"></option>
-      @for (account of availableOriginAccounts(); track account.id) {
-        <option [value]="account.id">{{ account.label }}</option>
-      }
-    </select>
-  </mat-form-field>
-
-  @if (selectedTransactionType() === TransactionType.Transfer) {
+  <div class="inputs-wrapper w-100">
     <mat-form-field floatLabel="auto">
-      <mat-label>A la cuenta</mat-label>
-      <select autocomplete="off" matNativeControl formControlName="targetAccountId">
-        <option label="-- Selecciona una cuenta --"></option>
-        @for (account of availableTargetAccounts(); track account.id) {
-          <option [value]="account.id">{{ account.label }}</option>
+      <mat-label>Cuenta</mat-label>
+      <mat-select formControlName="originAccountId">
+        <mat-option>--</mat-option>
+        @for (account of availableOriginAccounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.label }}</mat-option>
         }
-      </select>
+      </mat-select>
     </mat-form-field>
-  }
+
+    @if (selectedTransactionType() === TransactionType.Transfer) {
+      <mat-form-field floatLabel="auto">
+        <mat-label>A la cuenta</mat-label>
+        <mat-select formControlName="targetAccountId">
+          <mat-option>--</mat-option>
+          @for (account of availableTargetAccounts(); track account.id) {
+            <mat-option [value]="account.id">{{ account.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+  </div>
 </form>
 
-<div class="d-flex flex-column gap-2">
-  <button class="btn btn-light w-100" [disabled]="!form.valid" (click)="save()">Guardar</button>
+<div class="d-flex flex-column gap-2 w-100 mt-4">
+  <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
   @if (transaction()?.id) {
-    <button class="btn btn-danger w-100" (click)="delete()">Eliminar</button>
+    <button matButton="filled" class="danger-button" (click)="delete()">Eliminar</button>
   }
-  <button class="btn btn-outline-light w-100" (click)="cancel()">Cancelar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

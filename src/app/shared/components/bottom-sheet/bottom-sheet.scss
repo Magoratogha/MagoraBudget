@@ -1,6 +1,0 @@
-@use '../../styles/mixins';
-@use '../../styles/variables';
-
-.offcanvas {
-  @include mixins.bottom-sheet();
-}

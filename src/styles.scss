@@ -36,13 +36,6 @@ body {
   z-index: 2040;
 }
 
-.btn-light[disabled] {
-  background-color: colors.$black-03;
-  border-color: colors.$black-03;
-  color: colors.$white-05;
-  opacity: 1;
-}
-
 mat-form-field {
   width: 100%;
 }

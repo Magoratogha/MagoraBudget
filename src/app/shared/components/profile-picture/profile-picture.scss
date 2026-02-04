@@ -1,6 +1,4 @@
-@use '../../styles/colors';
-
 .profile-picture {
-  border: 1px solid colors.$white-00;
+  border: 2px solid var(--mat-sys-primary);
   padding: 4px;
 }

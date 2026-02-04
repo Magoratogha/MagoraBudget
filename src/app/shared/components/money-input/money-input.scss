@@ -1,10 +1,9 @@
-@use '../../styles/colors';
-
 input {
   border: none;
   background-color: transparent;
   width: 100%;
   text-align: center;
+  color: var(--mat-sys-on-surface-variant);
 
   &:focus, &:active, &:hover {
     border: none;
@@ -13,6 +12,6 @@ input {
 }
 
 .input-wrapper {
-  background-color: colors.$black-04;
+  background-color: var(--mat-sys-surface-container-highest);
   border-radius: 8px;
 }

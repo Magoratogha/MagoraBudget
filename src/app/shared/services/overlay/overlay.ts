@@ -1,22 +1,21 @@
 import { inject, Injectable, Type } from '@angular/core';
-import { BottomSheet, Loader, Modal, SidePanel } from '../../components';
+import { Loader, Modal } from '../../components';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Overlay {
-  private _sidePanel: SidePanel | null = null;
   private _loader: Loader | null = null;
-  private _bottomSheet: BottomSheet | null = null;
   private _modal: Modal | null = null;
+  private _sidePanel: MatDrawer | null = null;
   private _matBottomSheet = inject(MatBottomSheet);
   private _matBottomSheetRef?: MatBottomSheetRef;
 
-  public initOverlays(sidePanel: SidePanel, loader: Loader, bottomSheet: BottomSheet, modal: Modal) {
+  public initOverlays(sidePanel: MatDrawer, loader: Loader, modal: Modal) {
     this._sidePanel = sidePanel;
     this._loader = loader;
-    this._bottomSheet = bottomSheet;
     this._modal = modal;
   }
 
@@ -29,14 +28,11 @@ export class Overlay {
   }
 
   public openBottomSheet(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }) {
-    //this._bottomSheet?.open(innerComponent, innerComponentInputs);
-    //return this._bottomSheet?.bottomSheetClosed;
     this._matBottomSheetRef = this._matBottomSheet.open(innerComponent, { data: innerComponentInputs });
     return this._matBottomSheetRef.afterDismissed();
   }
 
   public closeBottomSheet(triggerCallback: boolean = false) {
-    //this._bottomSheet?.close(triggerCallback);
     this._matBottomSheetRef?.dismiss(triggerCallback);
   }
 

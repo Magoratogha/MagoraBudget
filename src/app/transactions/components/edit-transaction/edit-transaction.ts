@@ -3,24 +3,30 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
 import { TRANSACTION_TYPE_INFO_MAP } from '../../constants';
-import { NgClass } from '@angular/common';
 import { onlyNumbersValidator } from '../../../shared/utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DatePicker, MoneyInput } from '../../../shared/components';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Account, AccountType } from '../../../accounts/models';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-transaction',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    NgClass,
     MatFormFieldModule,
     MatInputModule,
     DatePicker,
     MoneyInput,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
   ],
   host: { class: 'inner-bottom-sheet-component' },
   templateUrl: './edit-transaction.html',
@@ -73,17 +79,6 @@ export class EditTransaction implements OnInit {
 
   ngOnInit() {
 
-  }
-
-  changeAccountType(accountType: TransactionType): void {
-    this.form.reset({
-      type: accountType,
-      amount: this.form.get('amount')?.value || 0,
-      date: this.form.get('date')?.value || new Date(),
-      originAccountId: this.form.get('originAccountId')?.value || '',
-      targetAccountId: this.form.get('targetAccountId')?.value || '',
-      ownerId: this._auth.getLoggedUser()!.uid
-    });
   }
 
   save() {

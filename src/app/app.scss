@@ -11,3 +11,8 @@ app-profile-picture {
   padding-right: 0.75rem;
   justify-content: flex-end;
 }
+
+mat-drawer-container {
+  --mat-sidenav-container-shape: 0px;
+  height: 100%;
+}

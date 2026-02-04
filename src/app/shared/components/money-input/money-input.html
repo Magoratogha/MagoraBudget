@@ -1,5 +1,5 @@
 <div class="input-wrapper d-flex align-items-center justify-content-center py-3">
   <input #textInput class="display-4 font-monospace" [value]="stringValue()" (input)="onValueChange(textInput.value)"
          mask="separator.0" thousandSeparator="." inputmode="numeric" prefix="$" pattern="[0-9]*" (blur)="onTouched!()"
-         autocomplete="off" appAutoFocus>
+         autocomplete="off">
 </div>

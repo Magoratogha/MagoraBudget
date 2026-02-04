@@ -1,7 +1,15 @@
-<div class="w-100 d-flex justify-content-center align-items-center gap-0">
-  <div class="icon-wrapper">
-    <i class="bi bi-calendar-week d-flex"></i>
-  </div>
-  <input #datePicker type="date" (change)="onValueChange(datePicker.value)" [value]="stringValue()"
-         (blur)="onTouched!()" (focus)="saveDefaultValue(datePicker.value)" autocomplete="off">
+<div class="w-100 d-flex justify-content-center align-items-center">
+  <mat-chip (click)="openPicker()">
+    <mat-icon matChipAvatar class="material-symbols-rounded">calendar_month</mat-icon>
+    {{ value() | date: 'dd/MM/yyyy' }}
+  </mat-chip>
+  <mat-form-field class="d-none">
+    <input hidden matInput [matDatepicker]="picker" (dateChange)="writeValue($event.value)">
+  </mat-form-field>
+  <mat-datepicker touchUi #picker>
+    <mat-datepicker-actions>
+      <button matButton matDatepickerCancel>Cancelar</button>
+      <button matButton="filled" matDatepickerApply>Aplicar</button>
+    </mat-datepicker-actions>
+  </mat-datepicker>
 </div>
