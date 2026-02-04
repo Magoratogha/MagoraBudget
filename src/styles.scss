@@ -2,30 +2,26 @@
 @use './app/shared/styles/colors';
 @use './app/shared/styles/mixins';
 @use './app/shared/styles/variables';
-@use './app/shared/styles/material-theme-colors';
 
 html {
   height: 100%;
   @include mat.theme((
-    color: material-theme-colors.$primary-palette,
+    color: (
+      primary: mat.$chartreuse-palette,
+    ),
     typography: Roboto,
     density: 0,
   ));
 }
 
 body {
-  color-scheme: dark;
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
   margin: 0;
   height: 100%;
-  background-color: colors.$black-00;
-  color: colors.$white-00;
-  font-family: Roboto, serif;
-  font-weight: 400;
   touch-action: manipulation;
-}
-
-small {
-  font-size: 0.75em;
 }
 
 .offcanvas {
@@ -53,54 +49,50 @@ mat-form-field {
 
 .inner-bottom-sheet-component {
   width: 100%;
-  height: calc(100dvh - #{ variables.$bottom-sheet-top-padding } - #{ variables.$bottom-sheet-bottom-padding } - #{ variables.$bottom-sheet-header-height });
+  height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  padding-block: 2rem;
 }
 
-p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text, .chip-badge, .chip-badge-sm {
+p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
   user-select: none;
+  font-weight: 400;
 }
 
-.btn-danger {
-  --bs-btn-color: #fff;
-  --bs-btn-bg: #{ colors.$red };
-  --bs-btn-border-color: #{ colors.$red };
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #{ colors.$red-active };
-  --bs-btn-hover-border-color: #{ colors.$red-active };
-  --bs-btn-focus-shadow-rgb: 225, 83, 97;
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #{ colors.$red-active };
-  --bs-btn-active-border-color: #{ colors.$red-active };
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #{ colors.$red };
-  --bs-btn-disabled-border-color: #{ colors.$red };
-}
 
-.mat-mdc-input-element::placeholder {
-  color: colors.$white-08 !important;
-}
+mat-chip {
+  &.sm {
+    --mat-chip-label-text-size: 0.75rem;
+    --mat-chip-container-height: 25px;
 
-.chip-badge, .chip-badge-sm {
-  font-family: var(--bs-font-monospace), serif;
-  background-color: colors.$black-04;
-  font-size: 1rem;
-  padding: 4px 8px;
-  border-radius: 4px;
+    .mdc-evolution-chip__action--primary {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+  }
+
+  &.mono {
+    --mat-chip-label-text-font: var(--bs-font-monospace), serif;
+  }
 
   &.positive {
-    background-color: colors.$green;
+    --mat-chip-label-text-color: #{ colors.$green };
   }
 
   &.negative {
-    background-color: colors.$red;
+    --mat-chip-label-text-color: #{ colors.$red };
   }
 }
 
-.chip-badge-sm {
-  padding: 2px 6px;
-  font-size: 0.75rem;
+.danger-button {
+  @include mat.button-overrides((
+    filled-container-color: #{ colors.$red },
+  ));
+}
+
+.mat-mdc-input-element::placeholder {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 40%, transparent) !important;
 }

@@ -1,11 +1,10 @@
-import { Component, computed, DestroyRef, effect, inject, input, OnInit } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
 import {
   ACCOUNT_TYPE_INFO_MAP,
   BALANCE_FIELD_WORDING_MAP,
   LABEL_FIELD_WORDING_MAP,
   QUOTA_FIELD_WORDING_MAP
 } from '../../constants';
-import { NgClass } from '@angular/common';
 import { Account, AccountType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
 import { FormControl, FormGroup, FormGroupDirective, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,6 +17,10 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
 import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChip, MatChipsModule } from '@angular/material/chips';
+import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 
 export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -30,12 +33,15 @@ export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-edit-account',
   imports: [
-    NgClass,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatChipsModule,
     NgxMaskDirective,
+    MatChip,
   ],
   templateUrl: './edit-account.html',
   styleUrl: './edit-account.scss',
@@ -52,9 +58,10 @@ export class EditAccount implements OnInit {
   private _fireStore = inject(FireStore);
   private _overlay = inject(Overlay);
   private _destroyRef = inject(DestroyRef);
+  private _bottomSheetData = inject(MAT_BOTTOM_SHEET_DATA);
 
   AccountType = AccountType;
-  account = input<Account>();
+  account = signal<Account | undefined>(this._bottomSheetData?.account);
   form = new FormGroup({
     label: new FormControl<string>('', [Validators.required]),
     type: new FormControl<AccountType>(AccountType.Cash, [Validators.required]),
@@ -98,13 +105,6 @@ export class EditAccount implements OnInit {
     }
   }
 
-  changeAccountType(accountType: AccountType): void {
-    this.form.reset({
-      type: accountType,
-      ownerId: this._auth.getLoggedUser()!.uid
-    });
-  }
-
   async saveAccount() {
     if (this.form.valid) {
       try {
@@ -113,6 +113,9 @@ export class EditAccount implements OnInit {
         if (accountToSave.type === AccountType.CreditCard || accountToSave.type === AccountType.Debt) {
           accountToSave.balance = accountToSave.balance * (-1);
           accountToSave.quota = accountToSave.quota! * (-1);
+        }
+        if (accountToSave.type === AccountType.Cash || accountToSave.type === AccountType.Savings) {
+          accountToSave.quota = NaN;
         }
         if (this.account()?.id) {
           await this._fireStore.editAccount(this.account()!.id!, accountToSave);

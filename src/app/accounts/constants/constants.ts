@@ -1,11 +1,11 @@
 import { AccountType } from '../models';
 
 export const ACCOUNT_TYPE_INFO_MAP: Record<AccountType, { iconClass: string, label: string }> = {
-  [AccountType.Cash]: { iconClass: 'bi-cash-coin', label: 'Efectivo' },
-  [AccountType.Savings]: { iconClass: 'bi-bank', label: 'Cuenta Bancaria' },
-  [AccountType.CreditCard]: { iconClass: 'bi-credit-card', label: 'Tarjeta de Crédito' },
-  [AccountType.Debt]: { iconClass: 'bi-currency-exchange', label: 'Deuda' },
-  [AccountType.SavingsGoal]: { iconClass: 'bi-piggy-bank', label: 'Meta de Ahorro' },
+  [AccountType.Cash]: { iconClass: 'universal_currency_alt', label: 'Efectivo' },
+  [AccountType.Savings]: { iconClass: 'account_balance', label: 'Cuenta Bancaria' },
+  [AccountType.CreditCard]: { iconClass: 'credit_card', label: 'Tarjeta de Crédito' },
+  [AccountType.Debt]: { iconClass: 'price_change', label: 'Deuda' },
+  [AccountType.SavingsGoal]: { iconClass: 'savings', label: 'Meta de Ahorro' },
 };
 
 export const BALANCE_FIELD_WORDING_MAP: Record<AccountType, { label: string, placeholder: string }> = {

@@ -1,32 +1,31 @@
-<form [formGroup]="form">
-  <div class="d-flex flex-column w-100 align-items-center justify-content-center">
-    <h1 class="display-4 text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
-    @if (account()?.id) {
-      <div class="chip-badge">Editando</div>
-    }
-    <div class="btn-group btn-group-lg mt-4 mb-5" role="group">
-      @for (type of Object.keys(AccountType); track type) {
-        @if (!isNaN(Number(type))) {
-          <input autocomplete="off" type="radio" class="btn-check" [id]="type" [value]="Number(type)"
-                 formControlName="type">
-          <label class="btn btn-outline-light d-flex align-items-center justify-content-center gap-1" [for]="type"
-                 (click)="changeAccountType(Number(type))">
-            <i class="d-flex bi" [ngClass]="$any(ACCOUNT_TYPE_INFO_MAP)[type].iconClass"></i>
-          </label>
-        }
+<form class="w-100 d-flex flex-column align-items-center justify-content-start" [formGroup]="form">
+  <h1 class="text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
+  @if (account()?.id) {
+    <mat-chip class="sm mono mb-2">Editando</mat-chip>
+  }
+
+  <mat-button-toggle-group formControlName="type" hideSingleSelectionIndicator class="mb-4 mt-2">
+    @for (type of Object.keys(AccountType); track type) {
+      @if (!isNaN(Number(type))) {
+        <mat-button-toggle [value]="Number(type)">
+          <mat-icon class="material-symbols-rounded">{{ $any(ACCOUNT_TYPE_INFO_MAP)[type].iconClass }}></mat-icon>
+        </mat-button-toggle>
       }
-    </div>
-    <mat-form-field>
+    }
+  </mat-button-toggle-group>
+
+  <div class="inputs-wrapper">
+    <mat-form-field class="mt-3">
       <mat-label>{{ labelPlaceholder().label }}</mat-label>
       <input autocomplete="off" matInput [placeholder]="labelPlaceholder().placeholder" formControlName="label">
-      <mat-icon class="material-icons-outlined" matPrefix>label</mat-icon>
+      <mat-icon class="material-symbols-rounded" matPrefix>label</mat-icon>
     </mat-form-field>
     <mat-form-field>
       <mat-label>{{ balanceLabelAndPlaceholder().label }}</mat-label>
       <input autocomplete="off" matInput [placeholder]="balanceLabelAndPlaceholder().placeholder"
              formControlName="balance"
              mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
-      <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
+      <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
     </mat-form-field>
     @if (selectedAccountType() !== AccountType.Savings && selectedAccountType() !== AccountType.Cash) {
       <mat-form-field>
@@ -35,16 +34,16 @@
                formControlName="quota"
                [errorStateMatcher]="quotaValueErrorStateMatcher"
                mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
-        <mat-icon class="material-icons-outlined" matPrefix>attach_money</mat-icon>
+        <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
       </mat-form-field>
     }
   </div>
 </form>
 
-<div class="d-flex flex-column gap-2">
-  <button class="btn btn-light w-100" [disabled]="!form.valid" (click)="saveAccount()">Guardar</button>
+<div class="d-flex flex-column gap-2 w-100 mt-4">
+  <button matButton="filled" [disabled]="!form.valid" (click)="saveAccount()">Guardar</button>
   @if (account()?.id) {
-    <button class="btn btn-danger w-100" (click)="deleteAccount()">Eliminar</button>
+    <button matButton="filled" class="danger-button" (click)="deleteAccount()">Eliminar</button>
   }
-  <button class="btn btn-outline-light w-100" (click)="cancel()">Cancelar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

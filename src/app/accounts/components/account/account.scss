@@ -1,18 +1,21 @@
 @use '../../../shared/styles/colors';
 
 .account {
-  background-color: colors.$black-01;
+  background-color: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface-variant);
   padding: 16px;
   border-radius: 8px;
 
-  i {
-    font-size: 1.5rem;
+  .mat-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.75rem;
   }
 
   .progress {
     height: 24px;
     border-radius: 8px;
-    background-color: colors.$black-03;
+    background-color: var(--mat-sys-surface-container-low);
 
     &.\32 {
       .progress-bar {

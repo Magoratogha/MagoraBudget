@@ -4,13 +4,17 @@ import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
 import { EditAccount } from '../edit-account/edit-account';
 import { Overlay } from '../../../shared/services';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-account',
   imports: [
     NgClass,
     CurrencyPipe,
-    PercentPipe
+    PercentPipe,
+    MatChipsModule,
+    MatIconModule
   ],
   templateUrl: './account.html',
   styleUrl: './account.scss',

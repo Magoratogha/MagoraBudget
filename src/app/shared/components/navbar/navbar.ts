@@ -4,13 +4,15 @@ import { NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth, FireStore } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-navbar',
   imports: [
     NgClass,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    MatButtonModule
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',

@@ -1,13 +1,13 @@
 <div class="d-flex w-100 justify-content-center py-2" (click)="edit()">
   <div class="account w-100 d-flex flex-column gap-3">
     <div class="d-flex gap-2 justify-content-between align-items-center gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <i class="d-flex bi" [ngClass]="ACCOUNT_TYPE_INFO_MAP[account()!.type].iconClass"></i>
+      <div class="d-flex align-items-center gap-2">
+        <mat-icon class="material-symbols-rounded">{{ ACCOUNT_TYPE_INFO_MAP[account()!.type].iconClass }}</mat-icon>
         <span>{{ account()?.label }}</span>
       </div>
-      <div class="chip-badge" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
+      <mat-chip class="mono" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
         {{ balance() | currency : 'USD' : 'symbol' : '1.0-0' }}
-      </div>
+      </mat-chip>
     </div>
     @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
       <div class="progress" [ngClass]="account()!.type.toString()">

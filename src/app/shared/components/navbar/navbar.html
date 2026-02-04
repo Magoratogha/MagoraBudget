@@ -1,14 +1,14 @@
-<nav>
+<nav class="mat-bg-surface-container">
   @for (item of leftSideItems(); track item) {
-    <a [routerLink]="item.route" routerLinkActive="active">
+    <a matButton [routerLink]="item.route" routerLinkActive="active">
       <i class="d-flex bi" [ngClass]="item.icon"></i>
     </a>
   }
-  <button type="button" class="btn btn-light create-button" (click)="onCreateClick()">
+  <button matButton="filled" class="create-button" (click)="onCreateClick()">
     <i class="bi bi-plus d-flex"></i>
   </button>
   @for (item of rightSideItems(); track item) {
-    <a [routerLink]="item.route" routerLinkActive="active">
+    <a matButton [routerLink]="item.route" routerLinkActive="active">
       <i class="d-flex bi" [ngClass]="item.icon"></i>
     </a>
   }

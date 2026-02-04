@@ -2,7 +2,7 @@
 @use '../../styles/variables';
 
 nav {
-  background-color: colors.$black-01;
+  background-color: var(--mat-sys-surface-container);
   width: 100dvw;
   height: variables.$navbar-height;
   position: fixed;
@@ -12,20 +12,27 @@ nav {
   align-items: center;
   padding-bottom: 16px;
   padding-inline: 16px;
-  box-shadow: rgba(0, 0, 0, 0.9) 0 20px 80px;
+  z-index: 500;
 
   a {
+    --width: 48px;
+    --height: 48px;
+    width: var(--width);
+    max-width: var(--width);
+    min-width: auto;
+    height: var(--height);
+    max-height: var(--height);
+    min-height: auto;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 12px;
     border-radius: calc(100% / 3);
-    color: inherit;
+    color: var(--mat-sys-on-surface-variant);
     text-decoration: inherit;
 
     &.active {
-      background-color: colors.$black-04;
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
     }
 
     i {
@@ -34,8 +41,14 @@ nav {
   }
 
   .create-button {
-    width: 56px;
-    height: 56px;
+    --width: 56px;
+    --height: 56px;
+    width: var(--width);
+    max-width: var(--width);
+    min-width: auto;
+    height: var(--height);
+    max-height: var(--height);
+    min-height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
