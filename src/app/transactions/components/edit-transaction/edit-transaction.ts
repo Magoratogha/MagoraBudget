@@ -65,9 +65,9 @@ export class EditTransaction implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedTransactionType() !== TransactionType.Transfer) {
-        this.form.controls.targetAccountId.removeValidators(Validators.required);
+        this.form.controls.targetAccountId.setValidators([]);
       } else {
-        this.form.controls.targetAccountId.addValidators(Validators.required);
+        this.form.controls.targetAccountId.setValidators([Validators.required]);
       }
       if (this.selectedOriginAccountId() === this.form.controls.targetAccountId.value) {
         this.form.controls.targetAccountId.setValue('');

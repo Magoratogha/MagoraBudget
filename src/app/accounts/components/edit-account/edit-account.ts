@@ -66,7 +66,7 @@ export class EditAccount implements OnInit {
     label: new FormControl<string>('', [Validators.required]),
     type: new FormControl<AccountType>(AccountType.Cash, [Validators.required]),
     balance: new FormControl<number>(NaN, [Validators.required, Validators.min(0), onlyNumbersValidator()]),
-    quota: new FormControl<number>(NaN, [Validators.min(0), onlyNumbersValidator()]),
+    quota: new FormControl<number>(NaN),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   }, [quotaMinValueValidator()]);
   selectedAccountType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
@@ -84,9 +84,9 @@ export class EditAccount implements OnInit {
   constructor() {
     effect(() => {
       if (this.selectedAccountType() === AccountType.Savings || this.selectedAccountType() === AccountType.Cash) {
-        this.form.controls.quota.removeValidators(Validators.required);
+        this.form.controls.quota.setValidators([]);
       } else {
-        this.form.controls.quota.addValidators(Validators.required);
+        this.form.controls.quota.setValidators([Validators.required, Validators.min(0), onlyNumbersValidator()]);
       }
       this.form.controls.quota.updateValueAndValidity();
       this.form.updateValueAndValidity();

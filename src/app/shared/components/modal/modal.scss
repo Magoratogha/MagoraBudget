@@ -1,9 +1,0 @@
-@use '../../styles/mixins';
-@use '../../styles/variables';
-
-.offcanvas {
-  @include mixins.bottom-sheet();
-  height: auto;
-  z-index: 2045;
-  pointer-events: all;
-}

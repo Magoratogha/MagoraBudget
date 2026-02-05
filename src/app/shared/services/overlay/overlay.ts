@@ -2,21 +2,21 @@ import { inject, Injectable, Type } from '@angular/core';
 import { Loader, Modal } from '../../components';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Overlay {
-  private _loader: Loader | null = null;
-  private _modal: Modal | null = null;
   private _sidePanel: MatDrawer | null = null;
   private _matBottomSheet = inject(MatBottomSheet);
+  private _matDialog = inject(MatDialog);
   private _matBottomSheetRef?: MatBottomSheetRef;
+  private _matModalDialogRef?: MatDialogRef<Modal>;
+  private _matLoaderDialogRef?: MatDialogRef<Loader>;
 
-  public initOverlays(sidePanel: MatDrawer, loader: Loader, modal: Modal) {
+  public initOverlays(sidePanel: MatDrawer) {
     this._sidePanel = sidePanel;
-    this._loader = loader;
-    this._modal = modal;
   }
 
   public openSidePanel() {
@@ -28,7 +28,10 @@ export class Overlay {
   }
 
   public openBottomSheet(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }) {
-    this._matBottomSheetRef = this._matBottomSheet.open(innerComponent, { data: innerComponentInputs });
+    this._matBottomSheetRef = this._matBottomSheet.open(innerComponent, {
+      data: innerComponentInputs,
+      autoFocus: false
+    });
     return this._matBottomSheetRef.afterDismissed();
   }
 
@@ -37,19 +40,27 @@ export class Overlay {
   }
 
   public openModal(title: string, description?: string) {
-    this._modal?.open(title, description);
-    return this._modal?.modalClosed;
+    this._matModalDialogRef = this._matDialog.open(Modal, { data: { title, description }, autoFocus: false });
+    return this._matModalDialogRef.afterClosed();
   }
 
   public closeModal(triggerCallback: boolean = false) {
-    this._modal?.close(triggerCallback);
+    this._matModalDialogRef?.close(triggerCallback);
   }
 
   public showLoader() {
-    this._loader?.isVisible.set(true);
+    if (!this._matLoaderDialogRef) {
+      this._matLoaderDialogRef = this._matDialog.open(Loader, {
+        autoFocus: false,
+        disableClose: true,
+        backdropClass: 'loader-backdrop',
+        panelClass: 'loader-panel'
+      });
+    }
   }
 
   public hideLoader() {
-    this._loader?.isVisible.set(false);
+    this._matLoaderDialogRef?.close();
+    this._matLoaderDialogRef = undefined;
   }
 }
