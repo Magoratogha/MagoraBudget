@@ -85,6 +85,7 @@ export class EditAccount implements OnInit {
     effect(() => {
       if (this.selectedAccountType() === AccountType.Savings || this.selectedAccountType() === AccountType.Cash) {
         this.form.controls.quota.setValidators([]);
+        this.form.controls.quota.reset();
       } else {
         this.form.controls.quota.setValidators([Validators.required, Validators.min(0), onlyNumbersValidator()]);
       }
