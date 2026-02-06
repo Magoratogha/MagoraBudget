@@ -5,6 +5,30 @@
       <h2>¡Hola, {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0) }}!</h2>
     </div>
   </div>
+  <form [formGroup]="form" class="w-100 d-flex flex-column align-items-center px-3">
+    <h3 class="mb-4 d-flex align-items-center gap-1">
+      <mat-icon class="material-symbols-rounded">settings</mat-icon>
+      Ajustes
+    </h3>
+    <mat-form-field floatLabel="auto">
+      <mat-label>Cuenta preferida para gastos</mat-label>
+      <mat-select formControlName="preferredExpensesAccountId">
+        <mat-option>--</mat-option>
+        @for (account of availableExpensesAccounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field floatLabel="auto">
+      <mat-label>Cuenta preferida para ingresos</mat-label>
+      <mat-select formControlName="preferredIncomesAccountId">
+        <mat-option>--</mat-option>
+        @for (account of availableIncomesAccounts(); track account.id) {
+          <mat-option [value]="account.id">{{ account.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
   <div class="d-flex flex-column align-items-center w-100 pb-4 px-3">
     <span class="mb-3">¿No eres {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0) }}?</span>
     <button matButton="filled" class="w-100" (click)="auth.logout()">Cerrar sesión</button>

@@ -54,6 +54,10 @@ export class Auth {
     return this._user();
   }
 
+  public getLoggedUserSignal() {
+    return this._user;
+  }
+
   private _logError(error: any) {
     console.error('Auth error: ' + error);
   }

@@ -34,8 +34,12 @@ export class Navbar implements OnInit, OnDestroy {
   createButtonClicked = output();
 
   ngOnInit(): void {
-    const unsubscribe = this._fireStore.listenToUserAccounts(this._auth.getLoggedUser()!.uid);
-    this._unsubscribeFunctions.push(unsubscribe);
+    const userId = this._auth.getLoggedUser()!.uid;
+    this._unsubscribeFunctions.push(
+      this._fireStore.listenToUserAccounts(userId),
+      this._fireStore.listenToUserTransactions(userId),
+      this._fireStore.listenToUserSettings(userId)
+    );
   }
 
   ngOnDestroy(): void {

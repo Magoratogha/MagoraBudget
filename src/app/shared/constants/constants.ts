@@ -10,6 +10,8 @@ export const NAVBAR_ITEMS: NavbarItem[] = [
 export const FIREBASE_COLLECTION_NAMES = {
   USERS: 'users',
   ACCOUNTS: 'accounts',
+  TRANSACTIONS: 'transactions',
+  USER_SETTINGS: 'user-settings',
 };
 
 export const WARNING_MODAL_DELETE_WORDING = {

@@ -15,29 +15,33 @@
   <app-money-input class="mb-3" formControlName="amount"/>
   <app-date-picker class="mb-4" formControlName="date"/>
 
-  <div class="inputs-wrapper w-100">
-    <mat-form-field floatLabel="auto">
-      <mat-label>Cuenta</mat-label>
-      <mat-select formControlName="originAccountId">
-        <mat-option>--</mat-option>
-        @for (account of availableOriginAccounts(); track account.id) {
-          <mat-option [value]="account.id">{{ account.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    @if (selectedTransactionType() === TransactionType.Transfer) {
+  @if (availableOriginAccounts().length && availableTargetAccounts().length) {
+    <div class="inputs-wrapper w-100">
       <mat-form-field floatLabel="auto">
-        <mat-label>A la cuenta</mat-label>
-        <mat-select formControlName="targetAccountId">
+        <mat-label>Cuenta</mat-label>
+        <mat-select formControlName="originAccountId">
           <mat-option>--</mat-option>
-          @for (account of availableTargetAccounts(); track account.id) {
+          @for (account of availableOriginAccounts(); track account.id) {
             <mat-option [value]="account.id">{{ account.label }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
-    }
-  </div>
+
+      @if (selectedTransactionType() === TransactionType.Transfer) {
+        <mat-form-field floatLabel="auto">
+          <mat-label>A la cuenta</mat-label>
+          <mat-select formControlName="targetAccountId">
+            <mat-option>--</mat-option>
+            @for (account of availableTargetAccounts(); track account.id) {
+              <mat-option [value]="account.id">{{ account.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+    </div>
+  } @else {
+    <p class="text-center text-red">Para hacer una transacción primero debes agregar una o más cuentas.</p>
+  }
 </form>
 
 <div class="d-flex flex-column gap-2 w-100 mt-4">

@@ -90,3 +90,11 @@ mat-chip {
 .loader-backdrop {
   @include mixins.overlay-background-blur();
 }
+
+.text-green {
+  color: colors.$green !important;
+}
+
+.text-red {
+  color: colors.$red !important;
+}
