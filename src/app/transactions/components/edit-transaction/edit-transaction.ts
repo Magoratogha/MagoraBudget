@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, OnInit, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, OnInit, signal, Signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
 import { take } from 'rxjs';
 import { UserSettings } from '../../../shared/models';
+import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -44,11 +45,12 @@ export class EditTransaction implements OnInit {
   private _fireStore = inject(FireStore);
   private _overlay = inject(Overlay);
   private _destroyRef = inject(DestroyRef);
+  private _bottomSheetData = inject(MAT_BOTTOM_SHEET_DATA);
   userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();
   userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
 
   TransactionType = TransactionType;
-  transaction = input<Transaction>();
+  transaction = signal<Transaction | undefined>(this._bottomSheetData?.transaction);
   form = new FormGroup({
     type: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
     amount: new FormControl<number>(0, [Validators.required, Validators.min(1), onlyNumbersValidator(false)]),
@@ -99,7 +101,16 @@ export class EditTransaction implements OnInit {
   }
 
   ngOnInit() {
-
+    if (this.transaction()) {
+      this.form.setValue({
+        type: this.transaction()?.type || TransactionType.Expense,
+        amount: this.transaction()?.amount || 0,
+        date: this.transaction()?.date || new Date(),
+        originAccountId: this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
+        targetAccountId: this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
+        ownerId: this.transaction()?.ownerId || this._auth.getLoggedUser()!.uid
+      }, { emitEvent: false });
+    }
   }
 
   async save() {

@@ -1,1 +1,6 @@
-{{ transactions() | json }}
+<div class="pt-4">
+  @for (transaction of transactions(); track transaction.id) {
+    <app-transaction [transaction]="transaction"/>
+  }
+</div>
+

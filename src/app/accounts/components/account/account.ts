@@ -1,11 +1,12 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { Account as IAccount, AccountType } from '../../models';
-import { ACCOUNT_TYPE_INFO_MAP } from '../../constants';
 import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
 import { EditAccount } from '../edit-account/edit-account';
 import { Overlay } from '../../../shared/services';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { getAccountTypeIcon } from '../../../shared/utils';
 
 @Component({
   selector: 'app-account',
@@ -14,13 +15,13 @@ import { MatIconModule } from '@angular/material/icon';
     CurrencyPipe,
     PercentPipe,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule
   ],
   templateUrl: './account.html',
   styleUrl: './account.scss',
 })
 export class Account {
-  ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   AccountType = AccountType;
   accountUpdated = output();
   private _overlay = inject(Overlay)
@@ -83,4 +84,6 @@ export class Account {
   edit() {
     this._overlay.openBottomSheet(EditAccount, { account: this.account() });
   }
+
+  protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }

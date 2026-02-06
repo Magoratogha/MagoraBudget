@@ -1,11 +1,6 @@
 @use '../../../shared/styles/colors';
 
 .account {
-  background-color: var(--mat-sys-surface-container-highest);
-  color: var(--mat-sys-on-surface-variant);
-  padding: 16px;
-  border-radius: 8px;
-
   .mat-icon {
     width: 1.75rem;
     height: 1.75rem;

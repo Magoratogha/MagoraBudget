@@ -101,7 +101,7 @@ export class EditAccount implements OnInit {
         balance: this.account()?.balance ? Math.abs(this.account()!.balance) : NaN,
         quota: this.account()?.quota ? Math.abs(this.account()!.quota as number) : NaN,
         ownerId: this.account()?.ownerId || this._auth.getLoggedUser()!.uid
-      });
+      }, { emitEvent: false });
     }
   }
 

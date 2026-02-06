@@ -41,6 +41,10 @@ export class FireStore {
     }
   }
 
+  public getUserAccount(accountId: string) {
+    return this._userAccounts().find(account => account.id === accountId) || null;
+  }
+
   public async addAccount(account: Account): Promise<string> {
     try {
       this._cleanWhiteSpaces(account);

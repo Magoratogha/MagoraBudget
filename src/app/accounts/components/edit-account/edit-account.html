@@ -24,7 +24,7 @@
       <mat-label>{{ balanceLabelAndPlaceholder().label }}</mat-label>
       <input autocomplete="off" matInput [placeholder]="balanceLabelAndPlaceholder().placeholder"
              formControlName="balance"
-             mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
+             mask="separator.0" thousandSeparator="," inputmode="numeric" pattern="[0-9]*">
       <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
     </mat-form-field>
     @if (selectedAccountType() !== AccountType.Savings && selectedAccountType() !== AccountType.Cash) {
@@ -33,7 +33,7 @@
         <input autocomplete="off" matInput [placeholder]="quotaLabelAndPlaceholder()!.placeholder"
                formControlName="quota"
                [errorStateMatcher]="quotaValueErrorStateMatcher"
-               mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
+               mask="separator.0" thousandSeparator="," inputmode="numeric" pattern="[0-9]*">
         <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
       </mat-form-field>
     }
