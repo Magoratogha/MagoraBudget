@@ -1,7 +1,7 @@
 <form class="w-100 d-flex flex-column align-items-center justify-content-start" [formGroup]="form">
   <h1 class="text-center">{{ getAccountTypeLabel(selectedAccountType()!) }}</h1>
   @if (account()?.id) {
-    <mat-chip class="sm mono mb-2">Editando</mat-chip>
+    <mat-chip class="sm mono mb-2 positive">Editando</mat-chip>
   }
 
   <mat-button-toggle-group formControlName="type" hideSingleSelectionIndicator class="mb-4 mt-2">
@@ -42,8 +42,8 @@
 
 <div class="d-flex flex-column gap-2 w-100 mt-4">
   <button matButton="filled" [disabled]="!form.valid" (click)="saveAccount()">Guardar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
   @if (account()?.id) {
     <button matButton="filled" class="danger-button" (click)="deleteAccount()">Eliminar</button>
   }
-  <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

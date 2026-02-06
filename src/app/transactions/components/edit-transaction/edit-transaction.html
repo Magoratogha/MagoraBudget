@@ -15,10 +15,10 @@
   <app-money-input class="mb-3" formControlName="amount"/>
   <app-date-picker class="mb-4" formControlName="date"/>
 
-  @if (availableOriginAccounts().length && availableTargetAccounts().length) {
+  @if (availableOriginAccounts().length) {
     <div class="inputs-wrapper w-100">
       <mat-form-field floatLabel="auto">
-        <mat-label>Cuenta</mat-label>
+        <mat-label>{{ originAccountLabel() }}</mat-label>
         <mat-select formControlName="originAccountId">
           <mat-option>--</mat-option>
           @for (account of availableOriginAccounts(); track account.id) {
@@ -52,8 +52,8 @@
 
 <div class="d-flex flex-column gap-2 w-100 mt-4">
   <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
   @if (transaction()?.id) {
     <button matButton="filled" class="danger-button" (click)="delete()">Eliminar</button>
   }
-  <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

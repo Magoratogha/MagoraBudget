@@ -65,6 +65,9 @@ export class EditTransaction implements OnInit {
   availableTargetAccounts = computed(() => {
     return this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId());
   });
+  originAccountLabel = computed(() => {
+    return this.selectedTransactionType() === TransactionType.Transfer ? 'De la cuenta' : 'Cuenta';
+  });
 
   protected readonly Object = Object;
   protected readonly isNaN = isNaN;
