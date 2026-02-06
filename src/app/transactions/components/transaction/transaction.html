@@ -1,0 +1,45 @@
+<mat-card appearance="filled" class="transaction mb-3" (click)="edit()">
+  <mat-card-content class="d-flex align-items-center justify-content-between gap-3">
+    <div class="d-flex flex-column gap-2 w-100">
+      <div class="d-flex gap-2 align-items-center justify-content-between">
+        <mat-chip class="sm" [class.positive]="transaction()?.type === TransactionType.Income"
+                  [class.negative]="transaction()?.type === TransactionType.Expense">
+          {{ getTransactionTypeLabel(transaction()!.type) }}</mat-chip>
+        <span class="font-monospace" [class.text-green]="transaction()?.type === TransactionType.Income" [class.text-red]="transaction()?.type === TransactionType.Expense">
+          {{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'USD' : 'symbol' : '1.0-0'}}
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-1">
+        @switch (transaction()?.type) {
+          @case (TransactionType.Expense) {
+              <mat-icon class="material-symbols-rounded">
+                {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
+              </mat-icon>
+              <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+              <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
+              <mat-icon class="material-symbols-rounded money-icon-end text-red">attach_money</mat-icon>
+          }
+          @case (TransactionType.Income) {
+              <mat-icon class="material-symbols-rounded money-icon-start text-green">attach_money</mat-icon>
+              <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
+              <mat-icon class="material-symbols-rounded">
+                {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
+              </mat-icon>
+              <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+          }
+          @case (TransactionType.Transfer) {
+              <mat-icon class="material-symbols-rounded">
+                {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
+              </mat-icon>
+              <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+              <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
+              <mat-icon class="material-symbols-rounded">
+                {{ getAccountTypeIcon(getAccountDetails(transaction()!.targetAccountId!)!.type) }}
+              </mat-icon>
+              <span>{{ getAccountDetails(transaction()!.targetAccountId!)!.label }}</span>
+          }
+        }
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
