@@ -34,8 +34,11 @@ nav {
       color: var(--mat-sys-on-secondary-container);
     }
 
-    i {
-      font-size: 1.5rem;
+    mat-icon {
+      font-size: 1.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      margin: 0;
     }
   }
 
@@ -52,6 +55,12 @@ nav {
     align-items: center;
     justify-content: center;
     border-radius: calc(100% / 3);
-    font-size: 2rem;
+
+    mat-icon {
+      font-size: 1.75rem;
+      width: 1.75rem;
+      height: 1.75rem;
+      margin: 0;
+    }
   }
 }

@@ -4,7 +4,7 @@
     {{ value() | date: 'dd/MM/yyyy' }}
   </mat-chip>
   <mat-form-field class="d-none">
-    <input hidden matInput [matDatepicker]="picker" (dateChange)="writeValue($event.value)">
+    <input hidden matInput autocomplete="off" [matDatepicker]="picker" (dateChange)="writeValue($event.value)">
   </mat-form-field>
   <mat-datepicker touchUi #picker>
     <mat-datepicker-actions>

@@ -5,8 +5,8 @@
     @for (type of Object.keys(TransactionType); track type) {
       @if (!isNaN(Number(type))) {
         <mat-button-toggle [value]="Number(type)">
-          <mat-icon class="material-symbols-rounded">{{ $any(TRANSACTION_TYPE_INFO_MAP)[type].iconClass }}</mat-icon>
-          {{ $any(TRANSACTION_TYPE_INFO_MAP)[type].label }}
+          <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
+          {{ getTransactionTypeLabel(Number(type)) }}
         </mat-button-toggle>
       }
     }
@@ -22,7 +22,10 @@
         <mat-select formControlName="originAccountId">
           <mat-option>--</mat-option>
           @for (account of availableOriginAccounts(); track account.id) {
-            <mat-option [value]="account.id">{{ account.label }}</mat-option>
+            <mat-option [value]="account.id">
+              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+              {{ account.label }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -33,7 +36,10 @@
           <mat-select formControlName="targetAccountId">
             <mat-option>--</mat-option>
             @for (account of availableTargetAccounts(); track account.id) {
-              <mat-option [value]="account.id">{{ account.label }}</mat-option>
+              <mat-option [value]="account.id">
+                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+                {{ account.label }}
+              </mat-option>
             }
           </mat-select>
         </mat-form-field>

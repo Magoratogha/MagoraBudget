@@ -15,20 +15,20 @@
   .progress {
     height: 24px;
     border-radius: 8px;
-    background-color: var(--mat-sys-surface-container-low);
+    background-color: colors.$progress-gray;
 
     &.\32 {
       .progress-bar {
-        background-color: colors.$red;
+        background-color: colors.$progress-red;
       }
     }
 
     &.\33 {
-      background-color: colors.$red;
+      background-color: colors.$progress-red;
     }
 
     &-bar {
-      background-color: colors.$green;
+      background-color: colors.$progress-green;
     }
   }
 

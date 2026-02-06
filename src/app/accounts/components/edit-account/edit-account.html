@@ -1,5 +1,5 @@
 <form class="w-100 d-flex flex-column align-items-center justify-content-start" [formGroup]="form">
-  <h1 class="text-center">{{ ACCOUNT_TYPE_INFO_MAP[selectedAccountType()!].label }}</h1>
+  <h1 class="text-center">{{ getAccountTypeLabel(selectedAccountType()!) }}</h1>
   @if (account()?.id) {
     <mat-chip class="sm mono mb-2">Editando</mat-chip>
   }
@@ -8,7 +8,7 @@
     @for (type of Object.keys(AccountType); track type) {
       @if (!isNaN(Number(type))) {
         <mat-button-toggle [value]="Number(type)">
-          <mat-icon class="material-symbols-rounded">{{ $any(ACCOUNT_TYPE_INFO_MAP)[type].iconClass }}</mat-icon>
+          <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
         </mat-button-toggle>
       }
     }

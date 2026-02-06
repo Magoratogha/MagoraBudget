@@ -1,15 +1,15 @@
 <nav class="mat-bg-surface-container">
   @for (item of leftSideItems(); track item) {
     <a matButton [routerLink]="item.route" routerLinkActive="active">
-      <i class="d-flex bi" [ngClass]="item.icon"></i>
+      <mat-icon class="material-symbols-rounded">{{ item.icon }}</mat-icon>
     </a>
   }
   <button matButton="filled" class="create-button" (click)="onCreateClick()">
-    <i class="bi bi-plus d-flex"></i>
+    <mat-icon class="material-symbols-rounded">add</mat-icon>
   </button>
   @for (item of rightSideItems(); track item) {
     <a matButton [routerLink]="item.route" routerLinkActive="active">
-      <i class="d-flex bi" [ngClass]="item.icon"></i>
+      <mat-icon class="material-symbols-rounded">{{ item.icon }}</mat-icon>
     </a>
   }
 </nav>

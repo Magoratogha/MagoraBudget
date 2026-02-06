@@ -15,7 +15,10 @@
       <mat-select formControlName="preferredExpensesAccountId">
         <mat-option>--</mat-option>
         @for (account of availableExpensesAccounts(); track account.id) {
-          <mat-option [value]="account.id">{{ account.label }}</mat-option>
+          <mat-option [value]="account.id">
+            <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+            {{ account.label }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>
@@ -24,7 +27,10 @@
       <mat-select formControlName="preferredIncomesAccountId">
         <mat-option>--</mat-option>
         @for (account of availableIncomesAccounts(); track account.id) {
-          <mat-option [value]="account.id">{{ account.label }}</mat-option>
+          <mat-option [value]="account.id">
+            <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+            {{ account.label }}
+          </mat-option>
         }
       </mat-select>
     </mat-form-field>

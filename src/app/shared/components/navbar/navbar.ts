@@ -1,18 +1,19 @@
 import { Component, computed, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { NavbarItem } from '../../models';
-import { NgClass } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth, FireStore } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { ACCOUNT_TYPE_INFO_MAP } from '../../../accounts/constants';
 
 @Component({
   selector: 'app-navbar',
   imports: [
-    NgClass,
     RouterLink,
     RouterLinkActive,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
@@ -49,4 +50,6 @@ export class Navbar implements OnInit, OnDestroy {
   onCreateClick() {
     this.createButtonClicked.emit();
   }
+
+  protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
 }

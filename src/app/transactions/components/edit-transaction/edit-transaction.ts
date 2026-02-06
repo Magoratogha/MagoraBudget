@@ -2,8 +2,12 @@ import { Component, computed, DestroyRef, effect, inject, input, OnInit, Signal 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
-import { TRANSACTION_TYPE_INFO_MAP } from '../../constants';
-import { onlyNumbersValidator } from '../../../shared/utils';
+import {
+  getAccountTypeIcon,
+  getTransactionTypeIcon,
+  getTransactionTypeLabel,
+  onlyNumbersValidator
+} from '../../../shared/utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DatePicker, MoneyInput } from '../../../shared/components';
@@ -36,7 +40,6 @@ import { UserSettings } from '../../../shared/models';
   styleUrl: './edit-transaction.scss',
 })
 export class EditTransaction implements OnInit {
-  TRANSACTION_TYPE_INFO_MAP = TRANSACTION_TYPE_INFO_MAP;
   private _auth = inject(Auth);
   private _fireStore = inject(FireStore);
   private _overlay = inject(Overlay);
@@ -139,4 +142,8 @@ export class EditTransaction implements OnInit {
   cancel() {
     this._overlay.closeBottomSheet();
   }
+
+  protected readonly getAccountTypeIcon = getAccountTypeIcon;
+  protected readonly getTransactionTypeIcon = getTransactionTypeIcon;
+  protected readonly getTransactionTypeLabel = getTransactionTypeLabel;
 }

@@ -11,6 +11,7 @@ import { UserSettings } from '../../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { ACCOUNT_TYPE_INFO_MAP } from '../../../accounts/constants';
+import { getAccountTypeIcon } from '../../utils';
 
 @Component({
   selector: 'app-side-panel',
@@ -81,4 +82,5 @@ export class SidePanel implements OnInit {
   }
 
   protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
+  protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }

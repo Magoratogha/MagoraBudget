@@ -1,17 +1,17 @@
 import { Component, computed, DestroyRef, effect, inject, OnInit, signal } from '@angular/core';
-import {
-  ACCOUNT_TYPE_INFO_MAP,
-  BALANCE_FIELD_WORDING_MAP,
-  LABEL_FIELD_WORDING_MAP,
-  QUOTA_FIELD_WORDING_MAP
-} from '../../constants';
+import { BALANCE_FIELD_WORDING_MAP, LABEL_FIELD_WORDING_MAP, QUOTA_FIELD_WORDING_MAP } from '../../constants';
 import { Account, AccountType } from '../../models';
 import { Auth, FireStore, Overlay } from '../../../shared/services';
 import { FormControl, FormGroup, FormGroupDirective, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { onlyNumbersValidator, quotaMinValueValidator } from '../../../shared/utils';
+import {
+  getAccountTypeIcon,
+  getAccountTypeLabel,
+  onlyNumbersValidator,
+  quotaMinValueValidator
+} from '../../../shared/utils';
 import { NgxMaskDirective } from 'ngx-mask';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
@@ -50,7 +50,6 @@ export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
   }
 })
 export class EditAccount implements OnInit {
-  ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   Object = Object;
   Number = Number;
   isNaN = isNaN;
@@ -153,4 +152,7 @@ export class EditAccount implements OnInit {
   cancel() {
     this._overlay.closeBottomSheet();
   }
+
+  protected readonly getAccountTypeLabel = getAccountTypeLabel;
+  protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }
