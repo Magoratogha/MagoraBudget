@@ -1,5 +1,12 @@
 <form [formGroup]="form" class="d-flex flex-column w-100 align-items-center justify-content-center">
-  <h1 class="text-center">Transacción</h1>
+  <h1 class="text-center d-flex align-items-center gap-1">
+    @if (transaction()?.id) {
+      <button matIconButton class="delete-icon" (click)="delete()">
+        <mat-icon class="material-symbols-rounded text-red">delete</mat-icon>
+      </button>
+    }
+    Transacción
+  </h1>
   @if (transaction()?.id) {
     <mat-chip class="sm mono mb-2 positive">Editando</mat-chip>
   }
@@ -56,7 +63,4 @@
 <div class="d-flex flex-column gap-2 w-100 mt-4">
   <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
   <button matButton="tonal" (click)="cancel()">Cancelar</button>
-  @if (transaction()?.id) {
-    <button matButton="filled" class="danger-button" (click)="delete()">Eliminar</button>
-  }
 </div>
