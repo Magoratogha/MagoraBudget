@@ -97,8 +97,8 @@ export class EditAccount implements OnInit {
     if (this.account()) {
       this.form.patchValue({
         label: this.account()?.label || '',
-        balance: this.account()?.balance ? Math.abs(this.account()!.balance) : NaN,
-        quota: this.account()?.quota ? Math.abs(this.account()!.quota as number) : NaN,
+        balance: typeof this.account()?.balance === 'number' ? Math.abs(this.account()!.balance) : NaN,
+        quota: typeof this.account()?.quota === 'number' ? Math.abs(this.account()!.quota as number) : NaN,
         ownerId: this.account()?.ownerId || this._auth.getLoggedUser()!.uid
       }, { emitEvent: false });
 
