@@ -125,7 +125,7 @@ export class EditTransaction implements OnInit {
           transactionToSave.targetAccountId = '';
         }
         if (this.transaction()?.id) {
-          await this._fireStore.editTransaction(this.transaction()!.id!, transactionToSave);
+          await this._fireStore.editTransaction(this.transaction()!.id!, transactionToSave, this.transaction()!);
         } else {
           await this._fireStore.addTransaction(transactionToSave);
         }

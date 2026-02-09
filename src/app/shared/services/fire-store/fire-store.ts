@@ -11,11 +11,12 @@ import {
   query,
   setDoc,
   Timestamp,
+  updateDoc,
   where
 } from '@angular/fire/firestore';
 import { FIREBASE_COLLECTION_NAMES } from '../../constants';
 import { Account } from '../../../accounts/models';
-import { Transaction } from '../../../transactions/models';
+import { Transaction, TransactionType } from '../../../transactions/models';
 import { UserSettings } from '../../models';
 
 @Injectable({
@@ -45,6 +46,10 @@ export class FireStore {
     return this._userAccounts().find(account => account.id === accountId) || null;
   }
 
+  public getUserTransaction(transactionId: string) {
+    return this._userTransactions().find(transaction => transaction.id === transactionId) || null;
+  }
+
   public async addAccount(account: Account): Promise<string> {
     try {
       this._cleanWhiteSpaces(account);
@@ -59,10 +64,10 @@ export class FireStore {
     }
   }
 
-  public async editAccount(accountId: string, account: Account): Promise<void> {
+  public async editAccount(accountId: string, account: Partial<Account>): Promise<void> {
     try {
       this._cleanWhiteSpaces(account);
-      await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account);
+      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account);
     } catch (e) {
       this._logError(e);
       throw e;
@@ -81,6 +86,7 @@ export class FireStore {
   public async addTransaction(transaction: Transaction): Promise<string> {
     try {
       this._cleanWhiteSpaces(transaction);
+      await this._updateAccountsByTransaction(transaction);
       const docRef = await addDoc(
         collection(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS),
         transaction
@@ -92,10 +98,12 @@ export class FireStore {
     }
   }
 
-  public async editTransaction(transactionId: string, transaction: Transaction): Promise<void> {
+  public async editTransaction(transactionId: string, transactionToSave: Transaction, currentTransaction: Transaction): Promise<void> {
     try {
-      this._cleanWhiteSpaces(transaction);
-      await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), transaction);
+      this._cleanWhiteSpaces(transactionToSave);
+      this._cleanWhiteSpaces(currentTransaction);
+      await this._updateAccountsByTransaction(transactionToSave, currentTransaction);
+      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), { ...transactionToSave });
     } catch (e) {
       this._logError(e);
       throw e;
@@ -104,6 +112,9 @@ export class FireStore {
 
   public async deleteTransaction(transactionId: string): Promise<void> {
     try {
+      const transactionToDelete = this.getUserTransaction(transactionId)!;
+      this._cleanWhiteSpaces(transactionToDelete);
+      await this._rollbackTransaction(transactionToDelete);
       await deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId));
     } catch (e) {
       this._logError(e);
@@ -128,7 +139,7 @@ export class FireStore {
   public async editUserSettings(settingsId: string, settings: UserSettings): Promise<void> {
     try {
       this._cleanWhiteSpaces(settings);
-      await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), settings);
+      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), { ...settings });
     } catch (e) {
       this._logError(e);
       throw e;
@@ -219,6 +230,44 @@ export class FireStore {
     Object.keys(obj).map(
       (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
     );
+  }
+
+  private async _updateAccountsByTransaction(transactionToPerform: Transaction, previousTransaction?: Transaction) {
+    await this._performTransaction(transactionToPerform);
+    if (previousTransaction) {
+      await this._rollbackTransaction(previousTransaction);
+    }
+  }
+
+  private async _performTransaction(transaction: Transaction) {
+    const originAccount = this.getUserAccount(transaction.originAccountId)!;
+    switch (transaction.type) {
+      case TransactionType.Income:
+        await this.editAccount(originAccount.id!, {
+          balance: originAccount.balance + transaction.amount,
+        });
+        break;
+      case TransactionType.Expense:
+        await this.editAccount(originAccount.id!, {
+          balance: originAccount.balance - transaction.amount,
+        });
+        break;
+      case TransactionType.Transfer:
+        const targetAccount = this.getUserAccount(transaction.targetAccountId!)!;
+        await Promise.all([
+          this.editAccount(originAccount.id!, {
+            balance: originAccount.balance - transaction.amount,
+          }),
+          this.editAccount(targetAccount.id!, {
+            balance: targetAccount.balance + transaction.amount,
+          })
+        ]);
+        break;
+    }
+  }
+
+  private async _rollbackTransaction(transaction: Transaction) {
+    await this._performTransaction({ ...transaction, amount: transaction.amount * -1 });
   }
 
   private _logError(error: any) {
