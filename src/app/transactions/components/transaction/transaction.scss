@@ -18,3 +18,8 @@ mat-icon {
   width: auto;
   max-width: calc(50% - 12px);
 }
+
+.read-only {
+  opacity: 0.6;
+  pointer-events: none;
+}

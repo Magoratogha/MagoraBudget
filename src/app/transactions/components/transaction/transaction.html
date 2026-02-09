@@ -1,4 +1,4 @@
-<mat-card appearance="filled" class="transaction mb-3" (click)="edit()">
+<mat-card appearance="filled" class="transaction mb-3" [class.read-only]="hasDeletedAccount()" (click)="edit()">
   <mat-card-content class="d-flex align-items-center justify-content-between gap-3">
     <div class="d-flex flex-column gap-2 w-100">
       <div class="d-flex gap-2 align-items-center justify-content-between">
@@ -13,34 +13,50 @@
       <div class="d-flex align-items-center gap-1">
         @switch (transaction()?.type) {
           @case (TransactionType.Expense) {
-            <mat-icon class="material-symbols-rounded">
-              {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
-            </mat-icon>
-            <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+            @if (getAccountDetails(transaction()!.originAccountId)) {
+              <mat-icon class="material-symbols-rounded">
+                {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
+              </mat-icon>
+              <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+            } @else {
+              <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
+            }
             <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
             <mat-icon class="material-symbols-rounded money-icon-end text-red">attach_money</mat-icon>
           }
           @case (TransactionType.Income) {
             <mat-icon class="material-symbols-rounded money-icon-start text-green">attach_money</mat-icon>
             <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
-            <mat-icon class="material-symbols-rounded">
-              {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
-            </mat-icon>
-            <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
-          }
-          @case (TransactionType.Transfer) {
-            <div class="d-flex align-items-center gap-1 transfer-item">
+            @if (getAccountDetails(transaction()!.originAccountId)) {
               <mat-icon class="material-symbols-rounded">
                 {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
               </mat-icon>
               <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+            } @else {
+              <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
+            }
+          }
+          @case (TransactionType.Transfer) {
+            <div class="d-flex align-items-center gap-1 transfer-item">
+              @if (getAccountDetails(transaction()!.originAccountId)) {
+                <mat-icon class="material-symbols-rounded">
+                  {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
+                </mat-icon>
+                <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+              } @else {
+                <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
+              }
             </div>
             <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
             <div class="d-flex align-items-center gap-1 transfer-item">
-              <mat-icon class="material-symbols-rounded">
-                {{ getAccountTypeIcon(getAccountDetails(transaction()!.targetAccountId!)!.type) }}
-              </mat-icon>
-              <span>{{ getAccountDetails(transaction()!.targetAccountId!)!.label }}</span>
+              @if (getAccountDetails(transaction()!.targetAccountId!)) {
+                <mat-icon class="material-symbols-rounded">
+                  {{ getAccountTypeIcon(getAccountDetails(transaction()!.targetAccountId!)!.type) }}
+                </mat-icon>
+                <span>{{ getAccountDetails(transaction()!.targetAccountId!)!.label }}</span>
+              } @else {
+                <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
+              }
             </div>
           }
         }
@@ -48,3 +64,7 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+<ng-template #deletedAccount>
+  <mat-chip class="sm text-decoration-line-through">Cuenta eliminada</mat-chip>
+</ng-template>

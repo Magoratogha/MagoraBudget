@@ -5,7 +5,7 @@ import { Transaction as ITransaction, TransactionType } from '../../models';
 import { MatIconModule } from '@angular/material/icon';
 import { getAccountTypeIcon, getTransactionTypeLabel } from '../../../shared/utils';
 import { Account } from '../../../accounts/models';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgTemplateOutlet } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { EditTransaction } from '../edit-transaction/edit-transaction';
 
@@ -15,7 +15,8 @@ import { EditTransaction } from '../edit-transaction/edit-transaction';
     MatCardModule,
     MatIconModule,
     CurrencyPipe,
-    MatChipsModule
+    MatChipsModule,
+    NgTemplateOutlet
   ],
   templateUrl: './transaction.html',
   styleUrl: './transaction.scss',
@@ -41,11 +42,23 @@ export class Transaction {
     }
   });
 
+  hasDeletedAccount = computed(() => {
+    switch (this.transaction()?.type) {
+      case TransactionType.Transfer:
+        return !this.getAccountDetails(this.transaction()!.originAccountId)
+          || !this.getAccountDetails(this.transaction()!.targetAccountId!);
+      default:
+        return !this.getAccountDetails(this.transaction()!.originAccountId);
+    }
+  });
+
   getAccountDetails(accountId: string): Account | null {
     return this._fireStore.getUserAccount(accountId);
   }
 
   edit() {
-    this._overlay.openBottomSheet(EditTransaction, { transaction: this.transaction() });
+    if (!this.hasDeletedAccount()) {
+      this._overlay.openBottomSheet(EditTransaction, { transaction: this.transaction() });
+    }
   }
 }
