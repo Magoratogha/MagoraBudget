@@ -39,7 +39,7 @@ export class Overlay {
     this._matBottomSheetRef?.dismiss(triggerCallback);
   }
 
-  public openModal(title: string, description?: string) {
+  public openModal(title: string, description?: string | string[]) {
     this._matModalDialogRef = this._matDialog.open(Modal, { data: { title, description }, autoFocus: false });
     return this._matModalDialogRef.afterClosed();
   }

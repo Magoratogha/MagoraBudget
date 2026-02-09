@@ -11,5 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class Modal {
   dialogData = inject(MAT_DIALOG_DATA);
   title = signal<string>(this.dialogData.title);
-  description = signal<string | undefined>(this.dialogData.description);
+  description = signal<string | string[] | undefined>(this.dialogData.description);
+  protected readonly Array = Array;
 }

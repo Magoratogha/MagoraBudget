@@ -15,7 +15,7 @@ import {
 import { NgxMaskDirective } from 'ngx-mask';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { take } from 'rxjs';
-import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
+import { WARNING_MODAL_DELETE_ACCOUNT_WORDING } from '../../../shared/constants';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -133,7 +133,7 @@ export class EditAccount implements OnInit {
   }
 
   async deleteAccount() {
-    this._overlay.openModal(WARNING_MODAL_DELETE_WORDING.title, WARNING_MODAL_DELETE_WORDING.description)
+    this._overlay.openModal(WARNING_MODAL_DELETE_ACCOUNT_WORDING.title, WARNING_MODAL_DELETE_ACCOUNT_WORDING.description)
       ?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldDelete) => {
         if (shouldDelete) {

@@ -15,6 +15,14 @@ export const FIREBASE_COLLECTION_NAMES = {
 };
 
 export const WARNING_MODAL_DELETE_WORDING = {
-  title: 'Estás seguro?',
-  description: 'Esta operación no se puede revertir.',
+  title: '¿Estás seguro?',
+  description: '¡Pilas! Esta operación no se puede revertir.',
+}
+
+export const WARNING_MODAL_DELETE_ACCOUNT_WORDING = {
+  title: '¿Estás seguro?',
+  description: [
+    '¡Pilas! No podrás editar ninguna transacción asociada con esta cuenta una vez eliminada.',
+    'Si aun así quieres eliminarla, te recomendamos eliminar primero sus transacciones asociadas.',
+    'Esta operación no se puede revertir.'],
 }

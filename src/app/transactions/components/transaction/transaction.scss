@@ -15,6 +15,6 @@ mat-icon {
 }
 
 .transfer-item {
-  flex: calc(50% - 12px);
-  text-align: center;
+  width: auto;
+  max-width: calc(50% - 12px);
 }
