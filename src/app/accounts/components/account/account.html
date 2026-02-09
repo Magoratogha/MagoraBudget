@@ -6,7 +6,7 @@
         <span>{{ account()?.label }}</span>
       </div>
       <mat-chip class="mono" [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
-        {{ balance() | currency : 'USD' : 'symbol' : '1.0-0' }}
+        {{ this.account()!.balance | currency : 'USD' : 'symbol' : '1.0-0' }}
       </mat-chip>
     </div>
     @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {

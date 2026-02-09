@@ -27,24 +27,11 @@ export class Account {
   private _overlay = inject(Overlay)
 
   account = input<IAccount>();
-  balance = computed(() => {
-    switch (this.account()?.type) {
-      case AccountType.Debt:
-      case AccountType.CreditCard:
-        return Math.abs(this.account()!.balance as number)
-      case AccountType.Cash:
-      case AccountType.Savings:
-      case AccountType.SavingsGoal:
-      default:
-        return this.account()!.balance as number;
-    }
-  });
   target = computed(() => {
     switch (this.account()?.type) {
       case AccountType.Debt:
         return 0;
       case AccountType.CreditCard:
-        return Math.abs(this.account()!.quota as number);
       case AccountType.SavingsGoal:
         return this.account()!.quota as number;
       case AccountType.Cash:
@@ -56,7 +43,7 @@ export class Account {
   quota = computed(() => {
     switch (this.account()?.type) {
       case AccountType.Debt:
-        return Math.abs(this.account()!.quota as number);
+        return this.account()!.quota as number;
       case AccountType.CreditCard:
       case AccountType.SavingsGoal:
         return 0;

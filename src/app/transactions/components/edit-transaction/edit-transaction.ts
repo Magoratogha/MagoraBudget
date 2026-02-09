@@ -21,6 +21,7 @@ import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
 import { take } from 'rxjs';
 import { UserSettings } from '../../../shared/models';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -35,6 +36,7 @@ import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
+    MatChipsModule,
   ],
   host: { class: 'inner-bottom-sheet-component' },
   templateUrl: './edit-transaction.html',
@@ -80,19 +82,19 @@ export class EditTransaction implements OnInit {
       switch (this.selectedTransactionType()) {
         case TransactionType.Transfer:
           this.form.controls.targetAccountId.setValidators([Validators.required]);
-          this.form.controls.originAccountId.setValue(this.userSettings().preferredExpensesAccountId || '');
-          this.form.controls.targetAccountId.setValue(this.userSettings().preferredIncomesAccountId || '');
+          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
+          this.form.controls.targetAccountId.setValue(this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '');
           if (this.form.controls.originAccountId.value === this.form.controls.targetAccountId.value) {
             this.form.controls.targetAccountId.setValue('');
           }
           break;
         case TransactionType.Income:
           this.form.controls.targetAccountId.setValidators([]);
-          this.form.controls.originAccountId.setValue(this.userSettings().preferredIncomesAccountId || '');
+          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredIncomesAccountId || '');
           break;
         case TransactionType.Expense:
           this.form.controls.targetAccountId.setValidators([]);
-          this.form.controls.originAccountId.setValue(this.userSettings().preferredExpensesAccountId || '');
+          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
           break;
       }
       this.form.controls.targetAccountId.updateValueAndValidity();
@@ -102,14 +104,15 @@ export class EditTransaction implements OnInit {
 
   ngOnInit() {
     if (this.transaction()) {
-      this.form.setValue({
-        type: this.transaction()?.type || TransactionType.Expense,
+      this.form.patchValue({
         amount: this.transaction()?.amount || 0,
         date: this.transaction()?.date || new Date(),
         originAccountId: this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
         targetAccountId: this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
         ownerId: this.transaction()?.ownerId || this._auth.getLoggedUser()!.uid
       }, { emitEvent: false });
+
+      this.form.controls.type.setValue(this.transaction()?.type || TransactionType.Expense);
     }
   }
 

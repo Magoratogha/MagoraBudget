@@ -13,3 +13,8 @@ mat-icon {
   height: 24px;
   min-height: 24px;
 }
+
+.transfer-item {
+  flex: calc(50% - 12px);
+  text-align: center;
+}

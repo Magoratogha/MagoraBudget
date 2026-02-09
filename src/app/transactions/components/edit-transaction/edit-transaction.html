@@ -1,5 +1,8 @@
 <form [formGroup]="form" class="d-flex flex-column w-100 align-items-center justify-content-center">
   <h1 class="text-center">Transacción</h1>
+  @if (transaction()?.id) {
+    <mat-chip class="sm mono mb-2 positive">Editando</mat-chip>
+  }
 
   <mat-button-toggle-group formControlName="type" hideSingleSelectionIndicator class="mb-4 mt-2">
     @for (type of Object.keys(TransactionType); track type) {
