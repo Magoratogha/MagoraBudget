@@ -1,15 +1,6 @@
 <mat-card appearance="filled" class="transaction mb-3" [class.read-only]="hasDeletedAccount()" (click)="edit()">
   <mat-card-content class="d-flex align-items-center justify-content-between gap-3">
-    <div class="d-flex flex-column gap-2 w-100">
-      <div class="d-flex gap-2 align-items-center justify-content-between">
-        <mat-chip class="sm" [class.positive]="transaction()?.type === TransactionType.Income"
-                  [class.negative]="transaction()?.type === TransactionType.Expense">
-          {{ getTransactionTypeLabel(transaction()!.type) }}</mat-chip>
-        <span class="font-monospace" [class.text-green]="transaction()?.type === TransactionType.Income"
-              [class.text-red]="transaction()?.type === TransactionType.Expense">
-          {{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
-        </span>
-      </div>
+    <div class="d-flex justify-content-between align-items-center w-100 gap-1">
       <div class="d-flex align-items-center gap-1">
         @switch (transaction()?.type) {
           @case (TransactionType.Expense) {
@@ -37,23 +28,23 @@
             }
           }
           @case (TransactionType.Transfer) {
-            <div class="d-flex align-items-center gap-1 transfer-item">
+            <div class="d-flex align-items-center gap-1">
               @if (getAccountDetails(transaction()!.originAccountId)) {
                 <mat-icon class="material-symbols-rounded">
                   {{ getAccountTypeIcon(getAccountDetails(transaction()!.originAccountId)!.type) }}
                 </mat-icon>
-                <span>{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
+                <span class="contained-text">{{ getAccountDetails(transaction()!.originAccountId)!.label }}</span>
               } @else {
                 <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
               }
             </div>
             <mat-icon class="material-symbols-rounded">arrow_right_alt</mat-icon>
-            <div class="d-flex align-items-center gap-1 transfer-item">
+            <div class="d-flex align-items-center gap-1">
               @if (getAccountDetails(transaction()!.targetAccountId!)) {
                 <mat-icon class="material-symbols-rounded">
                   {{ getAccountTypeIcon(getAccountDetails(transaction()!.targetAccountId!)!.type) }}
                 </mat-icon>
-                <span>{{ getAccountDetails(transaction()!.targetAccountId!)!.label }}</span>
+                <span class="contained-text">{{ getAccountDetails(transaction()!.targetAccountId!)!.label }}</span>
               } @else {
                 <ng-container [ngTemplateOutlet]="deletedAccount"></ng-container>
               }
@@ -61,6 +52,10 @@
           }
         }
       </div>
+      <mat-chip class="sm" [class.positive]="transaction()?.type === TransactionType.Income"
+                [class.negative]="transaction()?.type === TransactionType.Expense">
+        {{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
+      </mat-chip>
     </div>
   </mat-card-content>
 </mat-card>

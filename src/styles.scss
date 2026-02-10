@@ -55,10 +55,6 @@ mat-chip {
     }
   }
 
-  &.mono {
-    --mat-chip-label-text-font: var(--bs-font-monospace), serif;
-  }
-
   &.positive {
     --mat-chip-label-text-color: #{ colors.$green };
   }
@@ -105,4 +101,18 @@ mat-chip {
 
 .month-picker .mat-calendar-arrow {
   display: none;
+}
+
+.mat-mdc-card-content {
+  padding: 12px !important;
+}
+
+.contained-text {
+  max-width: fit-content;
+  white-space: normal;
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }

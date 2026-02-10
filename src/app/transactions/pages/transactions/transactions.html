@@ -9,7 +9,7 @@
   <button matIconButton>
     <mat-icon class="material-symbols-rounded" (click)="prevMonth()">arrow_back</mat-icon>
   </button>
-  <button matButton="tonal" (click)="picker.open()">
+  <button matButton="tonal" class="text-capitalize" (click)="picker.open()">
     {{ date() | date: 'MMMM yyyy' }}
   </button>
   <button matIconButton>
@@ -17,8 +17,21 @@
   </button>
 </div>
 <div class="pt-4">
-  @for (transaction of monthTransactions(); track transaction.id) {
-    <app-transaction [transaction]="transaction"/>
+  @if (monthTransactions().length) {
+    @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
+      <div class="d-flex align-items-center gap-2 mb-3 day-wrapper">
+        <span class="number">{{ day }}</span>
+        <small class="text text-capitalize">{{ getDateByDay(day) | date: 'EEEE' }}</small>
+      </div>
+      @for (transaction of transactionsPerDay()[day]; track transaction.id) {
+        <app-transaction [transaction]="transaction"/>
+      }
+    }
+  } @else {
+    <div class="d-flex w-100 flex-column gap-3 pt-3 text-center">
+      <span>Nada por acá. (·_·)</span>
+      <span>Toca en el botón de + para empezar a registrar transacciones.</span>
+    </div>
   }
 </div>
 

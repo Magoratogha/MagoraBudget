@@ -40,6 +40,17 @@ export class Transactions {
       transaction.date.getMonth() === this.date().getMonth() &&
       transaction.date.getFullYear() === this.date().getFullYear())
   });
+  transactionsPerDay = computed<Record<string, ITransaction[]>>(() => {
+    const transactionsPerDay: Record<string, ITransaction[]> = {};
+    this.monthTransactions().forEach(transaction => {
+      const day = transaction.date.getDate().toString();
+      if (!transactionsPerDay[day]) {
+        transactionsPerDay[day] = [];
+      }
+      transactionsPerDay[day].push(transaction);
+    });
+    return transactionsPerDay;
+  });
 
   setDate(date: Date) {
     this.picker.close();
@@ -61,4 +72,10 @@ export class Transactions {
     }
     this.date.set(new Date(this.date().getFullYear(), this.date().getMonth() - 1));
   }
+
+  getDateByDay(day: string): Date {
+    return new Date(this.date().getFullYear(), this.date().getMonth(), Number(day));
+  }
+
+  protected readonly Object = Object;
 }

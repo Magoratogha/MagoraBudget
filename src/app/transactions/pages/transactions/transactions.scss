@@ -1,0 +1,36 @@
+@use '../../../shared/styles/colors';
+
+.day-wrapper {
+  .number {
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .text {
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+}
+
+app-transaction {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: -1.2rem;
+    left: 14px;
+    height: 1.4rem;
+    width: 4px;
+    background-color: colors.$progress-gray;
+    z-index: -1;
+  }
+}
