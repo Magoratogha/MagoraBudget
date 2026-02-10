@@ -1,6 +1,6 @@
 <mat-drawer-container hasBackdrop>
   <mat-drawer mode="over" [autoFocus]="false">
-    <app-side-panel/>
+    <app-side-panel [showNewVersionBadge]="newVersionAvailable()"/>
   </mat-drawer>
   <mat-drawer-content>
     @if (auth.getLoggedUser()) {

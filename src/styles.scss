@@ -39,8 +39,11 @@ mat-form-field {
 }
 
 p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
-  user-select: none;
   font-weight: 400;
+}
+
+p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text, .progress-bar, .progress {
+  user-select: none;
 }
 
 
