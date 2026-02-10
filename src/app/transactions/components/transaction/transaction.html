@@ -7,7 +7,7 @@
           {{ getTransactionTypeLabel(transaction()!.type) }}</mat-chip>
         <span class="font-monospace" [class.text-green]="transaction()?.type === TransactionType.Income"
               [class.text-red]="transaction()?.type === TransactionType.Expense">
-          {{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'USD' : 'symbol' : '1.0-0'}}
+          {{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
         </span>
       </div>
       <div class="d-flex align-items-center gap-1">
