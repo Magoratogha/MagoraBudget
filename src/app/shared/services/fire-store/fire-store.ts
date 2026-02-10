@@ -187,7 +187,7 @@ export class FireStore {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS),
         where('ownerId', "==", userId),
-        orderBy('date', 'asc')
+        orderBy('date', 'desc')
       );
       return onSnapshot(q, (querySnapshot) => {
         const transactions: Transaction[] = [];

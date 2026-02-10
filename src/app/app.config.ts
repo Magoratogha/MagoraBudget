@@ -1,4 +1,4 @@
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, isDevMode, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -15,6 +15,10 @@ import {
 import { initializeAppCheck, provideAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { registerLocaleData } from '@angular/common';
+import localeES from '@angular/common/locales/es-CO';
+
+registerLocaleData(localeES);
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -54,6 +58,7 @@ export const appConfig: ApplicationConfig = {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline', floatLabel: 'always' } },
+    { provide: LOCALE_ID, useValue: 'es-CO' },
     provideEnvironmentNgxMask()
   ],
 };

@@ -98,3 +98,11 @@ mat-chip {
 .text-red {
   color: colors.$red !important;
 }
+
+.month-picker .mat-calendar-period-button {
+  pointer-events: none;
+}
+
+.month-picker .mat-calendar-arrow {
+  display: none;
+}

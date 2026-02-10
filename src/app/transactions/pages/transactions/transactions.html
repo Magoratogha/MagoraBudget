@@ -1,5 +1,23 @@
+<mat-form-field class="d-none">
+  <input hidden matInput autocomplete="off" [matDatepicker]="picker" [(ngModel)]="date">
+</mat-form-field>
+<mat-datepicker touchUi #picker (monthSelected)="setDate($event)"
+                startView="multi-year" panelClass="month-picker">
+</mat-datepicker>
+
+<div class="d-flex justify-content-center align-items-center gap-1">
+  <button matIconButton>
+    <mat-icon class="material-symbols-rounded" (click)="prevMonth()">arrow_back</mat-icon>
+  </button>
+  <button matButton="tonal" (click)="picker.open()">
+    {{ date() | date: 'MMMM yyyy' }}
+  </button>
+  <button matIconButton>
+    <mat-icon class="material-symbols-rounded" (click)="nextMonth()">arrow_forward</mat-icon>
+  </button>
+</div>
 <div class="pt-4">
-  @for (transaction of transactions(); track transaction.id) {
+  @for (transaction of monthTransactions(); track transaction.id) {
     <app-transaction [transaction]="transaction"/>
   }
 </div>
