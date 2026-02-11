@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
-import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { FirebaseApp, initializeApp, initializeServerApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_CONFIG, RECAPTCHA_CONFIG } from '../../firebase-options';
 import { provideServiceWorker } from '@angular/service-worker';
 import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
@@ -34,9 +34,14 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    provideFirebaseApp(() => initializeApp(FIREBASE_CONFIG)),
+    provideFirebaseApp(() => {
+      if (isPlatformBrowser(inject(PLATFORM_ID))) {
+        return initializeApp(FIREBASE_CONFIG);
+      }
+      return initializeServerApp(FIREBASE_CONFIG);
+    }),
     provideAuth(() => {
-      const auth = getAuth();
+      const auth = getAuth(inject(FirebaseApp));
       if (isPlatformBrowser(inject(PLATFORM_ID)) && location.hostname === 'localhost') {
         connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
       }
@@ -45,11 +50,11 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => {
       let firestore;
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
-        firestore = initializeFirestore(getApp(), {
+        firestore = initializeFirestore(inject(FirebaseApp), {
           localCache: persistentLocalCache()
         });
       } else {
-        firestore = getFirestore(getApp());
+        firestore = getFirestore(inject(FirebaseApp));
       }
       if (isPlatformBrowser(inject(PLATFORM_ID)) && location.hostname === 'localhost') {
         connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
@@ -59,7 +64,7 @@ export const appConfig: ApplicationConfig = {
     provideEnvironmentInitializer(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         provideAppCheck(() =>
-          initializeAppCheck(getApp(), {
+          initializeAppCheck(inject(FirebaseApp), {
             provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_CONFIG.reCaptchaKey),
             isTokenAutoRefreshEnabled: true
           })

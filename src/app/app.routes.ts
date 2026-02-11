@@ -5,12 +5,7 @@ const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToHome = () => redirectLoggedInTo(['home']);
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadComponent: () => import('./login/pages/login/login').then((m) => m.Login),
-    canActivate: [AuthGuard],
-    data: { authGuardPipe: redirectLoggedInToHome }
-  },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
     loadComponent: () => import('./home/pages/home/home').then((m) => m.Home),
@@ -35,6 +30,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' },
+  {
+    path: 'login',
+    loadComponent: () => import('./login/pages/login/login').then((m) => m.Login),
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectLoggedInToHome }
+  },
+  { path: 'not-found', redirectTo: 'home', pathMatch: 'full' },
+  { path: '**', redirectTo: 'not-found' },
 ];
