@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, OnInit, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, LOCALE_ID, OnInit, Signal } from '@angular/core';
 import { Auth, FireStore } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
@@ -10,9 +10,9 @@ import { Account, AccountType } from '../../../accounts/models';
 import { UserSettings } from '../../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
-import { ACCOUNT_TYPE_INFO_MAP } from '../../../accounts/constants';
 import { getAccountTypeIcon } from '../../utils';
 import { MatChipsModule } from '@angular/material/chips';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-side-panel',
@@ -32,6 +32,7 @@ export class SidePanel implements OnInit {
   auth = inject(Auth);
   private _fireStore = inject(FireStore);
   private _destroyRef = inject(DestroyRef);
+  private _providerId = inject(LOCALE_ID);
   showNewVersionBadge = input(false);
 
   userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();
@@ -85,9 +86,10 @@ export class SidePanel implements OnInit {
   }
 
   reload() {
-    window.location.reload();
+    if (isPlatformBrowser(this._providerId)) {
+      window.location.reload();
+    }
   }
 
-  protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }

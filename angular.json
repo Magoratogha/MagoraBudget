@@ -39,7 +39,9 @@
             "outputPath": {
               "base": "dist",
               "browser": ""
-            }
+            },
+            "server": "src/main.server.ts",
+            "outputMode": "static"
           },
           "configurations": {
             "production": {

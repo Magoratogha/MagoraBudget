@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar, ProfilePicture, SidePanel } from './shared/components';
 import { NAVBAR_ITEMS } from './shared/constants';
@@ -8,6 +8,12 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, tap } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+
+declare global {
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
+
 
 @Component({
   selector: 'app-root',
@@ -21,8 +27,12 @@ export class App implements AfterViewInit {
   auth = inject(Auth)
   newVersionAvailable = signal(false);
   private _sw = inject(SwUpdate);
+  private _platformId = inject(PLATFORM_ID);
 
   constructor() {
+    if (isPlatformBrowser(this._platformId) && location.hostname === 'localhost') {
+      self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
     if (this._sw.isEnabled) {
       this._sw.versionUpdates.pipe(
         takeUntilDestroyed(),
