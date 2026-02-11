@@ -37,7 +37,7 @@ jobs:
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_RECAPTCHA_KEY: ${{ secrets.FIREBASE_RECAPTCHA_KEY }}
-      - run: npm ci --legacy-peer-deps && ng build --configuration ${{ github.event.inputs.buildType }}
+      - run: npm ci --legacy-peer-deps && npm run build:${{ github.event.inputs.buildType || 'production' }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
