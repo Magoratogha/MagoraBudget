@@ -20,7 +20,7 @@ import {
   persistentLocalCache,
   provideFirestore
 } from '@angular/fire/firestore';
-import { initializeAppCheck, provideAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from '@angular/fire/app-check';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { isPlatformBrowser, registerLocaleData } from '@angular/common';
@@ -63,12 +63,10 @@ export const appConfig: ApplicationConfig = {
     }),
     provideEnvironmentInitializer(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
-        provideAppCheck(() =>
-          initializeAppCheck(inject(FirebaseApp), {
-            provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_CONFIG.reCaptchaKey),
-            isTokenAutoRefreshEnabled: true
-          })
-        )
+        return initializeAppCheck(inject(FirebaseApp), {
+          provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_CONFIG.reCaptchaKey),
+          isTokenAutoRefreshEnabled: true
+        })
       }
       return;
     }),
