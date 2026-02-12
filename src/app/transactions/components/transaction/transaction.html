@@ -1,6 +1,6 @@
 <mat-card appearance="filled" class="transaction mb-3" [class.read-only]="hasDeletedAccount()" (click)="edit()">
   <mat-card-content class="d-flex align-items-center justify-content-between gap-3">
-    <div class="d-flex justify-content-between align-items-center w-100 gap-1">
+    <div class="d-flex justify-content-between align-items-center w-100 gap-2">
       <div class="d-flex align-items-center gap-1">
         @switch (transaction()?.type) {
           @case (TransactionType.Expense) {

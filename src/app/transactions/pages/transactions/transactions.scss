@@ -23,7 +23,7 @@
 app-transaction {
   position: relative;
 
-  &:after {
+  &:before {
     content: '';
     position: absolute;
     top: -1.2rem;
