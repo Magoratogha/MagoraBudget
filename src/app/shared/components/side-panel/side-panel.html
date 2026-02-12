@@ -38,9 +38,9 @@
   <div class="d-flex flex-column align-items-center w-100 pb-4 px-3">
     <span class="mb-3">¿No eres {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0) }}?</span>
     <button matButton="filled" class="w-100" (click)="auth.logout()">Cerrar sesión</button>
-    <small class="mt-3 font-monospace">v{{ APP_VERSION }}</small>
     @if (showNewVersionBadge()) {
-      <mat-chip class="sm" (click)="reload()">Nueva version disponible</mat-chip>
+      <mat-chip class="sm mt-3" (click)="reload()">Nueva version disponible</mat-chip>
     }
+    <small class="mt-3 font-monospace">v{{ APP_VERSION }}</small>
   </div>
 </div>

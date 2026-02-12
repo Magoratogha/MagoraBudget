@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, LOCALE_ID, OnInit, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Signal } from '@angular/core';
 import { Auth, FireStore } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
@@ -32,7 +32,7 @@ export class SidePanel implements OnInit {
   auth = inject(Auth);
   private _fireStore = inject(FireStore);
   private _destroyRef = inject(DestroyRef);
-  private _providerId = inject(LOCALE_ID);
+  private _providerId = inject(PLATFORM_ID);
   showNewVersionBadge = input(false);
 
   userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();

@@ -27,6 +27,7 @@ export const routes: Routes = [
     loadComponent: () => import('./login/pages/login/login').then((m) => m.Login),
     canMatch: [isNotAuthed],
   },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'not-found', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'not-found' },
 ];
