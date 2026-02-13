@@ -1,12 +1,14 @@
 <div class="container">
-  <div class="d-grid w-100 px-4">
-    <button matButton="filled" (click)="login()">
+  <div class="app-logo d-flex align-items-center justify-content-center">
+    <img src="logo.svg" alt="logo"/>
+  </div>
+  <div class="d-flex flex-column px-2 w-100">
+    <h1>¡Hola!</h1>
+    <h3 class="mb-3 mt-1">Bienvenido a <b class="fw-bold">Budgets</b></h3>
+    <button matButton="filled" class="my-3" (click)="login()">
       <mat-icon class="material-symbols-rounded">login</mat-icon>
       Ingresar con Google
     </button>
+    <small class="font-monospace app-version w-100 mb-4 text-center">v{{ APP_VERSION }}</small>
   </div>
-</div>
-<small class="font-monospace app-version w-100 mb-4 text-center">v{{ APP_VERSION }}</small>
-<div class="app-logo">
-  <h1>Magora Budget</h1>
 </div>

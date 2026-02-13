@@ -52,6 +52,7 @@
     "@types/bootstrap": "^5.2.10",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
+    "pwa-asset-generator": "^8.1.2",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
