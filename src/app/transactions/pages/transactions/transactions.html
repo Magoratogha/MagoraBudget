@@ -5,7 +5,7 @@
                 startView="multi-year" panelClass="month-picker">
 </mat-datepicker>
 
-<div class="d-flex justify-content-center align-items-center gap-3">
+<div class="d-flex justify-content-center align-items-center gap-3 date-picker">
   <button matIconButton>
     <mat-icon class="material-symbols-rounded" (click)="prevMonth()">arrow_back</mat-icon>
   </button>
@@ -16,22 +16,20 @@
     <mat-icon class="material-symbols-rounded" (click)="nextMonth()">arrow_forward</mat-icon>
   </button>
 </div>
-<div class="pt-4">
-  @if (monthTransactions().length) {
-    @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
-      <div class="d-flex align-items-center gap-2 mb-3 day-wrapper">
-        <span class="number">{{ day }}</span>
-        <small class="text text-capitalize">{{ getDateByDay(day) | date: 'EEEE' }}</small>
-      </div>
-      @for (transaction of transactionsPerDay()[day]; track transaction.id) {
-        <app-transaction [transaction]="transaction"/>
-      }
-    }
-  } @else {
-    <div class="d-flex w-100 flex-column gap-3 pt-3 text-center">
-      <span>Nada por acá. (·_·)</span>
-      <span>Toca en el botón de + para empezar a registrar transacciones.</span>
+<h1 class="text-capitalize mb-4 main-title text-center">{{ date() | date: 'MMMM' }}</h1>
+@if (monthTransactions().length) {
+  @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
+    <div class="d-flex align-items-center gap-2 mb-3 day-wrapper">
+      <span class="number">{{ day }}</span>
+      <small class="text text-capitalize">{{ getDateByDay(day) | date: 'EEEE' }}</small>
     </div>
+    @for (transaction of transactionsPerDay()[day]; track transaction.id) {
+      <app-transaction [transaction]="transaction"/>
+    }
   }
-</div>
-
+} @else {
+  <div class="d-flex w-100 flex-column gap-3 pt-3 text-center">
+    <span>Nada por acá. (·_·)</span>
+    <span>Toca en el botón de + para empezar a registrar transacciones.</span>
+  </div>
+}

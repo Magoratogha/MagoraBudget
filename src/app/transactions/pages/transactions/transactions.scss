@@ -1,4 +1,5 @@
 @use '../../../shared/styles/colors';
+@use '../../../shared/styles/variables';
 
 .day-wrapper {
   .number {
@@ -18,6 +19,15 @@
     padding: 3px 6px;
     border-radius: 4px;
   }
+}
+
+.date-picker {
+  position: fixed;
+  bottom: variables.$navbar-height;
+  left: 0;
+  width: 100dvw;
+  padding: 1rem 1rem 0.5rem 1rem;
+  background-color: var(--mat-sys-surface-container);
 }
 
 app-transaction {

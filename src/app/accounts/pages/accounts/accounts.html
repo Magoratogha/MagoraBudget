@@ -1,13 +1,11 @@
-<div class="w-100 d-flex align-items-center justify-content-center flex-column">
-  <div class="balance-wrapper">
-    <mat-chip class="sm">Disponible</mat-chip>
-    <h1 class="display-4 mb-0 text-center"
-        [ngClass]="{ positive: availableBalance() > 0, negative: availableBalance() < 0 }">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+<div class="w-100 d-flex align-items-center justify-content-center flex-column mb-3">
+  <div class="balance-wrapper" [ngClass]="{ positive: availableBalance() > 0, negative: availableBalance() < 0 }">
+    <h1 class="mb-0 text-center main-title">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+    <small>Disponible</small>
   </div>
-  <div class="balance-wrapper">
-    <mat-chip class="sm">Saldo neto</mat-chip>
-    <h1 class="display-4 mb-0 text-center"
-        [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">{{ globalBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+  <div class="balance-wrapper" [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">
+    <h5 class="mb-0 text-center">{{ globalBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+    <small>Neto</small>
   </div>
 </div>
 @for (account of accounts(); track account.id) {

@@ -10,7 +10,7 @@ import {
 } from '../../../shared/utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { DatePicker, MoneyInput } from '../../../shared/components';
+import { DatePicker } from '../../../shared/components';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Account, AccountType } from '../../../accounts/models';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -22,6 +22,8 @@ import { take } from 'rxjs';
 import { UserSettings } from '../../../shared/models';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatChipsModule } from '@angular/material/chips';
+import { NgxMaskDirective } from 'ngx-mask';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -31,12 +33,13 @@ import { MatChipsModule } from '@angular/material/chips';
     MatFormFieldModule,
     MatInputModule,
     DatePicker,
-    MoneyInput,
     MatButtonToggleModule,
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
     MatChipsModule,
+    NgxMaskDirective,
+    CurrencyPipe,
   ],
   host: { class: 'inner-bottom-sheet-component' },
   templateUrl: './edit-transaction.html',
@@ -50,12 +53,13 @@ export class EditTransaction implements OnInit {
   private _bottomSheetData = inject(MAT_BOTTOM_SHEET_DATA);
   userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();
   userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
+  private _amountDefaultValidations = [Validators.required, Validators.min(1), onlyNumbersValidator(false)]
 
   TransactionType = TransactionType;
   transaction = signal<Transaction | undefined>(this._bottomSheetData?.transaction);
   form = new FormGroup({
     type: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
-    amount: new FormControl<number>(0, [Validators.required, Validators.min(1), onlyNumbersValidator(false)]),
+    amount: new FormControl<number>(0, this._amountDefaultValidations),
     date: new FormControl<Date>(new Date(), [Validators.required]),
     originAccountId: new FormControl<string>('', [Validators.required]),
     targetAccountId: new FormControl<string>(''),
@@ -63,15 +67,46 @@ export class EditTransaction implements OnInit {
   });
   selectedTransactionType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
   selectedOriginAccountId = toSignal(this.form.controls.originAccountId.valueChanges, { initialValue: this.form.controls.originAccountId.value });
+  selectedTargetAccountId = toSignal(this.form.controls.targetAccountId.valueChanges, { initialValue: this.form.controls.targetAccountId.value });
   availableOriginAccounts = computed(() => {
-    return this.userAccounts().filter((account) => account.type !== AccountType.Debt);
+    if (this.selectedTransactionType() === TransactionType.Income) {
+      return this.userAccounts();
+    } else {
+      return this.userAccounts().filter((account) => account.type !== AccountType.Debt);
+    }
   });
   availableTargetAccounts = computed(() => {
     return this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId());
   });
   originAccountLabel = computed(() => {
     return this.selectedTransactionType() === TransactionType.Transfer ? 'De la cuenta' : 'Cuenta';
-  });
+  })
+
+  maxExpenseAmount = signal<number | null>(null);
+  maxIncomeAmount = signal<number | null>(null);
+
+  amountErrorLabel = computed(() => {
+    const incomeLabel = ['A esa cuenta puedes enviar máximo', this.maxIncomeAmount()];
+    const expenseLabel = ['En esa cuenta solo tienes', this.maxExpenseAmount()];
+    switch (this.selectedTransactionType()) {
+      case TransactionType.Transfer:
+        const maxAmount = Math.min(
+          this.maxExpenseAmount() ?? Infinity,
+          this.maxIncomeAmount() ?? Infinity
+        );
+        if (maxAmount === this.maxIncomeAmount()) {
+          return incomeLabel;
+        } else {
+          return expenseLabel;
+        }
+      case TransactionType.Income:
+        return incomeLabel;
+      case TransactionType.Expense:
+        return expenseLabel;
+      default:
+        return ['', null];
+    }
+  })
 
   protected readonly Object = Object;
   protected readonly isNaN = isNaN;
@@ -100,6 +135,64 @@ export class EditTransaction implements OnInit {
       this.form.controls.targetAccountId.updateValueAndValidity();
       this.form.updateValueAndValidity();
     });
+
+    effect(() => {
+      const originAccount = this.userAccounts().find(account => account.id === this.selectedOriginAccountId());
+      const targetAccount = this.userAccounts().find(account => account.id === this.selectedTargetAccountId());
+      const transactionType = this.selectedTransactionType();
+
+      this.form.controls.amount.setValidators(this._amountDefaultValidations);
+      this.maxIncomeAmount.set(null);
+      this.maxExpenseAmount.set(null);
+
+      switch (transactionType) {
+        case TransactionType.Transfer:
+          if (originAccount || (targetAccount && targetAccount.quota)) {
+            if (originAccount) {
+              this._setMaxExpenseAmount(originAccount);
+            }
+            if (targetAccount && targetAccount.quota) {
+              this._setMaxIncomeAmount(targetAccount);
+            }
+            const maxAmount = Math.min(
+              this.maxExpenseAmount() ?? Infinity,
+              this.maxIncomeAmount() ?? Infinity
+            );
+            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(maxAmount)]);
+          }
+          break;
+        case TransactionType.Income:
+          if (originAccount && originAccount.quota) {
+            this._setMaxIncomeAmount(originAccount);
+            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(this.maxIncomeAmount() as number)]);
+          }
+          break;
+        case TransactionType.Expense:
+          if (originAccount) {
+            this._setMaxExpenseAmount(originAccount);
+            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(this.maxExpenseAmount() as number)]);
+          }
+          break;
+      }
+      this.form.controls.amount.updateValueAndValidity();
+      this.form.updateValueAndValidity();
+    })
+  }
+
+  private _setMaxExpenseAmount(account: Account): void {
+    this.maxExpenseAmount.set(
+      account.type === AccountType.CreditCard ?
+        Math.abs(account.quota!) - Math.abs(account.balance)
+        : account.balance
+    );
+  }
+
+  private _setMaxIncomeAmount(account: Account): void {
+    this.maxIncomeAmount.set(
+      account.type === AccountType.SavingsGoal ?
+        account.quota! - account.balance
+        : Math.abs(account.balance)
+    );
   }
 
   ngOnInit() {

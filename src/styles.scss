@@ -119,3 +119,12 @@ mat-chip {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+.main-title {
+  font-size: calc(1.75rem + 1.5vw);
+  font-weight: 500;
+}
+
+.fw-bold {
+  font-weight: 500 !important;
+}

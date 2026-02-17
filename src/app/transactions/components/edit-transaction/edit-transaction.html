@@ -22,7 +22,17 @@
     }
   </mat-button-toggle-group>
 
-  <app-money-input class="mb-3" formControlName="amount"/>
+  <mat-form-field class="mb-3">
+    <mat-label>Monto</mat-label>
+    <input autocomplete="off" matInput mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*"
+           placeholder="0" formControlName="amount">
+    <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
+    @if (form.controls.amount.hasError('max')) {
+      <mat-error>{{ amountErrorLabel()[0] }}
+        <span class="fw-bolder ms-1">{{ amountErrorLabel()[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+      </mat-error>
+    }
+  </mat-form-field>
   <app-date-picker class="mb-4" formControlName="date"/>
 
   @if (availableOriginAccounts().length) {
