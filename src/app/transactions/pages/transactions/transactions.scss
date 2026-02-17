@@ -28,6 +28,14 @@
   width: 100dvw;
   padding: 1rem 1rem 0.5rem 1rem;
   background-color: var(--mat-sys-surface-container);
+
+  .left {
+    left: 4rem;
+  }
+
+  .right {
+    right: 4rem;
+  }
 }
 
 app-transaction {

@@ -5,6 +5,10 @@
 
 html {
   height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
   @include mat.theme((
     color: (
       primary: mat.$chartreuse-palette,

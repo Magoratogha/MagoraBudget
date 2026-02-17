@@ -3,15 +3,17 @@
     <app-side-panel [showNewVersionBadge]="newVersionAvailable()"/>
   </mat-drawer>
   <mat-drawer-content>
-    @if (auth.getLoggedUser()) {
-      <app-profile-picture
-        radius="50%"
-        [size]="40"
-        (click)="overlay.openSidePanel()"/>
-      <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
-    }
-    <div class="container pt-4">
-      <router-outlet/>
+    <div class="main-content">
+      @if (auth.getLoggedUser()) {
+        <app-profile-picture
+          radius="50%"
+          [size]="40"
+          (click)="overlay.openSidePanel()"/>
+        <app-navbar [items]="NAVBAR_ITEMS" (createButtonClicked)="onCreateButtonClick()"/>
+      }
+      <div class="container pt-4">
+        <router-outlet/>
+      </div>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

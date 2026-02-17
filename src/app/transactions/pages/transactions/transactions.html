@@ -6,13 +6,13 @@
 </mat-datepicker>
 
 <div class="d-flex justify-content-center align-items-center gap-3 date-picker">
-  <button matIconButton>
+  <button matIconButton class="position-fixed left">
     <mat-icon class="material-symbols-rounded" (click)="prevMonth()">arrow_back</mat-icon>
   </button>
   <button matButton="tonal" class="text-capitalize" (click)="picker.open()">
     {{ date() | date: 'MMMM yyyy' }}
   </button>
-  <button matIconButton>
+  <button matIconButton class="position-fixed right">
     <mat-icon class="material-symbols-rounded" (click)="nextMonth()">arrow_forward</mat-icon>
   </button>
 </div>

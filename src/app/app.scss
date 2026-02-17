@@ -15,4 +15,15 @@ app-profile-picture {
 mat-drawer-container {
   --mat-sidenav-container-shape: 0px;
   height: 100%;
+  overflow: hidden !important;
+}
+
+mat-drawer-content {
+  overflow: hidden !important;
+}
+
+.main-content {
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
