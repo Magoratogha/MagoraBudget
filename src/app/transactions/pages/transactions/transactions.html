@@ -17,10 +17,10 @@
   </button>
 </div>
 <h1 class="text-capitalize mb-4 main-title text-center">{{ date() | date: 'MMMM' }}</h1>
-<div class="pb-5 mb-4">
+<div class="pb-5 mb-4 d-flex flex-column gap-3">
   @if (monthTransactions().length) {
     @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
-      <div class="d-flex align-items-center gap-2 mb-3 day-wrapper">
+      <div class="d-flex align-items-center gap-2 day-wrapper">
         <span class="number">{{ day }}</span>
         <small class="text text-capitalize">{{ getDateByDay(day) | date: 'EEEE' }}</small>
       </div>
