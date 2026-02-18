@@ -1,0 +1,4 @@
+<span matSnackBarLabel class="d-flex align-items-center"><mat-icon class="material-symbols-rounded me-2">{{ icon() }}</mat-icon>{{ message() }}</span>
+<span matSnackBarActions>
+  <button matButton matSnackBarAction (click)="snackBarRef.dismissWithAction()">Ok</button>
+</span>

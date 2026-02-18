@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, PLATFORM_ID, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Navbar, ProfilePicture, SidePanel } from './shared/components';
 import { NAVBAR_ITEMS } from './shared/constants';
-import { Auth, Overlay } from './shared/services';
+import { Auth, FireStore, Overlay } from './shared/services';
 import { EditTransaction } from './transactions/components';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { SwUpdate } from '@angular/service-worker';
@@ -13,7 +13,6 @@ import { isPlatformBrowser } from '@angular/common';
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
 }
-
 
 @Component({
   selector: 'app-root',
@@ -28,6 +27,7 @@ export class App implements AfterViewInit {
   newVersionAvailable = signal(false);
   private _sw = inject(SwUpdate);
   private _platformId = inject(PLATFORM_ID);
+  private _fireStore = inject(FireStore);
 
   constructor() {
     if (isPlatformBrowser(this._platformId) && location.hostname === 'localhost') {
@@ -50,5 +50,17 @@ export class App implements AfterViewInit {
 
   onCreateButtonClick() {
     this.overlay.openBottomSheet(EditTransaction);
+  }
+
+  @HostListener('window:offline')
+  onOfflineConnection(): void {
+    this._fireStore.isOnline.set(false);
+    this.overlay.showSnackBar('Se perdió la conexión a internet', 'globe_2_cancel')
+  }
+
+  @HostListener('window:online')
+  onOnlineConnection(): void {
+    this._fireStore.isOnline.set(true);
+    this.overlay.showSnackBar('Se restableció la conexión a internet', 'mobiledata_arrows')
   }
 }

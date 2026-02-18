@@ -4,3 +4,4 @@ export * from './profile-picture/profile-picture';
 export * from './loader/loader';
 export * from './modal/modal';
 export * from './date-picker/date-picker';
+export * from './snack-bar/snack-bar';

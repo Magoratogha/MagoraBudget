@@ -1,8 +1,9 @@
 import { inject, Injectable, Type } from '@angular/core';
-import { Loader, Modal } from '../../components';
+import { Loader, Modal, SnackBar } from '../../components';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,11 @@ export class Overlay {
   private _sidePanel: MatDrawer | null = null;
   private _matBottomSheet = inject(MatBottomSheet);
   private _matDialog = inject(MatDialog);
+  private _snackBar = inject(MatSnackBar);
   private _matBottomSheetRef?: MatBottomSheetRef;
   private _matModalDialogRef?: MatDialogRef<Modal>;
   private _matLoaderDialogRef?: MatDialogRef<Loader>;
+  private _matSnackBarRef?: MatSnackBarRef<SnackBar>;
 
   public initOverlays(sidePanel: MatDrawer) {
     this._sidePanel = sidePanel;
@@ -46,6 +49,20 @@ export class Overlay {
 
   public closeModal(triggerCallback: boolean = false) {
     this._matModalDialogRef?.close(triggerCallback);
+  }
+
+  public showSnackBar(message: string, icon: string) {
+    this._matSnackBarRef = this._snackBar.openFromComponent(SnackBar, {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      data: { message, icon }
+    });
+    return this._matSnackBarRef.afterDismissed();
+  }
+
+  public dismissSnackBar() {
+    this._matSnackBarRef?.dismiss();
   }
 
   public showLoader() {

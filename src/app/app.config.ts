@@ -7,7 +7,7 @@ import {
   provideBrowserGlobalErrorListeners,
   provideEnvironmentInitializer
 } from '@angular/core';
-import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
+import { PreloadAllModules, provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { routes } from './app.routes';
 import { FirebaseApp, initializeApp, initializeServerApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_CONFIG, RECAPTCHA_CONFIG } from '../../firebase-options';
@@ -33,7 +33,9 @@ registerLocaleData(localeES);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withPreloading(PreloadAllModules)),
+    provideRouter(routes,
+      withPreloading(PreloadAllModules),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(FIREBASE_CONFIG);

@@ -1,10 +1,11 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { User } from "@angular/fire/auth";
 import {
-  addDoc,
   collection,
   deleteDoc,
+  disableNetwork,
   doc,
+  enableNetwork,
   Firestore,
   onSnapshot,
   orderBy,
@@ -27,15 +28,27 @@ export class FireStore {
   private _userAccounts = signal<Account[]>([]);
   private _userTransactions = signal<Transaction[]>([]);
   private _userSettings = signal<UserSettings>({} as UserSettings);
+  public isOnline = signal<boolean>(true);
+
+  constructor() {
+    effect(async () => {
+      if (this.isOnline()) {
+        await enableNetwork(this._db);
+      } else {
+        await disableNetwork(this._db);
+      }
+    })
+  }
 
   public async addNewUser(user: User) {
     try {
-      await setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USERS, user.uid), {
+      const data = {
         name: user.displayName,
         mail: user.email,
         provider: user.providerId,
         pictureUrl: user.photoURL || null,
-      });
+      }
+      await this._performOperation(() => setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USERS, user.uid), data));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -53,10 +66,8 @@ export class FireStore {
   public async addAccount(account: Account): Promise<string> {
     try {
       this._cleanWhiteSpaces(account);
-      const docRef = await addDoc(
-        collection(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS),
-        account
-      );
+      const docRef = doc(collection(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS));
+      await this._performOperation(() => setDoc(docRef, account));
       return docRef.id;
     } catch (e) {
       this._logError(e);
@@ -67,7 +78,7 @@ export class FireStore {
   public async editAccount(accountId: string, account: Partial<Account>): Promise<void> {
     try {
       this._cleanWhiteSpaces(account);
-      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account);
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -76,7 +87,7 @@ export class FireStore {
 
   public async deleteAccount(accountId: string): Promise<void> {
     try {
-      await deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId));
+      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId)));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -87,10 +98,8 @@ export class FireStore {
     try {
       this._cleanWhiteSpaces(transaction);
       await this._updateAccountsByTransaction(transaction);
-      const docRef = await addDoc(
-        collection(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS),
-        transaction
-      );
+      const docRef = doc(collection(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS));
+      await this._performOperation(() => setDoc(docRef, transaction));
       return docRef.id;
     } catch (e) {
       this._logError(e);
@@ -103,7 +112,7 @@ export class FireStore {
       this._cleanWhiteSpaces(transactionToSave);
       this._cleanWhiteSpaces(currentTransaction);
       await this._updateAccountsByTransaction(transactionToSave, currentTransaction);
-      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), { ...transactionToSave });
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), { ...transactionToSave }));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -115,7 +124,7 @@ export class FireStore {
       const transactionToDelete = this.getUserTransaction(transactionId)!;
       this._cleanWhiteSpaces(transactionToDelete);
       await this._rollbackTransaction(transactionToDelete);
-      await deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId));
+      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId)));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -125,10 +134,8 @@ export class FireStore {
   public async addUserSettings(settings: UserSettings): Promise<string> {
     try {
       this._cleanWhiteSpaces(settings);
-      const docRef = await addDoc(
-        collection(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS),
-        settings
-      );
+      const docRef = doc(collection(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS));
+      await this._performOperation(() => setDoc(docRef, settings));
       return docRef.id;
     } catch (e) {
       this._logError(e);
@@ -139,7 +146,7 @@ export class FireStore {
   public async editUserSettings(settingsId: string, settings: UserSettings): Promise<void> {
     try {
       this._cleanWhiteSpaces(settings);
-      await updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), { ...settings });
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), { ...settings }));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -263,6 +270,18 @@ export class FireStore {
           })
         ]);
         break;
+    }
+  }
+
+  private async _performOperation(operation: Function) {
+    try {
+      if (this.isOnline()) {
+        await operation();
+      } else {
+        operation();
+      }
+    } catch (e) {
+      throw e;
     }
   }
 
