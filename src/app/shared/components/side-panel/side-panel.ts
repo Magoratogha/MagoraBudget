@@ -1,12 +1,11 @@
-import { Component, computed, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Signal } from '@angular/core';
-import { Auth, FireStore } from '../../services';
+import { Component, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Signal } from '@angular/core';
+import { Auth, FireStore, Query } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Account, AccountType } from '../../../accounts/models';
 import { UserSettings } from '../../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,18 +30,14 @@ import { isPlatformBrowser } from '@angular/common';
 export class SidePanel implements OnInit {
   auth = inject(Auth);
   private _fireStore = inject(FireStore);
+  private _query = inject(Query);
   private _destroyRef = inject(DestroyRef);
   private _providerId = inject(PLATFORM_ID);
   showNewVersionBadge = input(false);
 
-  userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();
-  userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
-  availableExpensesAccounts = computed(() => {
-    return this.userAccounts().filter((account) => account.type !== AccountType.Debt);
-  });
-  availableIncomesAccounts = computed(() => {
-    return this.userAccounts();
-  });
+  userSettings: Signal<UserSettings> = this._query.userSettings;
+  availableExpensesAccounts = this._query.availableExpensesAccounts;
+  availableIncomesAccounts = this._query.availableIncomesAccounts;
 
   APP_VERSION = APP_VERSION_STRING;
 

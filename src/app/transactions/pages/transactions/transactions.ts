@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal, Signal, ViewChild } from '@angular/core';
-import { FireStore } from '../../../shared/services';
+import { Query } from '../../../shared/services';
 import { Transaction as ITransaction } from '../../models';
 import { Transaction } from '../../components';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
@@ -31,15 +31,17 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class Transactions {
   @ViewChild(MatDatepicker) picker!: MatDatepicker<Date>;
-  private _fireStore = inject(FireStore);
+  private _query = inject(Query);
 
   date = signal(new Date());
-  transactions: Signal<ITransaction[]> = this._fireStore.getUserTransactions();
+  transactions: Signal<ITransaction[]> = this._query.userTransactions;
+
   monthTransactions = computed<ITransaction[]>(() => {
     return this.transactions().filter(transaction =>
       transaction.date.getMonth() === this.date().getMonth() &&
       transaction.date.getFullYear() === this.date().getFullYear())
   });
+
   transactionsPerDay = computed<Record<string, ITransaction[]>>(() => {
     const transactionsPerDay: Record<string, ITransaction[]> = {};
     this.monthTransactions().forEach(transaction => {

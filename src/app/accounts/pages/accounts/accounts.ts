@@ -1,7 +1,7 @@
-import { Component, computed, inject, Signal } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { Account, EditAccount } from '../../components';
-import { FireStore, Overlay } from '../../../shared/services';
-import { Account as IAccount, AccountType } from '../../models';
+import { Overlay, Query } from '../../../shared/services';
+import { Account as IAccount } from '../../models';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -20,21 +20,11 @@ import { MatChipsModule } from '@angular/material/chips';
 })
 export class Accounts {
   private _overlay = inject(Overlay);
-  private _fireStore = inject(FireStore);
+  private _query = inject(Query);
 
-  accounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
-  globalBalance = computed(() => {
-    return this.accounts().reduce((total, account) => total + account.balance, 0);
-  });
-  availableBalance = computed(() => {
-    return this.accounts().reduce((total, account) => {
-      if (account.type === AccountType.Savings || account.type === AccountType.Cash) {
-        return total + account.balance;
-      } else {
-        return total;
-      }
-    }, 0);
-  });
+  accounts: Signal<IAccount[]> = this._query.userAccounts;
+  globalBalance = this._query.globalBalance;
+  availableBalance = this._query.availableBalance;
 
   addNewAccount() {
     this._overlay.openBottomSheet(EditAccount);

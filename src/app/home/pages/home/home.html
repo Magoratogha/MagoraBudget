@@ -1,1 +1,57 @@
-<p>home works!</p>
+<div class="d-flex flex-column">
+  <h1 class="fw-bold mb-3">Resumen</h1>
+  <mat-card appearance="filled" class="mb-2">
+    <mat-card-content>
+      <div class="d-flex align-items-center justify-content-center flex-column gap-3 p-2">
+        <div class="d-flex flex-column align-items-center w-100 balance-wrapper">
+          <h1 class="mb-0 text-center main-title">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+          <small class="fw-bold">Disponible</small>
+        </div>
+        <div class="d-flex w-100">
+          <div class="d-flex flex-column align-items-center w-50 text-green">
+            <h5 class="mb-0 text-center fw-bold">{{ monthIncomes() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+            <small class="fw-bold">Ingresos</small>
+          </div>
+          <div class="d-flex flex-column align-items-center w-50 text-red">
+            <h5 class="mb-0 text-center fw-bold">{{ monthExpenses() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+            <small class="fw-bold">Gastos</small>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <h1 class="fw-bold mb-3 mt-4">Gastos</h1>
+  <mat-card appearance="filled" class="mb-2">
+    <mat-card-content>
+      <div class="d-flex flex-column gap-2 py-1">
+        @for (type of Object.keys(expensesPerAccountType()); track expensesPerAccountType()) {
+          <div class="d-flex align-items-center justify-content-between gap-3 balance-wrapper">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
+              {{ getAccountTypeLabel(Number(type)) }}
+            </div>
+            <span
+              class="fw-bold text-red">{{ $any(expensesPerAccountType())[type] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <h1 class="fw-bold mb-3 mt-4">Ingresos</h1>
+  <mat-card appearance="filled" class="mb-2">
+    <mat-card-content>
+      <div class="d-flex flex-column gap-2 py-1">
+        @for (type of Object.keys(incomesPerAccountType()); track incomesPerAccountType()) {
+          <div class="d-flex align-items-center justify-content-between gap-3 balance-wrapper">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
+              {{ getAccountTypeLabel(Number(type)) }}
+            </div>
+            <span
+              class="fw-bold text-green">{{ $any(incomesPerAccountType())[type] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+          </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, effect, inject, OnInit, signal, Signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Transaction, TransactionType } from '../../models';
-import { Auth, FireStore, Overlay } from '../../../shared/services';
+import { Auth, FireStore, Overlay, Query } from '../../../shared/services';
 import {
   getAccountTypeIcon,
   getTransactionTypeIcon,
@@ -48,15 +48,18 @@ import { CurrencyPipe } from '@angular/common';
 export class EditTransaction implements OnInit {
   private _auth = inject(Auth);
   private _fireStore = inject(FireStore);
+  private _query = inject(Query);
   private _overlay = inject(Overlay);
   private _destroyRef = inject(DestroyRef);
   private _bottomSheetData = inject(MAT_BOTTOM_SHEET_DATA);
-  userAccounts: Signal<Account[]> = this._fireStore.getUserAccounts();
-  userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
   private _amountDefaultValidations = [Validators.required, Validators.min(1), onlyNumbersValidator(false)]
 
   TransactionType = TransactionType;
   transaction = signal<Transaction | undefined>(this._bottomSheetData?.transaction);
+
+  userAccounts: Signal<Account[]> = this._query.userAccounts;
+  userSettings: Signal<UserSettings> = this._query.userSettings;
+
   form = new FormGroup({
     type: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
     amount: new FormControl<number>(0, this._amountDefaultValidations),
@@ -65,19 +68,14 @@ export class EditTransaction implements OnInit {
     targetAccountId: new FormControl<string>(''),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   });
+
   selectedTransactionType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
   selectedOriginAccountId = toSignal(this.form.controls.originAccountId.valueChanges, { initialValue: this.form.controls.originAccountId.value });
   selectedTargetAccountId = toSignal(this.form.controls.targetAccountId.valueChanges, { initialValue: this.form.controls.targetAccountId.value });
-  availableOriginAccounts = computed(() => {
-    if (this.selectedTransactionType() === TransactionType.Income) {
-      return this.userAccounts();
-    } else {
-      return this.userAccounts().filter((account) => account.type !== AccountType.Debt);
-    }
-  });
-  availableTargetAccounts = computed(() => {
-    return this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId());
-  });
+
+  availableOriginAccounts = computed(() => this.selectedTransactionType() === TransactionType.Income ? this.userAccounts() : this._query.availableExpensesAccounts());
+  availableTargetAccounts = computed(() => this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId()));
+
   originAccountLabel = computed(() => {
     return this.selectedTransactionType() === TransactionType.Transfer ? 'De la cuenta' : 'Cuenta';
   })

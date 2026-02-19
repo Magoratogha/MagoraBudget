@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FireStore, Overlay } from '../../../shared/services';
 import { Transaction as ITransaction, TransactionType } from '../../models';
 import { MatIconModule } from '@angular/material/icon';
-import { getAccountTypeIcon, getTransactionTypeLabel } from '../../../shared/utils';
+import { getAccountTypeIcon } from '../../../shared/utils';
 import { Account } from '../../../accounts/models';
 import { CurrencyPipe, NgTemplateOutlet } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
@@ -28,7 +28,6 @@ export class Transaction {
   transaction = input<ITransaction>();
   protected readonly TransactionType = TransactionType;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
-  protected readonly getTransactionTypeLabel = getTransactionTypeLabel;
 
   balanceLabelPrefix = computed(() => {
     switch (this.transaction()?.type) {
