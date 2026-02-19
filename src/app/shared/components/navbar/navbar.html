@@ -1,6 +1,6 @@
 <nav class="mat-bg-surface-container">
   @for (item of leftSideItems(); track item) {
-    <a matButton [routerLink]="item.route" routerLinkActive="active">
+    <a matButton [routerLink]="item.route" routerLinkActive="active" (click)="updateQueryDate()">
       <mat-icon class="material-symbols-rounded">{{ item.icon }}</mat-icon>
     </a>
   }
@@ -8,7 +8,7 @@
     <mat-icon class="material-symbols-rounded">add</mat-icon>
   </button>
   @for (item of rightSideItems(); track item) {
-    <a matButton [routerLink]="item.route" routerLinkActive="active">
+    <a matButton [routerLink]="item.route" routerLinkActive="active" (click)="updateQueryDate()">
       <mat-icon class="material-symbols-rounded">{{ item.icon }}</mat-icon>
     </a>
   }
