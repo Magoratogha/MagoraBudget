@@ -1,76 +1,76 @@
-<form [formGroup]="form" class="d-flex flex-column w-100 align-items-center justify-content-center">
-  <h1 class="text-center d-flex align-items-center gap-1">
-    @if (transaction()?.id) {
-      <button matIconButton class="delete-icon" (click)="delete()">
-        <mat-icon class="material-symbols-rounded text-red">delete</mat-icon>
-      </button>
-    }
-    Transacción
-  </h1>
+<div class="d-flex mb-3 w-100 align-items-center justify-content-start gap-1">
   @if (transaction()?.id) {
-    <mat-chip class="sm mb-2 positive">Editando</mat-chip>
+    <button matIconButton (click)="delete()">
+      <mat-icon class="material-symbols-rounded text-red">delete</mat-icon>
+    </button>
   }
-
-  <mat-button-toggle-group formControlName="type" hideSingleSelectionIndicator class="mb-4 mt-2">
-    @for (type of Object.keys(TransactionType); track type) {
-      @if (!isNaN(Number(type))) {
-        <mat-button-toggle [value]="Number(type)">
-          <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
-          {{ getTransactionTypeLabel(Number(type)) }}
-        </mat-button-toggle>
-      }
-    }
-  </mat-button-toggle-group>
-
-  <mat-form-field class="mb-3">
-    <mat-label>Monto</mat-label>
-    <input autocomplete="off" matInput mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*"
-           placeholder="0" formControlName="amount">
-    <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
-    @if (form.controls.amount.hasError('max')) {
-      <mat-error>{{ amountErrorLabel()[0] }}
-        <span class="fw-bolder ms-1">{{ amountErrorLabel()[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
-      </mat-error>
-    }
-  </mat-form-field>
-  <app-date-picker class="mb-4" formControlName="date"/>
-
-  @if (availableOriginAccounts().length) {
-    <div class="inputs-wrapper w-100">
-      <mat-form-field floatLabel="auto">
-        <mat-label>{{ originAccountLabel() }}</mat-label>
-        <mat-select formControlName="originAccountId">
-          <mat-option>--</mat-option>
-          @for (account of availableOriginAccounts(); track account.id) {
-            <mat-option [value]="account.id">
-              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
-              {{ account.label }}
-            </mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      @if (selectedTransactionType() === TransactionType.Transfer) {
-        <mat-form-field floatLabel="auto">
-          <mat-label>A la cuenta</mat-label>
-          <mat-select formControlName="targetAccountId">
-            <mat-option>--</mat-option>
-            @for (account of availableTargetAccounts(); track account.id) {
-              <mat-option [value]="account.id">
-                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
-                {{ account.label }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      }
-    </div>
-  } @else {
-    <p class="text-center text-red">Para hacer una transacción primero debes agregar una o más cuentas.</p>
-  }
-</form>
-
-<div class="d-flex flex-column gap-2 w-100 mt-4">
-  <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
-  <button matButton="tonal" (click)="cancel()">Cancelar</button>
+  <h1 class="fw-bold mb-0 text-start">{{ transaction()?.id ? 'Editar Transacción' : 'Nueva Transacción' }}</h1>
 </div>
+<mat-card appearance="filled" class="content-wrapper w-100">
+  <mat-card-content>
+    <form class="items-container" [formGroup]="form">
+      <mat-chip>{{ getTransactionTypeLabel(selectedTransactionType()!) }}</mat-chip>
+      <mat-button-toggle-group formControlName="type">
+        @for (type of Object.keys(TransactionType); track type) {
+          @if (!isNaN(Number(type))) {
+            <mat-button-toggle [value]="Number(type)">
+              <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
+            </mat-button-toggle>
+          }
+        }
+      </mat-button-toggle-group>
+
+      <mat-form-field class="mt-3">
+        <mat-label>Monto</mat-label>
+        <input autocomplete="off" matInput mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*"
+               placeholder="0" formControlName="amount">
+        <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
+        @if (form.controls.amount.hasError('max')) {
+          <mat-error>{{ amountErrorLabel()[0] }}
+            <span class="fw-bolder ms-1">{{ amountErrorLabel()[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+          </mat-error>
+        }
+      </mat-form-field>
+      <app-date-picker formControlName="date"/>
+
+      @if (availableOriginAccounts().length) {
+        <div class="inputs-wrapper w-100">
+          <mat-form-field floatLabel="auto">
+            <mat-label>{{ originAccountLabel() }}</mat-label>
+            <mat-select formControlName="originAccountId">
+              <mat-option>--</mat-option>
+              @for (account of availableOriginAccounts(); track account.id) {
+                <mat-option [value]="account.id">
+                  <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+                  {{ account.label }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          @if (selectedTransactionType() === TransactionType.Transfer) {
+            <mat-form-field floatLabel="auto">
+              <mat-label>A la cuenta</mat-label>
+              <mat-select formControlName="targetAccountId">
+                <mat-option>--</mat-option>
+                @for (account of availableTargetAccounts(); track account.id) {
+                  <mat-option [value]="account.id">
+                    <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+                    {{ account.label }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+        </div>
+      } @else {
+        <p class="text-center text-red">Para hacer una transacción primero debes agregar una o más cuentas.</p>
+      }
+    </form>
+    <div class="d-flex flex-column gap-2 w-100 mt-3">
+      <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
+      <button matButton="tonal" (click)="cancel()">Cancelar</button>
+    </div>
+  </mat-card-content>
+</mat-card>
+

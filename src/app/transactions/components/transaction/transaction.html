@@ -51,7 +51,7 @@
         }
       }
     </div>
-    <span class="fw-bold" [class.text-green]="transaction()?.type === TransactionType.Income"
+    <span class="fw-bold number-text" [class.text-green]="transaction()?.type === TransactionType.Income"
           [class.text-red]="transaction()?.type === TransactionType.Expense">{{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
   </div>
 </div>

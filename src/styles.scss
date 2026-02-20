@@ -40,7 +40,11 @@ mat-form-field {
   align-items: center;
   justify-content: center;
   padding-bottom: 2rem;
-  padding-top: 1rem
+  padding-top: 1rem;
+
+  .mat-mdc-card-filled {
+    --mat-card-filled-container-color: var(--mat-sys-surface-container);
+  }
 }
 
 p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
@@ -169,5 +173,19 @@ mat-card.content-wrapper {
   }
 }
 
+mat-icon {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+}
+
 .mat-bottom-sheet-container {
+  --mat-bottom-sheet-container-background-color: var(--mat-sys-surface-container-highest);
+  --mat-bottom-sheet-container-text-color: var(--mat-sys-on-surface);
+  border-radius: 1.5rem 1.5rem 0 0;
+}
+
+.number-text {
+  white-space: nowrap;
 }

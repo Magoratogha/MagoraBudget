@@ -4,6 +4,7 @@ import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay, Query } from '../../../shared/services';
 import {
   getAccountTypeIcon,
+  getAccountTypeLabel,
   getTransactionTypeIcon,
   getTransactionTypeLabel,
   onlyNumbersValidator
@@ -24,6 +25,7 @@ import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { MatChipsModule } from '@angular/material/chips';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CurrencyPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -40,6 +42,7 @@ import { CurrencyPipe } from '@angular/common';
     MatChipsModule,
     NgxMaskDirective,
     CurrencyPipe,
+    MatCardModule
   ],
   host: { class: 'inner-bottom-sheet-component' },
   templateUrl: './edit-transaction.html',
@@ -254,4 +257,5 @@ export class EditTransaction implements OnInit {
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
   protected readonly getTransactionTypeIcon = getTransactionTypeIcon;
   protected readonly getTransactionTypeLabel = getTransactionTypeLabel;
+  protected readonly getAccountTypeLabel = getAccountTypeLabel;
 }

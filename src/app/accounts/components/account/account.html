@@ -6,7 +6,7 @@
           <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account()!.type) }}</mat-icon>
           <span class="contained-text">{{ account()?.label }}</span>
         </div>
-        <p class="fw-bold mb-0" [class.text-green]="account()!.balance > 0"
+        <p class="fw-bold mb-0 number-text" [class.text-green]="account()!.balance > 0"
            [class.text-red]="account()!.balance < 0">{{ this.account()!.balance | currency : 'COP' : 'symbol' : '1.0-0' }}</p>
       </div>
       @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {

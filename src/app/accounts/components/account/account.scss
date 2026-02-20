@@ -4,7 +4,7 @@
   .progress {
     height: 24px;
     border-radius: 8px;
-    background-color: var(--mat-sys-surface-container-highest);
+    background-color: colors.$progress-gray;
 
     &.\32 {
       .progress-bar {
