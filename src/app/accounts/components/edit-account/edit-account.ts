@@ -19,8 +19,9 @@ import { WARNING_MODAL_DELETE_ACCOUNT_WORDING } from '../../../shared/constants'
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatChip, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { MatCardModule } from '@angular/material/card';
 
 export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -41,7 +42,7 @@ export class QuotaValueErrorStateMatcher implements ErrorStateMatcher {
     MatButtonToggleModule,
     MatChipsModule,
     NgxMaskDirective,
-    MatChip,
+    MatCardModule
   ],
   templateUrl: './edit-account.html',
   styleUrl: './edit-account.scss',

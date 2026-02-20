@@ -1,23 +1,26 @@
-<mat-card appearance="filled" class="account mb-3" (click)="edit()">
-  <mat-card-content class="d-flex flex-column gap-3">
-    <div class="d-flex align-items-center justify-content-between gap-3">
-      <div class="d-flex align-items-center gap-2">
-        <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account()!.type) }}</mat-icon>
-        <span class="contained-text">{{ account()?.label }}</span>
+<mat-card appearance="filled" class="content-wrapper account" (click)="edit()">
+  <mat-card-content>
+    <div class="items-container sm py-0">
+      <div class="d-flex justify-content-between align-items-center w-100 gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account()!.type) }}</mat-icon>
+          <span class="contained-text">{{ account()?.label }}</span>
+        </div>
+        <p class="fw-bold mb-0" [class.text-green]="account()!.balance > 0"
+           [class.text-red]="account()!.balance < 0">{{ this.account()!.balance | currency : 'COP' : 'symbol' : '1.0-0' }}</p>
       </div>
-      <mat-chip [ngClass]="{ positive: account()!.balance > 0, negative: account()!.balance < 0 }">
-        {{ this.account()!.balance | currency : 'COP' : 'symbol' : '1.0-0' }}
-      </mat-chip>
+      @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
+        <div class="main-content flex-column gap-2 pt-3">
+          <div class="progress w-100" [ngClass]="account()!.type.toString()">
+            <div class="progress-bar" [style.width.%]="parsedBalancePercent()"></div>
+          </div>
+          <div class="d-flex justify-content-between hints w-100">
+            <small class="text-start">{{ quota() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
+            <small>{{ balancePercent() | percent }}</small>
+            <small class="text-end">{{ target() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
+          </div>
+        </div>
+      }
     </div>
-    @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
-      <div class="progress" [ngClass]="account()!.type.toString()">
-        <div class="progress-bar" [style.width.%]="parsedBalancePercent()"></div>
-      </div>
-      <div class="d-flex justify-content-between hints">
-        <small class="text-start">{{ quota() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
-        <small>{{ balancePercent() | percent }}</small>
-        <small class="text-end">{{ target() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
-      </div>
-    }
   </mat-card-content>
 </mat-card>

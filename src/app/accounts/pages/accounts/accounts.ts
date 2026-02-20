@@ -2,18 +2,19 @@ import { Component, inject, Signal } from '@angular/core';
 import { Account, EditAccount } from '../../components';
 import { Overlay, Query } from '../../../shared/services';
 import { Account as IAccount } from '../../models';
-import { CurrencyPipe, NgClass } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-accounts',
   imports: [
     Account,
     CurrencyPipe,
-    NgClass,
     MatButtonModule,
-    MatChipsModule
+    MatChipsModule,
+    MatCardModule
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',

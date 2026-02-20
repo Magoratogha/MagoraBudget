@@ -1,16 +1,10 @@
 @use '../../../shared/styles/colors';
 
 .account {
-  .mat-icon {
-    width: 1.75rem;
-    height: 1.75rem;
-    font-size: 1.75rem;
-  }
-
   .progress {
     height: 24px;
     border-radius: 8px;
-    background-color: colors.$progress-gray;
+    background-color: var(--mat-sys-surface-container-highest);
 
     &.\32 {
       .progress-bar {

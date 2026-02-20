@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-transactions',
@@ -21,7 +22,8 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     DatePipe,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule
   ],
   providers: [
     provideNativeDateAdapter()

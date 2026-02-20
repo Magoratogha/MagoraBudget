@@ -20,6 +20,9 @@ import { EditTransaction } from '../edit-transaction/edit-transaction';
   ],
   templateUrl: './transaction.html',
   styleUrl: './transaction.scss',
+  host: {
+    style: 'display: block;'
+  }
 })
 export class Transaction {
   private _overlay = inject(Overlay);

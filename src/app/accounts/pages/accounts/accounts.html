@@ -1,14 +1,37 @@
-<div class="w-100 d-flex align-items-center justify-content-center flex-column mb-3">
-  <div class="balance-wrapper" [ngClass]="{ positive: availableBalance() > 0, negative: availableBalance() < 0 }">
-    <h1 class="mb-0 text-center main-title">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
-    <small>Disponible</small>
+<div class="d-flex flex-column gap-4">
+  <div>
+    <h1 class="fw-bold mb-3">Saldo</h1>
+    <mat-card appearance="filled" class="content-wrapper mb-2">
+      <mat-card-content>
+        <div class="items-container">
+          <div class="main-content">
+            <h1 class="mb-0 text-center main-title"
+                [class.text-green]="availableBalance() > 0"
+                [class.text-red]="availableBalance() < 0">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+            <small class="fw-bold" [class.text-green]="availableBalance() > 0"
+                   [class.text-red]="availableBalance() < 0">Disponible</small>
+          </div>
+          <div class="d-flex flex-column align-items-center w-100">
+            <h5 class="mb-0 text-center fw-bold"
+                [class.text-green]="globalBalance() > 0"
+                [class.text-red]="globalBalance() < 0">{{ globalBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+            <small class="fw-bold" [class.text-green]="globalBalance() > 0"
+                   [class.text-red]="globalBalance() < 0">Neto</small>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
-  <div class="balance-wrapper" [ngClass]="{ positive: globalBalance() > 0, negative: globalBalance() < 0 }">
-    <h5 class="mb-0 text-center">{{ globalBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
-    <small>Neto</small>
-  </div>
+  @if (accounts().length) {
+    <div>
+      <h1 class="fw-bold mb-3">Cuentas</h1>
+      <div class="d-flex flex-column gap-3">
+        @for (account of accounts(); track account.id) {
+          <app-account [account]="account"></app-account>
+        }
+      </div>
+    </div>
+  }
+  <button matButton="filled" class="w-100" (click)="addNewAccount()">Agregar nueva cuenta</button>
 </div>
-@for (account of accounts(); track account.id) {
-  <app-account [account]="account"></app-account>
-}
-<button matButton="filled" class="w-100 mt-3" (click)="addNewAccount()">Agregar nueva cuenta</button>
+

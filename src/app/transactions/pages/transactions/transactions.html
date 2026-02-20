@@ -16,17 +16,24 @@
     <mat-icon class="material-symbols-rounded" (click)="nextMonth()">arrow_forward</mat-icon>
   </button>
 </div>
-<h1 class="text-capitalize mb-4 main-title text-center">{{ date() | date: 'MMMM' }}</h1>
+
+<h1 class="text-capitalize fw-bold mb-3">{{ date() | date: 'MMMM' }}</h1>
 <div class="pb-5 mb-4 d-flex flex-column gap-3">
   @if (monthTransactions().length) {
     @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
-      <div class="d-flex align-items-center gap-2 day-wrapper">
-        <span class="number">{{ day }}</span>
-        <small class="text text-capitalize">{{ getDateByDay(day) | date: 'EEEE' }}</small>
-      </div>
-      @for (transaction of transactionsPerDay()[day]; track transaction.id) {
-        <app-transaction [transaction]="transaction"/>
-      }
+      <mat-card appearance="filled" class="content-wrapper mb-2">
+        <mat-card-content>
+          <div class="day-wrapper">
+            <span class="number">{{ day }}</span>
+            <h5 class="text-capitalize fw-bold mb-0">{{ getDateByDay(day) | date: 'EEEE' }}</h5>
+          </div>
+          <div class="items-container sm">
+            @for (transaction of transactionsPerDay()[day]; track transaction.id) {
+              <app-transaction [transaction]="transaction"/>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
     }
   } @else {
     <div class="d-flex w-100 flex-column gap-3 pt-3 text-center">

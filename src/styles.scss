@@ -39,7 +39,8 @@ mat-form-field {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-block: 2rem;
+  padding-bottom: 2rem;
+  padding-top: 1rem
 }
 
 p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
@@ -131,4 +132,42 @@ mat-chip {
 
 .fw-bold {
   font-weight: 500 !important;
+}
+
+mat-card.content-wrapper {
+  .items-container {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    .main-content {
+      background-color: var(--mat-sys-surface-container);
+      color: var(--mat-sys-on-surface);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+    }
+
+    &.sm {
+      padding-block: 0.25rem;
+      padding-inline: 0;
+      gap: 0.5rem;
+
+      .main-content {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+    }
+  }
+}
+
+.mat-bottom-sheet-container {
 }
