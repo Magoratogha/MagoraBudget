@@ -1,8 +1,8 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { Query } from '../../../shared/services';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe } from '@angular/common';
-import { AccountType } from '../../../accounts/models';
+import { Account, AccountType } from '../../../accounts/models';
 import { getAccountTypeIcon, getAccountTypeLabel } from '../../../shared/utils';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -17,10 +17,21 @@ export class Home {
   availableBalance = this._query.availableBalance;
   monthIncomes = this._query.monthIncomes;
   monthExpenses = this._query.monthExpenses;
-  expensesPerAccountType: Signal<Partial<Record<AccountType, number>>> = this._query.expensesPerAccountType;
-  incomesPerAccountType: Signal<Partial<Record<AccountType, number>>> = this._query.incomesPerAccountType;
+  expensesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
+    return [...this._query.expensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
+  });
+  expensesPerAccount: Signal<[Account, number][]> = computed(() => {
+    return [...this._query.expensesPerAccount().entries()].sort((a, b) => a[1] - b[1]);
+  });
+  incomesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
+    return [...this._query.incomesPerAccountType().entries()].sort((a, b) => b[1] - a[1]);
+  });
+  incomesPerAccount: Signal<[Account, number][]> = computed(() => {
+    return [...this._query.incomesPerAccount().entries()].sort((a, b) => b[1] - a[1]);
+  });
   protected readonly Object = Object;
-  protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly Number = Number;
+  protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
+  protected readonly AccountType = AccountType;
 }

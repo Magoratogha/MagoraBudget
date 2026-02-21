@@ -1,14 +1,17 @@
-import { AccountType } from '../models';
+import { Account, AccountType } from '../models';
 
-export const ACCOUNT_TYPE_INFO_MAP: Record<AccountType, { iconClass: string, label: string }> = {
-  [AccountType.Cash]: { iconClass: 'account_balance_wallet', label: 'Efectivo' },
+const DELETED_ACCOUNTS_LABEL = 'Cuentas eliminadas';
+
+export const ACCOUNT_TYPE_INFO_MAP: Partial<Record<AccountType, { iconClass: string, label: string }>> = {
+  [AccountType.Cash]: { iconClass: 'payments', label: 'Efectivo' },
   [AccountType.Savings]: { iconClass: 'account_balance', label: 'Cuenta Bancaria' },
   [AccountType.CreditCard]: { iconClass: 'credit_card', label: 'Tarjeta de Crédito' },
-  [AccountType.Debt]: { iconClass: 'price_change', label: 'Deuda' },
-  [AccountType.SavingsGoal]: { iconClass: 'savings', label: 'Meta de Ahorro' },
+  [AccountType.Debt]: { iconClass: 'checkbook', label: 'Deuda' },
+  [AccountType.SavingsGoal]: { iconClass: 'savings', label: 'Ahorro' },
+  [AccountType.Deleted]: { iconClass: 'delete', label: DELETED_ACCOUNTS_LABEL },
 };
 
-export const BALANCE_FIELD_WORDING_MAP: Record<AccountType, { label: string, placeholder: string }> = {
+export const BALANCE_FIELD_WORDING_MAP: Partial<Record<AccountType, { label: string, placeholder: string }>> = {
   [AccountType.Cash]: { placeholder: '150.000', label: '¿Cuánto efectivo tienes?' },
   [AccountType.Savings]: { placeholder: '1.450.000', label: '¿Cuál es el saldo actual?' },
   [AccountType.CreditCard]: { placeholder: '6.500.000', label: '¿Cuánto debes a día de hoy?' },
@@ -22,10 +25,17 @@ export const QUOTA_FIELD_WORDING_MAP: Partial<Record<AccountType, { label: strin
   [AccountType.SavingsGoal]: { placeholder: '4.500.000', label: '¿Cuánto quieres ahorrar?' },
 };
 
-export const LABEL_FIELD_WORDING_MAP: Record<AccountType, { label: string, placeholder: string }> = {
+export const LABEL_FIELD_WORDING_MAP: Partial<Record<AccountType, { label: string, placeholder: string }>> = {
   [AccountType.Cash]: { placeholder: 'Billetera', label: 'Nombre' },
   [AccountType.Savings]: { placeholder: 'Cuenta de ahorros Bancolombia', label: 'Nombre' },
   [AccountType.CreditCard]: { placeholder: 'Tarjeta de crédito Davivienda', label: 'Nombre' },
   [AccountType.Debt]: { placeholder: 'Libranza Banco de Bogotá', label: 'Nombre' },
   [AccountType.SavingsGoal]: { placeholder: 'Ahorro para viaje', label: 'Nombre' },
 };
+
+export const DELETED_ACCOUNT_TEMPLATE: Account = {
+  type: AccountType.Deleted,
+  balance: 0,
+  label: DELETED_ACCOUNTS_LABEL,
+  ownerId: '',
+}

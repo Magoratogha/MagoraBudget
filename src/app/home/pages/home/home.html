@@ -23,43 +23,108 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <div>
-    <h1 class="fw-bold mb-3">Gastos</h1>
-    <mat-card appearance="filled" class="content-wrapper">
-      <mat-card-content>
-        <div class="items-container sm">
-          @for (type of Object.keys(expensesPerAccountType()); track expensesPerAccountType()) {
-            <div class="main-content">
-              <div class="d-flex align-items-center justify-content-center gap-2">
-                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
-                {{ getAccountTypeLabel(Number(type)) }}
+  @if (expensesPerAccountType().length && expensesPerAccount().length) {
+    <div class="d-flex flex-column gap-2">
+      <h1 class="fw-bold mb-3">Gastos</h1>
+      <mat-card appearance="filled" class="content-wrapper">
+        <mat-card-content>
+          <div class="subtitle">
+            <span class="icon"><mat-icon class="material-symbols-rounded">category</mat-icon></span>
+            <h5 class="text">Por tipo</h5>
+          </div>
+          <div class="items-container sm">
+            @for (expense of expensesPerAccountType(); track expense[0]) {
+              <div class="main-content">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <mat-icon class="material-symbols-rounded"
+                            [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
+                  </mat-icon>
+                  <span
+                    [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
+                </div>
+                <span
+                  class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
-              <span
-                class="fw-bold text-red">{{ $any(expensesPerAccountType())[type] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
-            </div>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  <div>
-    <h1 class="fw-bold mb-3">Ingresos</h1>
-    <mat-card appearance="filled" class="content-wrapper">
-      <mat-card-content>
-        <div class="items-container sm">
-          @for (type of Object.keys(incomesPerAccountType()); track incomesPerAccountType()) {
-            <div class="main-content">
-              <div class="d-flex align-items-center justify-content-center gap-2">
-                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
-                {{ getAccountTypeLabel(Number(type)) }}
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="filled" class="content-wrapper">
+        <mat-card-content>
+          <div class="subtitle">
+            <span class="icon"><mat-icon class="material-symbols-rounded">account_balance</mat-icon></span>
+            <h5 class="text">Por cuenta</h5>
+          </div>
+          <div class="items-container sm">
+            @for (expense of expensesPerAccount(); track expense[0].id) {
+              <div class="main-content">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    [class.text-red]="expense[0].type === AccountType.Deleted">{{ getAccountTypeIcon(expense[0].type) }}
+                  </mat-icon>
+                  <span
+                    [class.text-decoration-line-through]="expense[0].type === AccountType.Deleted">{{ expense[0].label }}</span>
+                </div>
+                <span
+                  class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
-              <span
-                class="fw-bold text-green">{{ $any(incomesPerAccountType())[type] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
-            </div>
-          }
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+  @if (incomesPerAccountType().length && incomesPerAccount().length) {
+    <div class="d-flex flex-column gap-2">
+      <h1 class="fw-bold mb-3">Ingresos</h1>
+      <mat-card appearance="filled" class="content-wrapper">
+        <mat-card-content>
+          <div class="subtitle">
+            <span class="icon"><mat-icon class="material-symbols-rounded">category</mat-icon></span>
+            <h5 class="text">Por tipo</h5>
+          </div>
+          <div class="items-container sm">
+            @for (income of incomesPerAccountType(); track income[0]) {
+              <div class="main-content">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <mat-icon class="material-symbols-rounded"
+                            [class.text-red]="income[0] === AccountType.Deleted">{{ getAccountTypeIcon(income[0]) }}
+                  </mat-icon>
+                  <span
+                    [class.text-decoration-line-through]="income[0] === AccountType.Deleted">{{ getAccountTypeLabel(income[0]) }}</span>
+                </div>
+                <span
+                  class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="filled" class="content-wrapper">
+        <mat-card-content>
+          <div class="subtitle">
+            <span class="icon"><mat-icon class="material-symbols-rounded">account_balance</mat-icon></span>
+            <h5 class="text">Por cuenta</h5>
+          </div>
+          <div class="items-container sm">
+            @for (income of incomesPerAccount(); track income[0].id) {
+              <div class="main-content">
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    [class.text-red]="income[0].type === AccountType.Deleted">{{ getAccountTypeIcon(income[0].type) }}
+                  </mat-icon>
+                  <span
+                    [class.text-decoration-line-through]="income[0].type === AccountType.Deleted">{{ income[0].label }}</span>
+                </div>
+                <span
+                  class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
 </div>

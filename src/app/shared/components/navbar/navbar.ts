@@ -53,7 +53,12 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   updateQueryDate() {
-    this._query.updateCurrentDate(new Date());
+    const currentDate = new Date();
+    const queryDate = this._query.getCurrentDate();
+
+    if (currentDate.getMonth() !== queryDate.getMonth() || currentDate.getFullYear() !== queryDate.getFullYear()) {
+      this._query.updateCurrentDate(currentDate);
+    }
   }
 
   protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;

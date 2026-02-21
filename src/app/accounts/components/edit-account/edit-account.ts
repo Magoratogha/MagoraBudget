@@ -71,13 +71,13 @@ export class EditAccount implements OnInit {
   }, [quotaMinValueValidator()]);
   selectedAccountType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
   labelPlaceholder = computed(() => {
-    return LABEL_FIELD_WORDING_MAP[this.selectedAccountType()!];
+    return LABEL_FIELD_WORDING_MAP[this.selectedAccountType()!]!;
   });
   balanceLabelAndPlaceholder = computed(() => {
-    return BALANCE_FIELD_WORDING_MAP[this.selectedAccountType()!];
+    return BALANCE_FIELD_WORDING_MAP[this.selectedAccountType()!]!;
   });
   quotaLabelAndPlaceholder = computed(() => {
-    return QUOTA_FIELD_WORDING_MAP[this.selectedAccountType()!];
+    return QUOTA_FIELD_WORDING_MAP[this.selectedAccountType()!]!;
   });
   quotaValueErrorStateMatcher = new QuotaValueErrorStateMatcher();
 

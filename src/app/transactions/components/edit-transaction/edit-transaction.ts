@@ -4,7 +4,6 @@ import { Transaction, TransactionType } from '../../models';
 import { Auth, FireStore, Overlay, Query } from '../../../shared/services';
 import {
   getAccountTypeIcon,
-  getAccountTypeLabel,
   getTransactionTypeIcon,
   getTransactionTypeLabel,
   onlyNumbersValidator
@@ -257,5 +256,4 @@ export class EditTransaction implements OnInit {
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
   protected readonly getTransactionTypeIcon = getTransactionTypeIcon;
   protected readonly getTransactionTypeLabel = getTransactionTypeLabel;
-  protected readonly getAccountTypeLabel = getAccountTypeLabel;
 }

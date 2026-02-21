@@ -21,11 +21,11 @@ export function quotaMinValueValidator(): ValidatorFn {
 }
 
 export function getAccountTypeIcon(accountType: AccountType): string {
-  return ACCOUNT_TYPE_INFO_MAP[accountType].iconClass;
+  return ACCOUNT_TYPE_INFO_MAP[accountType]?.iconClass || '';
 }
 
 export function getAccountTypeLabel(accountType: AccountType): string {
-  return ACCOUNT_TYPE_INFO_MAP[accountType].label;
+  return ACCOUNT_TYPE_INFO_MAP[accountType]?.label || '';
 }
 
 export function getTransactionTypeIcon(transactionType: TransactionType): string {

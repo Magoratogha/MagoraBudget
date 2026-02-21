@@ -41,7 +41,11 @@
               "browser": ""
             },
             "server": "src/main.server.ts",
-            "outputMode": "static"
+            "outputMode": "static",
+            "allowedCommonJsDependencies": [
+              "@grpc/grpc-js",
+              "@grpc/proto-loader"
+            ]
           },
           "configurations": {
             "production": {

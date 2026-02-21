@@ -1,8 +1,9 @@
 import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { FireStore } from '../fire-store/fire-store';
-import { Account as IAccount, AccountType } from '../../../accounts/models';
+import { Account, Account as IAccount, AccountType } from '../../../accounts/models';
 import { UserSettings } from '../../models';
 import { Transaction as ITransaction, Transaction, TransactionType } from '../../../transactions/models';
+import { DELETED_ACCOUNT_TEMPLATE } from '../../../accounts/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -63,42 +64,84 @@ export class Query {
     }, 0);
   });
 
-  public expensesPerAccountType: Signal<Partial<Record<AccountType, number>>> = computed(() => {
+  public expensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
     return this.monthTransactions().reduce((expenses, transaction) => {
       if (transaction.type === TransactionType.Expense) {
         const accountType = this._getAccountTypeById(transaction.originAccountId);
-        if (accountType !== null) {
-          expenses[accountType] = (expenses[accountType] || 0) - transaction.amount;
-          return expenses;
+        if (expenses.has(accountType)) {
+          expenses.set(accountType, expenses.get(accountType)! - transaction.amount);
+        } else {
+          expenses.set(accountType, -transaction.amount);
         }
         return expenses;
       } else {
         return expenses;
       }
-    }, {} as Partial<Record<AccountType, number>>);
+    }, new Map<AccountType, number>());
   });
 
-  public incomesPerAccountType: Signal<Partial<Record<AccountType, number>>> = computed(() => {
+  public expensesPerAccount: Signal<Map<Account, number>> = computed(() => {
     return this.monthTransactions().reduce((expenses, transaction) => {
-      if (transaction.type === TransactionType.Income) {
-        const accountType = this._getAccountTypeById(transaction.originAccountId);
-        if (accountType !== null) {
-          expenses[accountType] = (expenses[accountType] || 0) + transaction.amount;
-          return expenses;
+      if (transaction.type === TransactionType.Expense) {
+        const account = this._getAccountById(transaction.originAccountId);
+        if (expenses.has(account)) {
+          expenses.set(account, expenses.get(account)! - transaction.amount);
+        } else {
+          expenses.set(account, -transaction.amount);
         }
         return expenses;
       } else {
         return expenses;
       }
-    }, {} as Partial<Record<AccountType, number>>);
+    }, new Map<Account, number>());
+  });
+
+  public incomesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
+    return this.monthTransactions().reduce((incomes, transaction) => {
+      if (transaction.type === TransactionType.Income) {
+        const accountType = this._getAccountTypeById(transaction.originAccountId);
+        if (incomes.has(accountType)) {
+          incomes.set(accountType, incomes.get(accountType)! + transaction.amount);
+        } else {
+          incomes.set(accountType, transaction.amount);
+        }
+        return incomes;
+      } else {
+        return incomes;
+      }
+    }, new Map<AccountType, number>());
+  });
+
+  public incomesPerAccount: Signal<Map<Account, number>> = computed(() => {
+    return this.monthTransactions().reduce((incomes, transaction) => {
+      if (transaction.type === TransactionType.Income) {
+        const account = this._getAccountById(transaction.originAccountId);
+        if (incomes.has(account)) {
+          incomes.set(account, incomes.get(account)! + transaction.amount);
+        } else {
+          incomes.set(account, transaction.amount);
+        }
+        return incomes;
+      } else {
+        return incomes;
+      }
+    }, new Map<Account, number>());
   });
 
   public updateCurrentDate(date: Date) {
     this._today.set(date);
   }
 
-  private _getAccountTypeById(accountId: string): AccountType | null {
+  public getCurrentDate() {
+    return this._today();
+  }
+
+  private _getAccountTypeById(accountId: string): AccountType {
     const account = this._fireStore.getUserAccount(accountId);
-    return account? account.type : null;
+    return account ? account.type : AccountType.Deleted;
+  }
+
+  private _getAccountById(accountId: string): Account {
+    return this._fireStore.getUserAccount(accountId) || DELETED_ACCOUNT_TEMPLATE;
   }
 }

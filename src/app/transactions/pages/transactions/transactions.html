@@ -23,9 +23,9 @@
     @for (day of Object.keys(transactionsPerDay()).reverse(); track day) {
       <mat-card appearance="filled" class="content-wrapper mb-2">
         <mat-card-content>
-          <div class="day-wrapper">
-            <span class="number">{{ day }}</span>
-            <h5 class="text-capitalize fw-bold mb-0">{{ getDateByDay(day) | date: 'EEEE' }}</h5>
+          <div class="subtitle">
+            <span class="icon">{{ day }}</span>
+            <h5 class="text">{{ getDateByDay(day) | date: 'EEEE' }}</h5>
           </div>
           <div class="items-container sm">
             @for (transaction of transactionsPerDay()[day]; track transaction.id) {
