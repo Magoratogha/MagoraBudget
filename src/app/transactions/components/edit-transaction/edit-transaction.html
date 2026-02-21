@@ -20,7 +20,7 @@
 <mat-card appearance="filled" class="content-wrapper w-100">
   <mat-card-content>
     <form class="items-container gap-0" [formGroup]="form">
-      <mat-button-toggle-group formControlName="type" class="mt-2 mb-1">
+      <mat-button-toggle-group formControlName="type" class="mt-2 mb-1" hideSingleSelectionIndicator>
         @for (type of Object.keys(TransactionType); track type) {
           @if (!isNaN(Number(type))) {
             <mat-button-toggle [value]="Number(type)">

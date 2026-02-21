@@ -2,8 +2,8 @@
   "name": "Budgets",
   "short_name": "Budgets",
   "display": "standalone",
-  "theme_color": "#fafaf2",
-  "background_color": "#fafaf2",
+  "theme_color": "#11150d",
+  "background_color": "#11150d",
   "scope": "./",
   "start_url": "./",
   "icons": [

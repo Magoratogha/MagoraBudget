@@ -34,6 +34,11 @@
         }
       </mat-select>
     </mat-form-field>
+    <div class="d-flex align-items-center justify-content-center gap-2">
+      <mat-icon class="material-symbols-rounded">light_mode</mat-icon>
+      <mat-slide-toggle formControlName="darkMode"></mat-slide-toggle>
+      <mat-icon class="material-symbols-rounded">dark_mode</mat-icon>
+    </div>
   </form>
   <div class="d-flex flex-column align-items-center w-100 pb-4 px-3">
     <span class="mb-3">¿No eres {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0) }}?</span>

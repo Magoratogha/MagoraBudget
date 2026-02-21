@@ -1,5 +1,5 @@
 $green: var(--mat-sys-primary);
-$red: #9f5641;
-$progress-green: #6d934d;
-$progress-red: #9f5641;
-$progress-gray: #cacac3;
+$red: var(--mat-sys-error);
+$progress-green: var(--mat-sys-primary);
+$progress-red: var(--mat-sys-error);
+$progress-gray: light-dark(#cacac3, #cacac3);

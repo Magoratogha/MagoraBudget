@@ -1,4 +1,4 @@
-import { Component, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Renderer2, Signal } from '@angular/core';
 import { Auth, FireStore, Query } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { getAccountTypeIcon } from '../../utils';
 import { MatChipsModule } from '@angular/material/chips';
 import { isPlatformBrowser } from '@angular/common';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-side-panel',
@@ -22,7 +23,8 @@ import { isPlatformBrowser } from '@angular/common';
     MatSelectModule,
     ReactiveFormsModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSlideToggleModule
   ],
   templateUrl: './side-panel.html',
   styleUrl: './side-panel.scss',
@@ -33,6 +35,7 @@ export class SidePanel implements OnInit {
   private _query = inject(Query);
   private _destroyRef = inject(DestroyRef);
   private _providerId = inject(PLATFORM_ID);
+  private _renderer = inject(Renderer2);
   showNewVersionBadge = input(false);
 
   userSettings: Signal<UserSettings> = this._query.userSettings;
@@ -44,6 +47,7 @@ export class SidePanel implements OnInit {
   form = new FormGroup({
     preferredIncomesAccountId: new FormControl<string>(''),
     preferredExpensesAccountId: new FormControl<string>(''),
+    darkMode: new FormControl<boolean>(true),
   });
 
   constructor() {
@@ -53,7 +57,13 @@ export class SidePanel implements OnInit {
         this.form.setValue({
           preferredIncomesAccountId: settings.preferredIncomesAccountId,
           preferredExpensesAccountId: settings.preferredExpensesAccountId,
+          darkMode: settings.darkMode,
         }, { emitEvent: false });
+      }
+      if (settings.darkMode) {
+        this._renderer.removeClass(document.body, 'light-mode');
+      } else {
+        this._renderer.addClass(document.body, 'light-mode');
       }
     });
   }
@@ -67,15 +77,22 @@ export class SidePanel implements OnInit {
           await this._fireStore.editUserSettings(userSettings.id, {
             preferredExpensesAccountId: value?.preferredExpensesAccountId || '',
             preferredIncomesAccountId: value?.preferredIncomesAccountId || '',
+            darkMode: !!value?.darkMode,
             ownerId: userId
           } as UserSettings)
         } else {
           await this._fireStore.addUserSettings({
             preferredExpensesAccountId: value?.preferredExpensesAccountId || '',
             preferredIncomesAccountId: value?.preferredIncomesAccountId || '',
+            darkMode: !!value?.darkMode,
             ownerId: userId
           } as UserSettings)
         }
+      }
+      if (!!value?.darkMode) {
+        this._renderer.removeClass(document.body, 'light-mode');
+      } else {
+        this._renderer.addClass(document.body, 'light-mode');
       }
     });
   }

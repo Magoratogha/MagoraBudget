@@ -19,13 +19,13 @@
     [style.border-radius]="radius()"
     [style.font-size.rem]="fontSize()"
   >
-    <rect width="100%" height="100%" fill="#dae7ca"></rect>
+    <rect width="100%" height="100%" [attr.fill]="userSettings().darkMode ? '#3f4a35' : '#dae7ca'"></rect>
     <text
       x="50%"
       y="50%"
       text-anchor="middle"
       alignment-baseline="central"
-      fill="#3f4a35"
+      [attr.fill]="userSettings().darkMode ? '#dae7ca' : '#3f4a35'"
     >
       {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0)?.at(0) }}
     </text>
