@@ -1,4 +1,15 @@
-import { Component, DestroyRef, effect, inject, input, OnInit, PLATFORM_ID, Renderer2, Signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  DOCUMENT,
+  effect,
+  inject,
+  input,
+  OnInit,
+  PLATFORM_ID,
+  Renderer2,
+  Signal
+} from '@angular/core';
 import { Auth, FireStore, Query } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
@@ -36,6 +47,7 @@ export class SidePanel implements OnInit {
   private _destroyRef = inject(DestroyRef);
   private _providerId = inject(PLATFORM_ID);
   private _renderer = inject(Renderer2);
+  private _document = inject(DOCUMENT);
   showNewVersionBadge = input(false);
 
   userSettings: Signal<UserSettings> = this._query.userSettings;
@@ -61,9 +73,9 @@ export class SidePanel implements OnInit {
         }, { emitEvent: false });
       }
       if (settings.darkMode) {
-        this._renderer.removeClass(document.body, 'light-mode');
+        this._renderer.removeClass(this._document.body, 'light-mode');
       } else {
-        this._renderer.addClass(document.body, 'light-mode');
+        this._renderer.addClass(this._document.body, 'light-mode');
       }
     });
   }
@@ -90,9 +102,9 @@ export class SidePanel implements OnInit {
         }
       }
       if (!!value?.darkMode) {
-        this._renderer.removeClass(document.body, 'light-mode');
+        this._renderer.removeClass(this._document.body, 'light-mode');
       } else {
-        this._renderer.addClass(document.body, 'light-mode');
+        this._renderer.addClass(this._document.body, 'light-mode');
       }
     });
   }
