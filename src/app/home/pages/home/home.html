@@ -6,16 +6,16 @@
         <div class="items-container">
           <div class="main-content">
             <h1
-              class="mb-0 text-center main-title">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
+              class="text-center main-title">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
             <small class="fw-bold">Disponible</small>
           </div>
           <div class="d-flex w-100">
             <div class="d-flex flex-column align-items-center w-50 text-green">
-              <h5 class="mb-0 text-center fw-bold">{{ monthIncomes() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+              <h5 class="text-center fw-bold">{{ monthIncomes() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
               <small class="fw-bold">Ingresos</small>
             </div>
             <div class="d-flex flex-column align-items-center w-50 text-red">
-              <h5 class="mb-0 text-center fw-bold">{{ monthExpenses() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
+              <h5 class="text-center fw-bold">{{ monthExpenses() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
               <small class="fw-bold">Gastos</small>
             </div>
           </div>

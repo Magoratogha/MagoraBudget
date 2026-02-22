@@ -4,6 +4,69 @@
 @use './app/shared/styles/variables';
 @use './app/shared/styles/_theme-colors' as themes;
 
+/***
+### Reboot ###
+***/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+h6, h5, h4, h3, h2, h1 {
+  margin: 0;
+  line-height: 1.2
+}
+
+h1 {
+  font-size: calc(1.375rem + 1.5vw);
+}
+
+h2 {
+  font-size: calc(1.325rem + 0.9vw);
+}
+
+h3 {
+  font-size: calc(1.3rem + 0.6vw);
+}
+
+h4 {
+  font-size: calc(1.275rem + 0.3vw);
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+small {
+  font-size: 0.875em;
+}
+
+p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
+  font-weight: 400;
+  user-select: none;
+  margin: 0;
+}
+
+b,
+strong {
+  font-weight: 500;
+}
+
+/***
+### Global Styles ###
+***/
+
 html {
   height: 100%;
   width: 100%;
@@ -34,10 +97,6 @@ body.light-mode {
   color-scheme: light;
 }
 
-mat-form-field {
-  width: 100%;
-}
-
 .inner-bottom-sheet-component {
   width: 100%;
   height: auto;
@@ -50,50 +109,8 @@ mat-form-field {
 
   .mat-mdc-card-filled {
     --mat-card-filled-container-color: var(--mat-sys-surface-container);
+    --mat-card-filled-container-shape: 1.5rem;
   }
-}
-
-p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text {
-  font-weight: 400;
-}
-
-p, span, small, label, b, h1, h2, h3, h4, h5, h6, a, button, text, .progress-bar, .progress {
-  user-select: none;
-}
-
-
-mat-chip {
-  &.sm {
-    --mat-chip-label-text-size: 0.75rem;
-    --mat-chip-container-height: 25px;
-
-    .mdc-evolution-chip__action--primary {
-      padding-left: 8px !important;
-      padding-right: 8px !important;
-    }
-  }
-
-  &.positive {
-    --mat-chip-label-text-color: #{ colors.$green };
-  }
-
-  &.negative {
-    --mat-chip-label-text-color: #{ colors.$red };
-  }
-
-  .mdc-evolution-chip__graphic {
-    padding-right: 2px !important;
-  }
-}
-
-.danger-button {
-  @include mat.button-overrides((
-    filled-container-color: #{ colors.$red },
-  ));
-}
-
-.mat-mdc-input-element::placeholder {
-  color: color-mix(in srgb, var(--mat-sys-on-surface) 40%, transparent) !important;
 }
 
 .loader-panel {
@@ -123,10 +140,6 @@ mat-chip {
 
 .month-picker .mat-calendar-arrow {
   display: none;
-}
-
-.mat-mdc-card-content {
-  padding: 12px !important;
 }
 
 .contained-text {
@@ -173,6 +186,7 @@ mat-card.content-wrapper {
       text-transform: capitalize;
     }
   }
+
   .items-container {
     padding: 0;
     display: flex;
@@ -190,7 +204,6 @@ mat-card.content-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-
     }
 
     &.sm {
@@ -203,6 +216,56 @@ mat-card.content-wrapper {
       }
     }
   }
+}
+
+.number-text {
+  white-space: nowrap;
+}
+
+/***
+### Material overrides ###
+***/
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-chip {
+  &.sm {
+    --mat-chip-label-text-size: 0.75rem;
+    --mat-chip-container-height: 25px;
+
+    .mdc-evolution-chip__action--primary {
+      padding-left: 8px !important;
+      padding-right: 8px !important;
+    }
+  }
+
+  &.positive {
+    --mat-chip-label-text-color: #{ colors.$green };
+  }
+
+  &.negative {
+    --mat-chip-label-text-color: #{ colors.$red };
+  }
+
+  .mdc-evolution-chip__graphic {
+    padding-right: 2px !important;
+  }
+}
+
+.danger-button {
+  @include mat.button-overrides((
+    filled-container-color: #{ colors.$red },
+  ));
+}
+
+.mat-mdc-input-element::placeholder {
+  color: color-mix(in srgb, var(--mat-sys-on-surface) 40%, transparent) !important;
+}
+
+.mat-mdc-card-content {
+  padding: 12px !important;
 }
 
 mat-icon {
@@ -218,6 +281,99 @@ mat-icon {
   border-radius: 1.5rem 1.5rem 0 0;
 }
 
-.number-text {
-  white-space: nowrap;
+/***
+### Utilities ###
+***/
+
+.container {
+  padding-inline: 0.75rem;
+  width: 100%;
 }
+
+.d-block {
+  display: block !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.position-fixed {
+  position: fixed !important;
+}
+
+.flex-row {
+  flex-direction: row !important;
+}
+
+.flex-column {
+  flex-direction: column !important;
+}
+
+.justify-content-start {
+  justify-content: flex-start !important;
+}
+
+.justify-content-end {
+  justify-content: flex-end !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.justify-content-between {
+  justify-content: space-between !important;
+}
+
+.align-items-start {
+  align-items: flex-start !important;
+}
+
+.align-items-end {
+  align-items: flex-end !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.h-100 {
+  height: 100% !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.text-start {
+  text-align: left !important;
+}
+
+.text-end {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through !important;
+}
+
+.text-capitalize {
+  text-transform: capitalize !important;
+}
+
+@include mixins.generate-utility('gap', 'gap');
+@include mixins.generate-utility-with-directions('m', 'margin');
+@include mixins.generate-utility-with-directions('p', 'padding');

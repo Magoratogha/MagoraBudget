@@ -5,14 +5,14 @@
       <mat-card-content>
         <div class="items-container">
           <div class="main-content">
-            <h1 class="mb-0 text-center main-title"
+            <h1 class="text-center main-title"
                 [class.text-green]="availableBalance() > 0"
                 [class.text-red]="availableBalance() < 0">{{ availableBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h1>
             <small class="fw-bold" [class.text-green]="availableBalance() > 0"
                    [class.text-red]="availableBalance() < 0">Disponible</small>
           </div>
           <div class="d-flex flex-column align-items-center w-100">
-            <h5 class="mb-0 text-center fw-bold"
+            <h5 class="text-center fw-bold"
                 [class.text-green]="globalBalance() > 0"
                 [class.text-red]="globalBalance() < 0">{{ globalBalance() | currency : 'COP' : 'symbol' : '1.0-0' }}</h5>
             <small class="fw-bold" [class.text-green]="globalBalance() > 0"

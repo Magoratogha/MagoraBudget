@@ -1,6 +1,6 @@
 <div class="d-flex align-items-start justify-content-between mb-3 w-100 gap-3">
   <div class="d-flex flex-column gap-2">
-    <h1 class="fw-bold mb-0 text-start">{{ account()?.label ? account()?.label : 'Nueva Cuenta' }}</h1>
+    <h1 class="fw-bold text-start">{{ account()?.label ? account()?.label : 'Nueva Cuenta' }}</h1>
     <div>
       <mat-chip>
         <mat-icon matChipAvatar class="material-symbols-rounded">{{ getAccountTypeIcon(selectedAccountType()!) }}
