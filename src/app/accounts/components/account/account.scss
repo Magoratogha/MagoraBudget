@@ -1,30 +1,14 @@
 @use '../../../shared/styles/colors';
 
 .account {
-  .progress {
-    height: 24px;
-    border-radius: 8px;
-    background-color: colors.$progress-gray;
+  .main-content {
+    padding-inline: 0.75rem;
 
-    &.\32 {
-      .progress-bar {
-        background-color: colors.$progress-red;
+    .hints {
+      small {
+        width: 33%;
+        text-align: center;
       }
-    }
-
-    &.\33 {
-      background-color: colors.$progress-red;
-    }
-
-    &-bar {
-      background-color: colors.$progress-green;
-    }
-  }
-
-  .hints {
-    small {
-      width: 33%;
-      text-align: center;
     }
   }
 }

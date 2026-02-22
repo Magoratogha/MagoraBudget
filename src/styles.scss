@@ -95,6 +95,16 @@ body {
 
 body.light-mode {
   color-scheme: light;
+
+  mat-progress-bar.debt .mdc-linear-progress__buffer-bar {
+    background: repeating-linear-gradient(
+        45deg,
+        #{ colors.$red } 0,
+        #{ colors.$red } 3px,
+        transparent 3px,
+        transparent 7px
+    );
+  }
 }
 
 .inner-bottom-sheet-component {
@@ -226,6 +236,33 @@ mat-card.content-wrapper {
 ### Material overrides ###
 ***/
 
+:root {
+  @include mat.progress-bar-overrides((
+    active-indicator-height: 1.5rem,
+    track-height: 1.5rem,
+  ));
+}
+
+mat-progress-bar {
+  border-radius: 0.5rem;
+
+  &.debt {
+    .mdc-linear-progress__buffer-bar {
+      background: repeating-linear-gradient(
+          45deg,
+          #{ colors.$red } 0,
+          #{ colors.$red } 2px,
+          transparent 2px,
+          transparent 7px
+      );
+    }
+  }
+
+  &.credit-card {
+    --mat-progress-bar-active-indicator-color: #{ colors.$red };
+  }
+}
+
 mat-form-field {
   width: 100%;
 }
@@ -252,12 +289,6 @@ mat-chip {
   .mdc-evolution-chip__graphic {
     padding-right: 2px !important;
   }
-}
-
-.danger-button {
-  @include mat.button-overrides((
-    filled-container-color: #{ colors.$red },
-  ));
 }
 
 .mat-mdc-input-element::placeholder {

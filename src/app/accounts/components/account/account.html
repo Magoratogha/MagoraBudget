@@ -11,12 +11,12 @@
       </div>
       @if (account()?.type !== AccountType.Savings && account()?.type !== AccountType.Cash) {
         <div class="main-content flex-column gap-2 pt-3">
-          <div class="progress w-100" [ngClass]="account()!.type.toString()">
-            <div class="progress-bar" [style.width.%]="parsedBalancePercent()"></div>
-          </div>
+          <mat-progress-bar mode="determinate" [value]="parsedBalancePercent()"
+                            [class.debt]="account()!.type === AccountType.Debt"
+                            [class.credit-card]="account()!.type === AccountType.CreditCard"></mat-progress-bar>
           <div class="d-flex justify-content-between hints w-100">
             <small class="text-start">{{ quota() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
-            <small>{{ balancePercent() | percent }}</small>
+            <small class="fw-bold">{{ balancePercent() | percent }}</small>
             <small class="text-end">{{ target() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
           </div>
         </div>

@@ -1,22 +1,23 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { Account as IAccount, AccountType } from '../../models';
-import { CurrencyPipe, NgClass, PercentPipe } from '@angular/common';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { EditAccount } from '../edit-account/edit-account';
 import { Overlay } from '../../../shared/services';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { getAccountTypeIcon } from '../../../shared/utils';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-account',
   imports: [
-    NgClass,
     CurrencyPipe,
     PercentPipe,
     MatChipsModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    MatProgressBarModule
   ],
   templateUrl: './account.html',
   styleUrl: './account.scss',
