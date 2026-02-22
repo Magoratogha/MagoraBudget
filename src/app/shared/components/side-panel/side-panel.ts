@@ -72,11 +72,7 @@ export class SidePanel implements OnInit {
           darkMode: settings.darkMode,
         }, { emitEvent: false });
       }
-      if (settings.darkMode) {
-        this._renderer.removeClass(this._document.body, 'light-mode');
-      } else {
-        this._renderer.addClass(this._document.body, 'light-mode');
-      }
+      this._setTheme(settings.darkMode);
     });
   }
 
@@ -101,11 +97,7 @@ export class SidePanel implements OnInit {
           } as UserSettings)
         }
       }
-      if (!!value?.darkMode) {
-        this._renderer.removeClass(this._document.body, 'light-mode');
-      } else {
-        this._renderer.addClass(this._document.body, 'light-mode');
-      }
+      this._setTheme(!!value?.darkMode);
     });
   }
 
@@ -113,6 +105,20 @@ export class SidePanel implements OnInit {
     if (isPlatformBrowser(this._providerId)) {
       window.location.reload();
     }
+  }
+
+  private _setTheme(darkMode: boolean) {
+    if (darkMode) {
+      this._renderer.removeClass(this._document.body, 'light-mode');
+    } else {
+      this._renderer.addClass(this._document.body, 'light-mode');
+    }
+
+    const themeColorTag = this._document.querySelector("meta[name='theme-color']")
+    const statusBarTag = this._document.querySelector("meta[name='apple-mobile-web-app-status-bar-style']");
+
+    this._renderer.setAttribute(themeColorTag, 'content', darkMode ? "#11150d" : "#f8fbee");
+    this._renderer.setAttribute(statusBarTag, 'content', darkMode ? "black-translucent" : "default");
   }
 
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
