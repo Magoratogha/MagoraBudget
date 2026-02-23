@@ -8,6 +8,8 @@
   position: fixed;
   top: 0;
   left: 0;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .app-logo {

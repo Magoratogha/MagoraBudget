@@ -23,6 +23,12 @@
       </mat-card-content>
     </mat-card>
   </div>
+  <div>
+    <h1 class="fw-bold mb-3">Presupuestos</h1>
+    <div class="d-flex flex-column gap-2">
+      <button matButton="outlined" (click)="openBudgetPreferences()">Configurar presupuestos</button>
+    </div>
+  </div>
   @if (expensesPerAccountType().length && expensesPerAccount().length) {
     <div class="d-flex flex-column gap-2">
       <h1 class="fw-bold mb-3">Gastos</h1>

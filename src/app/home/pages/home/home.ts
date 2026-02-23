@@ -1,19 +1,22 @@
 import { Component, computed, inject, Signal } from '@angular/core';
-import { Query } from '../../../shared/services';
+import { Overlay, Query } from '../../../shared/services';
 import { MatCardModule } from '@angular/material/card';
 import { CurrencyPipe } from '@angular/common';
 import { Account, AccountType } from '../../../accounts/models';
 import { getAccountTypeIcon, getAccountTypeLabel } from '../../../shared/utils';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { BudgetPreferences } from '../../components';
 
 @Component({
   selector: 'app-home',
-  imports: [MatCardModule, CurrencyPipe, MatIconModule],
+  imports: [MatCardModule, CurrencyPipe, MatIconModule, MatButtonModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
   private _query = inject(Query);
+  private _overlay = inject(Overlay);
   availableBalance = this._query.availableBalance;
   monthIncomes = this._query.monthIncomes;
   monthExpenses = this._query.monthExpenses;
@@ -34,4 +37,8 @@ export class Home {
   protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
   protected readonly AccountType = AccountType;
+
+  openBudgetPreferences() {
+    this._overlay.openBottomSheet(BudgetPreferences);
+  }
 }

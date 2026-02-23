@@ -1,0 +1,22 @@
+<h1 class="fw-bold text-start w-100 px-3 mb-3">Presupuestos</h1>
+<mat-card appearance="filled" class="content-wrapper w-100">
+  <mat-card-content>
+    <div class="items-container">
+      @for (type of Object.keys(AccountType); track type) {
+        @if (!isNaN(Number(type)) && (Number(type) !== AccountType.Deleted) && Number(type) !== AccountType.Debt) {
+          <div class="d-flex gap-2 align-items-center justify-content-between w-100">
+            <div class="d-flex gap-2 align-items-center">
+              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
+              <span>{{ getAccountTypeLabel(Number(type))}}</span>
+            </div>
+            <mat-slide-toggle></mat-slide-toggle>
+          </div>
+        }
+      }
+    </div>
+    <div class="d-flex flex-column gap-2 w-100 mt-4 pt-2">
+      <button matButton="filled" (click)="save()">Guardar</button>
+      <button matButton="tonal" (click)="cancel()">Cancelar</button>
+    </div>
+  </mat-card-content>
+</mat-card>
