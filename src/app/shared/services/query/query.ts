@@ -15,6 +15,7 @@ export class Query {
   public userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
   public userAccounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
   public userTransactions: Signal<Transaction[]> = this._fireStore.getUserTransactions();
+  public isDarkModeEnabled = signal<boolean>(true);
 
   public globalBalance = computed(() => {
     return this.userAccounts().reduce((total, account) => total + account.balance, 0);

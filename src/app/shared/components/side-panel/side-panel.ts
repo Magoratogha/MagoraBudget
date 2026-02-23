@@ -122,6 +122,7 @@ export class SidePanel implements OnInit {
     }
     const themeColorTag = this._document.querySelector("meta[name='theme-color']")
     this._renderer.setAttribute(themeColorTag, 'content', isDarkModeEnabled ? "#11150d" : "#f8fbee");
+    this._query.isDarkModeEnabled.set(isDarkModeEnabled);
 
     if (isPlatformBrowser(this._providerId)) {
       localStorage.setItem('isDarkModeEnabled', String(isDarkModeEnabled));

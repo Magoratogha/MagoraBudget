@@ -13,5 +13,5 @@ export class ProfilePicture {
   size = input(120);
   radius = input('16px');
   fontSize = computed(() => this.size() / 40);
-  userSettings = this._query.userSettings;
+  isDarkModeEnabled = this._query.isDarkModeEnabled;
 }
