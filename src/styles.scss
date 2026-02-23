@@ -73,8 +73,6 @@ html {
   overflow: hidden;
   overscroll-behavior: none;
   position: fixed;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
   @include mat.theme((
     color: (
       primary: themes.$primary-palette,

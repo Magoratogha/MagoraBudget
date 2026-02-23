@@ -1,14 +1,16 @@
 @use './shared/styles/variables';
 
 .container {
-  margin-top: -2rem;
-  padding-bottom: calc(1.5rem + #{ variables.$navbar-height });
+  height: 100%;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 app-profile-picture {
   display: flex;
   width: 100%;
-  padding-right: 0.75rem;
   justify-content: flex-end;
 }
 
@@ -22,8 +24,6 @@ mat-drawer-content {
   overflow: hidden !important;
 }
 
-.main-content {
-  height: 100dvh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+.router-outlet-container {
+  margin-top: -1rem;
 }
