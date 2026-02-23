@@ -8,6 +8,7 @@ import {
   OnInit,
   PLATFORM_ID,
   Renderer2,
+  signal,
   Signal
 } from '@angular/core';
 import { Auth, FireStore, Query } from '../../services';
@@ -16,7 +17,7 @@ import { APP_VERSION_STRING } from '../../../../../version-info';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserSettings } from '../../models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,7 +36,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ReactiveFormsModule,
     MatIconModule,
     MatChipsModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FormsModule
   ],
   templateUrl: './side-panel.html',
   styleUrl: './side-panel.scss',
@@ -53,13 +55,13 @@ export class SidePanel implements OnInit {
   userSettings: Signal<UserSettings> = this._query.userSettings;
   availableExpensesAccounts = this._query.availableExpensesAccounts;
   availableIncomesAccounts = this._query.availableIncomesAccounts;
+  isDarkModeEnabled = signal<boolean>(true);
 
   APP_VERSION = APP_VERSION_STRING;
 
   form = new FormGroup({
     preferredIncomesAccountId: new FormControl<string>(''),
     preferredExpensesAccountId: new FormControl<string>(''),
-    darkMode: new FormControl<boolean>(true),
   });
 
   constructor() {
@@ -69,11 +71,19 @@ export class SidePanel implements OnInit {
         this.form.setValue({
           preferredIncomesAccountId: settings.preferredIncomesAccountId,
           preferredExpensesAccountId: settings.preferredExpensesAccountId,
-          darkMode: settings.darkMode,
         }, { emitEvent: false });
       }
-      this._setTheme(settings.darkMode);
     });
+
+    effect(() => {
+      const darkMode = this.isDarkModeEnabled();
+      this._setTheme(darkMode);
+    });
+
+    if (isPlatformBrowser(this._providerId)) {
+      const isDarkModeEnabled = localStorage.getItem('isDarkModeEnabled') !== 'false';
+      this.isDarkModeEnabled.set(isDarkModeEnabled);
+    }
   }
 
   async ngOnInit() {
@@ -85,19 +95,16 @@ export class SidePanel implements OnInit {
           await this._fireStore.editUserSettings(userSettings.id, {
             preferredExpensesAccountId: value?.preferredExpensesAccountId || '',
             preferredIncomesAccountId: value?.preferredIncomesAccountId || '',
-            darkMode: !!value?.darkMode,
             ownerId: userId
           } as UserSettings)
         } else {
           await this._fireStore.addUserSettings({
             preferredExpensesAccountId: value?.preferredExpensesAccountId || '',
             preferredIncomesAccountId: value?.preferredIncomesAccountId || '',
-            darkMode: !!value?.darkMode,
             ownerId: userId
           } as UserSettings)
         }
       }
-      this._setTheme(!!value?.darkMode);
     });
   }
 
@@ -107,18 +114,18 @@ export class SidePanel implements OnInit {
     }
   }
 
-  private _setTheme(darkMode: boolean) {
-    if (darkMode) {
+  private _setTheme(isDarkModeEnabled: boolean) {
+    if (isDarkModeEnabled) {
       this._renderer.removeClass(this._document.body, 'light-mode');
     } else {
       this._renderer.addClass(this._document.body, 'light-mode');
     }
-
     const themeColorTag = this._document.querySelector("meta[name='theme-color']")
-    const statusBarTag = this._document.querySelector("meta[name='apple-mobile-web-app-status-bar-style']");
+    this._renderer.setAttribute(themeColorTag, 'content', isDarkModeEnabled ? "#11150d" : "#f8fbee");
 
-    this._renderer.setAttribute(themeColorTag, 'content', darkMode ? "#11150d" : "#f8fbee");
-    this._renderer.setAttribute(statusBarTag, 'content', darkMode ? "black-translucent" : "default");
+    if (isPlatformBrowser(this._providerId)) {
+      localStorage.setItem('isDarkModeEnabled', String(isDarkModeEnabled));
+    }
   }
 
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
