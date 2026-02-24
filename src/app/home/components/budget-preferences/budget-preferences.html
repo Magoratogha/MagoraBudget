@@ -4,19 +4,30 @@
     <div class="items-container">
       @for (type of Object.keys(AccountType); track type) {
         @if (!isNaN(Number(type)) && (Number(type) !== AccountType.Deleted) && Number(type) !== AccountType.Debt) {
-          <div class="d-flex gap-2 align-items-center justify-content-between w-100">
-            <div class="d-flex gap-2 align-items-center">
-              <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
-              <span>{{ getAccountTypeLabel(Number(type)) }}</span>
+          <form [formGroup]="$any(form.controls.budgets.get(type)!)" class="d-flex w-100 flex-column gap-3">
+            <div class="d-flex gap-2 align-items-center justify-content-between">
+              <div class="d-flex gap-2 align-items-center">
+                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
+                <span>{{ getAccountTypeLabel(Number(type)) }}</span>
+              </div>
+              <mat-slide-toggle formControlName="enabled"
+                                (change)="onToggleChange(type, $event.checked)"></mat-slide-toggle>
             </div>
-            <mat-slide-toggle></mat-slide-toggle>
-          </div>
+            @if (form.get(['budgets', type, 'enabled'])!.value) {
+              <mat-form-field>
+                <mat-label>Presupuesto mensual</mat-label>
+                <input autocomplete="off" matInput placeholder="1.500.000" formControlName="amount" mask="separator.0"
+                       thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
+                <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
+              </mat-form-field>
+            }
+          </form>
         }
       }
     </div>
   </mat-card-content>
 </mat-card>
 <div class="d-flex flex-column gap-2 w-100 mt-3">
-  <button matButton="filled" (click)="save()">Guardar</button>
+  <button matButton="filled" [disabled]="!form.valid || form.pristine" (click)="save()">Guardar</button>
   <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

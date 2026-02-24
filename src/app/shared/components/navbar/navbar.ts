@@ -40,7 +40,8 @@ export class Navbar implements OnInit, OnDestroy {
     this._unsubscribeFunctions.push(
       this._fireStore.listenToUserAccounts(userId),
       this._fireStore.listenToUserTransactions(userId),
-      this._fireStore.listenToUserSettings(userId)
+      this._fireStore.listenToUserSettings(userId),
+      this._fireStore.listenToBudgetPreference(userId),
     );
   }
 

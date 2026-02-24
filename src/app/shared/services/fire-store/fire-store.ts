@@ -19,6 +19,7 @@ import { FIREBASE_COLLECTION_NAMES } from '../../constants';
 import { Account } from '../../../accounts/models';
 import { Transaction, TransactionType } from '../../../transactions/models';
 import { UserSettings } from '../../models';
+import { BudgetPreference } from '../../../home/models';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,7 @@ export class FireStore {
   private _userAccounts = signal<Account[]>([]);
   private _userTransactions = signal<Transaction[]>([]);
   private _userSettings = signal<UserSettings>({} as UserSettings);
+  private _budgetPreference = signal<BudgetPreference>({} as BudgetPreference);
   public isOnline = signal<boolean>(true);
 
   constructor() {
@@ -143,6 +145,28 @@ export class FireStore {
     }
   }
 
+  public async addBudgetPreference(preference: BudgetPreference): Promise<string> {
+    try {
+      this._cleanWhiteSpaces(preference);
+      const docRef = doc(collection(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES));
+      await this._performOperation(() => setDoc(docRef, preference));
+      return docRef.id;
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public async editBudgetPreferences(preferenceId: string, preference: BudgetPreference): Promise<void> {
+    try {
+      this._cleanWhiteSpaces(preference);
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES, preferenceId), { ...preference }));
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
   public async editUserSettings(settingsId: string, settings: UserSettings): Promise<void> {
     try {
       this._cleanWhiteSpaces(settings);
@@ -163,6 +187,10 @@ export class FireStore {
 
   public getUserSettings() {
     return this._userSettings.asReadonly();
+  }
+
+  public getBudgetPreference() {
+    return this._budgetPreference.asReadonly();
   }
 
   public listenToUserAccounts(userId: string) {
@@ -225,6 +253,26 @@ export class FireStore {
             ...doc.data(),
             id: doc.id,
           } as UserSettings);
+        });
+      });
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public listenToBudgetPreference(userId: string) {
+    try {
+      const q = query(
+        collection(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES),
+        where('ownerId', "==", userId)
+      );
+      return onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          this._budgetPreference.set({
+            ...doc.data(),
+            id: doc.id,
+          } as BudgetPreference);
         });
       });
     } catch (e) {

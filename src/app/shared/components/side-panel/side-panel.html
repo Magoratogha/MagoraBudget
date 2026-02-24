@@ -5,12 +5,12 @@
       <h2>¡Hola, {{ auth.getLoggedUser()?.displayName?.split(" ")?.at(0) }}!</h2>
     </div>
   </div>
-  <div class="w-100 d-flex flex-column align-items-center">
-    <h3 class="mb-4 d-flex align-items-center gap-1">
+  <div class="w-100 d-flex flex-column align-items-center gap-4">
+    <h3 class="d-flex align-items-center gap-1">
       <mat-icon class="material-symbols-rounded">settings</mat-icon>
       Ajustes
     </h3>
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="d-flex flex-column gap-3 w-100">
       <mat-form-field floatLabel="auto">
         <mat-label>Cuenta preferida para gastos</mat-label>
         <mat-select formControlName="preferredExpensesAccountId">

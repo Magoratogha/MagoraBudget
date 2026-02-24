@@ -16,7 +16,7 @@
                             [class.credit-card]="account()!.type === AccountType.CreditCard"></mat-progress-bar>
           <div class="d-flex justify-content-between hints w-100">
             <small class="text-start">{{ quota() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
-            <small class="fw-bold">{{ balancePercent() | percent }}</small>
+            <small class="fw-bold"><span>{{ balancePercent() | percent }}</span></small>
             <small class="text-end">{{ target() | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
           </div>
         </div>

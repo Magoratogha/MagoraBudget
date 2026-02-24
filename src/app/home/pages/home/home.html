@@ -26,6 +26,34 @@
   <div>
     <h1 class="fw-bold mb-3">Presupuestos</h1>
     <div class="d-flex flex-column gap-2">
+      @if (budgetPreference().id) {
+        <mat-card appearance="filled" class="content-wrapper mb-2">
+          <mat-card-content>
+            <div class="items-container sm">
+              @for (budget of budgetsBalance(); track budget) {
+                <div class="main-content flex-column align-items-start gap-2 budget">
+                  <div class="d-flex align-items-center justify-content-between w-100 mb-1">
+                    <div class="d-flex align-items-center gap-2">
+                      <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(budget.accountType) }}</mat-icon>
+                      <span>{{ getAccountTypeLabel(budget.accountType) }}</span>
+                    </div>
+                    <span class="fw-bold text-green"
+                          [class.text-red]="budget.isOverPassed">{{ budget.balance | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+                  </div>
+                  <mat-progress-bar mode="determinate" [value]="budget.progressBarPercentage"
+                                    [class.debt]="budget.isOverPassed"></mat-progress-bar>
+                  <div class="d-flex justify-content-between hints w-100">
+                    <small class="text-start">{{ 0 | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
+                    <small class="fw-bold">
+                      <span>{{ budget.percentage | percent }}</span></small>
+                    <small class="text-end">{{ budget.limit | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
+                  </div>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
       <button matButton="outlined" (click)="openBudgetPreferences()">Configurar presupuestos</button>
     </div>
   </div>
@@ -40,7 +68,7 @@
           </div>
           <div class="items-container sm">
             @for (expense of expensesPerAccountType(); track expense[0]) {
-              <div class="main-content">
+              <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon class="material-symbols-rounded"
                             [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
@@ -63,7 +91,7 @@
           </div>
           <div class="items-container sm">
             @for (expense of expensesPerAccount(); track expense[0].id) {
-              <div class="main-content">
+              <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon
                     class="material-symbols-rounded"
@@ -92,7 +120,7 @@
           </div>
           <div class="items-container sm">
             @for (income of incomesPerAccountType(); track income[0]) {
-              <div class="main-content">
+              <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon class="material-symbols-rounded"
                             [class.text-red]="income[0] === AccountType.Deleted">{{ getAccountTypeIcon(income[0]) }}
@@ -115,7 +143,7 @@
           </div>
           <div class="items-container sm">
             @for (income of incomesPerAccount(); track income[0].id) {
-              <div class="main-content">
+              <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon
                     class="material-symbols-rounded"

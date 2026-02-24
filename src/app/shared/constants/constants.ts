@@ -12,6 +12,7 @@ export const FIREBASE_COLLECTION_NAMES = {
   ACCOUNTS: 'accounts',
   TRANSACTIONS: 'transactions',
   USER_SETTINGS: 'user-settings',
+  BUDGET_PREFERENCES: 'budget-preferences',
 };
 
 export const WARNING_MODAL_DELETE_WORDING = {

@@ -4,6 +4,7 @@ import { Account, Account as IAccount, AccountType } from '../../../accounts/mod
 import { UserSettings } from '../../models';
 import { Transaction as ITransaction, Transaction, TransactionType } from '../../../transactions/models';
 import { DELETED_ACCOUNT_TEMPLATE } from '../../../accounts/constants';
+import { BudgetPreference } from '../../../home/models';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ export class Query {
   private _today = signal(new Date());
 
   public userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
+  public budgetPreference: Signal<BudgetPreference> = this._fireStore.getBudgetPreference();
   public userAccounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
   public userTransactions: Signal<Transaction[]> = this._fireStore.getUserTransactions();
   public isDarkModeEnabled = signal<boolean>(true);

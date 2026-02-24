@@ -1,15 +1,13 @@
-<div class="w-100 d-flex justify-content-center align-items-center">
-  <mat-chip (click)="openPicker()">
-    <mat-icon matChipAvatar class="material-symbols-rounded">calendar_month</mat-icon>
-    {{ value() | date: 'dd/MM/yyyy' }}
-  </mat-chip>
-  <mat-form-field class="d-none">
-    <input hidden matInput autocomplete="off" [matDatepicker]="picker" (dateChange)="writeValue($event.value)">
-  </mat-form-field>
-  <mat-datepicker touchUi #picker>
-    <mat-datepicker-actions>
-      <button matButton matDatepickerCancel>Cancelar</button>
-      <button matButton="filled" matDatepickerApply>Aplicar</button>
-    </mat-datepicker-actions>
-  </mat-datepicker>
-</div>
+<mat-chip (click)="openPicker()">
+  <mat-icon matChipAvatar class="material-symbols-rounded">calendar_month</mat-icon>
+  {{ value() | date: 'dd/MM/yyyy' }}
+</mat-chip>
+<mat-form-field class="d-none">
+  <input hidden matInput autocomplete="off" [matDatepicker]="picker" (dateChange)="writeValue($event.value)">
+</mat-form-field>
+<mat-datepicker touchUi #picker>
+  <mat-datepicker-actions>
+    <button matButton matDatepickerCancel>Cancelar</button>
+    <button matButton="filled" matDatepickerApply>Aplicar</button>
+  </mat-datepicker-actions>
+</mat-datepicker>
