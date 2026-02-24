@@ -1,4 +1,4 @@
-<div class="d-flex align-items-start justify-content-between mb-3 w-100 gap-3 px-3">
+<div class="d-flex align-items-start justify-content-between mb-3 w-100 gap-3 px-2">
   <div class="d-flex flex-column gap-2">
     <h1 class="fw-bold text-start">{{ transaction()?.id ? 'Editar Transacción' : 'Nueva Transacción' }}</h1>
     <div>
@@ -19,7 +19,7 @@
 
 <mat-card appearance="filled" class="content-wrapper w-100">
   <mat-card-content>
-    <form class="items-container gap-0" [formGroup]="form">
+    <form class="items-container gap-0 pb-1" [formGroup]="form">
       <mat-button-toggle-group formControlName="type" class="mt-2" hideSingleSelectionIndicator>
         @for (type of Object.keys(TransactionType); track type) {
           @if (!isNaN(Number(type))) {
@@ -76,10 +76,10 @@
         <p class="text-center text-red">Para hacer una transacción primero debes agregar una o más cuentas.</p>
       }
     </form>
-    <div class="d-flex flex-column gap-2 w-100 mt-3">
-      <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
-      <button matButton="tonal" (click)="cancel()">Cancelar</button>
-    </div>
   </mat-card-content>
 </mat-card>
+<div class="d-flex flex-column gap-2 w-100 mt-3">
+  <button matButton="filled" [disabled]="!form.valid" (click)="save()">Guardar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
+</div>
 

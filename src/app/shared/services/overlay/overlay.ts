@@ -33,7 +33,8 @@ export class Overlay {
   public openBottomSheet(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }) {
     this._matBottomSheetRef = this._matBottomSheet.open(innerComponent, {
       data: innerComponentInputs,
-      autoFocus: false
+      autoFocus: false,
+      backdropClass: 'app-overlay-backdrop',
     });
     return this._matBottomSheetRef.afterDismissed();
   }
@@ -43,7 +44,11 @@ export class Overlay {
   }
 
   public openModal(title: string, description?: string | string[]) {
-    this._matModalDialogRef = this._matDialog.open(Modal, { data: { title, description }, autoFocus: false });
+    this._matModalDialogRef = this._matDialog.open(Modal, {
+      data: { title, description },
+      autoFocus: false,
+      backdropClass: 'app-overlay-backdrop',
+    });
     return this._matModalDialogRef.afterClosed();
   }
 
@@ -70,7 +75,7 @@ export class Overlay {
       this._matLoaderDialogRef = this._matDialog.open(Loader, {
         autoFocus: false,
         disableClose: true,
-        backdropClass: 'loader-backdrop',
+        backdropClass: 'app-overlay-backdrop',
         panelClass: 'loader-panel'
       });
     }
