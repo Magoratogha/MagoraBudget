@@ -279,6 +279,8 @@ mat-card.content-wrapper {
     active-indicator-height: 1.5rem,
     track-height: 1.5rem,
   ));
+
+  --mat-select-placeholder-text-color: color-mix(in srgb, var(--mat-sys-on-surface) 40%, transparent);
 }
 
 mat-progress-bar {
@@ -369,7 +371,7 @@ mat-drawer {
   display: none;
 }
 
-.amount-container .mat-mdc-form-field-subscript-wrapper {
+.amount-container .money-input .mat-mdc-form-field-subscript-wrapper {
   display: block;
 }
 

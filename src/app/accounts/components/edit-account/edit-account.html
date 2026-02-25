@@ -17,7 +17,7 @@
 </div>
 <mat-card appearance="filled" class="content-wrapper w-100">
   <mat-card-content>
-    <form class="items-container gap-0 pb-1" [formGroup]="form">
+    <form class="items-container gap-0" [formGroup]="form">
       <mat-button-toggle-group formControlName="type" class="mb-2" hideSingleSelectionIndicator>
         @for (type of Object.keys(AccountType); track type) {
           @if (!isNaN(Number(type)) && Number(type) !== AccountType.Deleted) {
