@@ -22,6 +22,10 @@
       </mat-card-content>
     </mat-card>
   </div>
+  <button matButton="outlined" class="w-100" (click)="addNewAccount()">
+    <mat-icon class="material-symbols-rounded">add_circle</mat-icon>
+    Agregar nueva cuenta
+  </button>
   @if (accounts().length) {
     <div>
       <h1 class="fw-bold mb-3">Cuentas</h1>
@@ -32,6 +36,5 @@
       </div>
     </div>
   }
-  <button matButton="outlined" class="w-100" (click)="addNewAccount()">Agregar nueva cuenta</button>
 </div>
 

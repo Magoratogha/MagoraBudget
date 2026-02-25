@@ -253,14 +253,21 @@ mat-card.content-wrapper {
     width: 33%;
     text-align: center;
   }
-
   .fw-bold span {
-    background-color: var(--mat-sys-surface-container-highest);
     font-weight: bolder !important;
-    padding-inline: 0.5rem;
     padding-block: 0.15rem;
-    border-radius: 0.25rem;
   }
+}
+
+.hint,
+.hints .fw-bold span {
+  background-color: var(--mat-sys-surface-container-highest);
+  padding-inline: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.hint {
+  padding-block: 0.25rem;
 }
 
 /***

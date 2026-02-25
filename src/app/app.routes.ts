@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { isAuthed, isNotAuthed } from './shared/guards/auth-guard';
+import { Home } from './home/pages';
+import { Login } from './login/pages';
 
 export const routes: Routes = [
   {
     path: 'home',
-    loadComponent: () => import('./home/pages/home/home').then((m) => m.Home),
+    component: Home,
     canMatch: [isAuthed],
   },
   {
@@ -24,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/pages/login/login').then((m) => m.Login),
+    component: Login,
     canMatch: [isNotAuthed],
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },

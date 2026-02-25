@@ -1,6 +1,6 @@
 <div class="d-flex flex-column gap-4">
   <div>
-    <h1 class="fw-bold mb-3">Resumen</h1>
+    <h1 class="fw-bold mb-3">Resumen Mensual</h1>
     <mat-card appearance="filled" class="content-wrapper mb-2">
       <mat-card-content>
         <div class="items-container">
@@ -54,7 +54,10 @@
           </mat-card-content>
         </mat-card>
       }
-      <button matButton="outlined" (click)="openBudgetPreferences()">Configurar presupuestos</button>
+      <button matButton="outlined" (click)="openBudgetPreferences()">
+        <mat-icon class="material-symbols-rounded">tune</mat-icon>
+        Configurar presupuestos
+      </button>
     </div>
   </div>
   @if (expensesPerAccountType().length && expensesPerAccount().length) {

@@ -17,6 +17,7 @@ import { EditTransaction } from '../edit-transaction/edit-transaction';
     CurrencyPipe,
     MatChipsModule,
     NgTemplateOutlet,
+
   ],
   templateUrl: './transaction.html',
   styleUrl: './transaction.scss',

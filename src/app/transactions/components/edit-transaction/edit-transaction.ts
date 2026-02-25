@@ -68,6 +68,7 @@ export class EditTransaction implements OnInit {
     date: new FormControl<Date>(new Date(), [Validators.required]),
     originAccountId: new FormControl<string>('', [Validators.required]),
     targetAccountId: new FormControl<string>(''),
+    description: new FormControl<string>(''),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   });
 
@@ -202,6 +203,7 @@ export class EditTransaction implements OnInit {
         date: this.transaction()?.date || new Date(),
         originAccountId: this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
         targetAccountId: this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
+        description: this.transaction()?.description || '',
         ownerId: this.transaction()?.ownerId || this._auth.getLoggedUser()!.uid
       }, { emitEvent: false });
 

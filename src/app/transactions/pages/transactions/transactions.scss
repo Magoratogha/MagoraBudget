@@ -21,3 +21,12 @@
 app-transaction {
   width: 100%;
 }
+
+.month-label {
+  background-color: var(--mat-sys-surface-container-highest);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}

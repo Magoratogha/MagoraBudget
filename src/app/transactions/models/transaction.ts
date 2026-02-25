@@ -7,5 +7,6 @@ export interface Transaction {
   date: Date;
   originAccountId: string;
   targetAccountId?: string;
+  description?: string;
   ownerId: string;
 }

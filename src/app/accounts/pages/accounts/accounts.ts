@@ -6,6 +6,7 @@ import { CurrencyPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-accounts',
@@ -14,7 +15,8 @@ import { MatCardModule } from '@angular/material/card';
     CurrencyPipe,
     MatButtonModule,
     MatChipsModule,
-    MatCardModule
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './accounts.html',
   styleUrl: './accounts.scss',
