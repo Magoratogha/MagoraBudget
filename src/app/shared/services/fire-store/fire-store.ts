@@ -20,6 +20,7 @@ import { Account } from '../../../accounts/models';
 import { Transaction, TransactionType } from '../../../transactions/models';
 import { UserSettings } from '../../models';
 import { BudgetPreference } from '../../../home/models';
+import { Pending } from '../../../pending/models';
 
 @Injectable({
   providedIn: 'root',
@@ -28,8 +29,9 @@ export class FireStore {
   private _db = inject(Firestore);
   private _userAccounts = signal<Account[]>([]);
   private _userTransactions = signal<Transaction[]>([]);
+  private _userPendings = signal<Pending[]>([]);
   private _userSettings = signal<UserSettings>({} as UserSettings);
-  private _budgetPreference = signal<BudgetPreference>({} as BudgetPreference);
+  private _userBudgetPreference = signal<BudgetPreference>({} as BudgetPreference);
   public isOnline = signal<boolean>(true);
 
   constructor() {
@@ -167,6 +169,58 @@ export class FireStore {
     }
   }
 
+  public async addPending(pending: Pending): Promise<string> {
+    try {
+      this._cleanWhiteSpaces(pending);
+      const docRef = doc(collection(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS));
+      await this._performOperation(() => setDoc(docRef, pending));
+      return docRef.id;
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public async editPending(pendingId: string, pending: Pending): Promise<void> {
+    try {
+      this._cleanWhiteSpaces(pending);
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId), { ...pending }));
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public async setPendingCompletion(pending: Pending, isDone: boolean): Promise<void> {
+    try {
+      if (pending.hasAssociatedTransaction && isDone) {
+        const transaction: Transaction = {
+          type: pending.transactionType!,
+          amount: pending.amount,
+          date: new Date(),
+          originAccountId: pending.originAccountId!,
+          targetAccountId: pending.targetAccountId,
+          description: pending.label,
+          ownerId: pending.ownerId
+        }
+        await this.addTransaction(transaction);
+      }
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pending.id!), { isDone }));
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
+  public async deletePending(pendingId: string): Promise<void> {
+    try {
+      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId)));
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
   public async editUserSettings(settingsId: string, settings: UserSettings): Promise<void> {
     try {
       this._cleanWhiteSpaces(settings);
@@ -189,8 +243,12 @@ export class FireStore {
     return this._userSettings.asReadonly();
   }
 
-  public getBudgetPreference() {
-    return this._budgetPreference.asReadonly();
+  public getUserBudgetPreference() {
+    return this._userBudgetPreference.asReadonly();
+  }
+
+  public getUserPendings() {
+    return this._userPendings.asReadonly();
   }
 
   public listenToUserAccounts(userId: string) {
@@ -241,6 +299,29 @@ export class FireStore {
     }
   }
 
+  public listenToUserPendings(userId: string) {
+    try {
+      const q = query(
+        collection(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS),
+        where('ownerId', "==", userId),
+        orderBy('label', 'asc')
+      );
+      return onSnapshot(q, (querySnapshot) => {
+        const pendings: Pending[] = [];
+        querySnapshot.forEach((doc) => {
+          pendings.push({
+            ...doc.data(),
+            id: doc.id,
+          } as Pending);
+        });
+        this._userPendings.set(pendings);
+      });
+    } catch (e) {
+      this._logError(e);
+      throw e;
+    }
+  }
+
   public listenToUserSettings(userId: string) {
     try {
       const q = query(
@@ -261,7 +342,7 @@ export class FireStore {
     }
   }
 
-  public listenToBudgetPreference(userId: string) {
+  public listenToUserBudgetPreference(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES),
@@ -269,7 +350,7 @@ export class FireStore {
       );
       return onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          this._budgetPreference.set({
+          this._userBudgetPreference.set({
             ...doc.data(),
             id: doc.id,
           } as BudgetPreference);

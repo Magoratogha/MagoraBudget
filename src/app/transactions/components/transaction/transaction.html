@@ -56,10 +56,10 @@
             [class.text-red]="transaction()?.type === TransactionType.Expense">{{ balanceLabelPrefix() }} {{ transaction()?.amount | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
     </div>
     @if (transaction()?.description) {
-      <span class="hint d-flex align-items-center gap-1 contained-text">
+      <small class="hint d-flex align-items-center ps-0 contained-text">
         <mat-icon class="material-symbols-rounded">label</mat-icon>
         {{ transaction()?.description }}
-      </span>
+      </small>
     }
   </div>
 </div>

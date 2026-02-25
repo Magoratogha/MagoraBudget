@@ -8,16 +8,16 @@
 </div>
 <mat-card appearance="filled" class="content-wrapper w-100">
   <mat-card-content>
-    <form class="items-container gap-3">
+    <form [formGroup]="form" class="items-container gap-3">
       <div class="w-100 d-flex flex-column gap-4 fields-container">
         <mat-form-field>
           <mat-label>Nombre</mat-label>
-          <input autocomplete="off" matInput placeholder="Servicios públicos">
+          <input autocomplete="off" matInput placeholder="Servicios públicos" formControlName="label">
           <mat-icon class="material-symbols-rounded" matPrefix>label</mat-icon>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Monto</mat-label>
-          <input autocomplete="off" matInput placeholder="350.000"
+          <input autocomplete="off" matInput placeholder="350.000" formControlName="amount"
                  mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
           <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
         </mat-form-field>
@@ -27,53 +27,59 @@
           <mat-icon class="material-symbols-rounded">compare_arrows</mat-icon>
           <span>Establecer transacción</span>
         </div>
-        <mat-slide-toggle></mat-slide-toggle>
+        <mat-slide-toggle formControlName="hasAssociatedTransaction"
+                          (change)="onToggleChange($event.checked)"></mat-slide-toggle>
       </div>
-      <div class="w-100 d-flex flex-column gap-4 fields-container">
-        <div class="d-flex gap-2 align-items-center justify-content-between w-100">
-          <div class="d-flex gap-2 align-items-center">
-            <mat-icon class="material-symbols-rounded">category</mat-icon>
-            <span>Tipo</span>
-          </div>
-          <mat-button-toggle-group hideSingleSelectionIndicator>
-            @for (type of Object.keys(TransactionType); track type) {
-              @if (!isNaN(Number(type))) {
-                <mat-button-toggle [value]="Number(type)">
-                  <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
-                </mat-button-toggle>
+      @if (isTransactionEnabled()) {
+        <div class="w-100 d-flex flex-column gap-4 fields-container">
+          <div class="d-flex gap-2 align-items-center justify-content-between w-100">
+            <div class="d-flex gap-2 align-items-center">
+              <mat-icon class="material-symbols-rounded">category</mat-icon>
+              <span>Tipo</span>
+            </div>
+            <mat-button-toggle-group hideSingleSelectionIndicator formControlName="transactionType"
+                                     (change)="onTypeChange($event.value)">
+              @for (type of Object.keys(TransactionType); track type) {
+                @if (!isNaN(Number(type))) {
+                  <mat-button-toggle [value]="Number(type)">
+                    <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
+                  </mat-button-toggle>
+                }
               }
-            }
-          </mat-button-toggle-group>
+            </mat-button-toggle-group>
+          </div>
+          <mat-form-field>
+            <mat-label>{{ originAccountLabel() }}</mat-label>
+            <mat-select placeholder="Selecciona una cuenta" formControlName="originAccountId">
+              <mat-option>--</mat-option>
+              @for (account of availableOriginAccounts(); track account.id) {
+                <mat-option [value]="account.id">
+                  <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+                  {{ account.label }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          @if (selectedTransactionType() === TransactionType.Transfer) {
+            <mat-form-field>
+              <mat-label>A la cuenta</mat-label>
+              <mat-select placeholder="Selecciona una cuenta" formControlName="targetAccountId">
+                <mat-option>--</mat-option>
+                @for (account of availableTargetAccounts(); track account.id) {
+                  <mat-option [value]="account.id">
+                    <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
+                    {{ account.label }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
         </div>
-        <mat-form-field>
-          <mat-label>Cuenta</mat-label>
-          <mat-select placeholder="Selecciona una cuenta">
-            <mat-option>--</mat-option>
-            @for (account of availableOriginAccounts(); track account.id) {
-              <mat-option [value]="account.id">
-                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
-                {{ account.label }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>A la cuenta</mat-label>
-          <mat-select placeholder="Selecciona una cuenta">
-            <mat-option>--</mat-option>
-            @for (account of availableOriginAccounts(); track account.id) {
-              <mat-option [value]="account.id">
-                <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account.type) }}</mat-icon>
-                {{ account.label }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
+      }
     </form>
   </mat-card-content>
 </mat-card>
 <div class="d-flex flex-column gap-2 w-100 mt-3">
-  <button matButton="filled">Guardar</button>
-  <button matButton="tonal">Cancelar</button>
+  <button matButton="filled" [disabled]="!form.valid || form.pristine" (click)="save()">Guardar</button>
+  <button matButton="tonal" (click)="cancel()">Cancelar</button>
 </div>

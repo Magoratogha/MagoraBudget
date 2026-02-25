@@ -5,7 +5,6 @@ import { Auth, FireStore, Query } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ACCOUNT_TYPE_INFO_MAP } from '../../../accounts/constants';
 
 @Component({
   selector: 'app-navbar',
@@ -41,7 +40,8 @@ export class Navbar implements OnInit, OnDestroy {
       this._fireStore.listenToUserAccounts(userId),
       this._fireStore.listenToUserTransactions(userId),
       this._fireStore.listenToUserSettings(userId),
-      this._fireStore.listenToBudgetPreference(userId),
+      this._fireStore.listenToUserBudgetPreference(userId),
+      this._fireStore.listenToUserPendings(userId)
     );
   }
 
@@ -61,6 +61,4 @@ export class Navbar implements OnInit, OnDestroy {
       this._query.updateCurrentDate(currentDate);
     }
   }
-
-  protected readonly ACCOUNT_TYPE_INFO_MAP = ACCOUNT_TYPE_INFO_MAP;
 }

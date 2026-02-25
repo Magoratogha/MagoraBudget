@@ -23,8 +23,9 @@ app-transaction {
 }
 
 .month-label {
-  background-color: var(--mat-sys-surface-container-highest);
-  padding: 0.25rem 0.5rem;
+  background-color: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  padding: 0.5rem 0.5rem;
   border-radius: 0.5rem;
   display: flex;
   align-items: center;

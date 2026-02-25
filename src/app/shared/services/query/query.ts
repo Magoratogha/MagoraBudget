@@ -5,6 +5,7 @@ import { UserSettings } from '../../models';
 import { Transaction as ITransaction, Transaction, TransactionType } from '../../../transactions/models';
 import { DELETED_ACCOUNT_TEMPLATE } from '../../../accounts/constants';
 import { BudgetPreference } from '../../../home/models';
+import { Pending } from '../../../pending/models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,10 @@ export class Query {
   private _today = signal(new Date());
 
   public userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
-  public budgetPreference: Signal<BudgetPreference> = this._fireStore.getBudgetPreference();
+  public budgetPreference: Signal<BudgetPreference> = this._fireStore.getUserBudgetPreference();
   public userAccounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
   public userTransactions: Signal<Transaction[]> = this._fireStore.getUserTransactions();
+  public userPendings: Signal<Pending[]> = this._fireStore.getUserPendings();
   public isDarkModeEnabled = signal<boolean>(true);
 
   public globalBalance = computed(() => {
@@ -57,6 +59,10 @@ export class Query {
     }, 0);
   });
 
+  public pendingIncomes = computed(() => {
+    return this.userPendings().filter((pending) => pending.hasAssociatedTransaction && !pending.isDone && pending.transactionType === TransactionType.Income);
+  });
+
   public monthExpenses = computed(() => {
     return this.monthTransactions().reduce((total, transaction) => {
       if (transaction.type === TransactionType.Expense) {
@@ -65,6 +71,10 @@ export class Query {
         return total;
       }
     }, 0);
+  });
+
+  public pendingExpenses = computed(() => {
+    return this.userPendings().filter((pending) => pending.hasAssociatedTransaction && !pending.isDone && pending.transactionType === TransactionType.Expense);
   });
 
   public expensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
@@ -80,6 +90,18 @@ export class Query {
       } else {
         return expenses;
       }
+    }, new Map<AccountType, number>());
+  });
+
+  public pendingExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
+    return this.pendingExpenses().reduce((expenses, pending) => {
+      const accountType = this._getAccountTypeById(pending.originAccountId!);
+      if (expenses.has(accountType)) {
+        expenses.set(accountType, expenses.get(accountType)! - pending.amount);
+      } else {
+        expenses.set(accountType, -pending.amount);
+      }
+      return expenses;
     }, new Map<AccountType, number>());
   });
 
@@ -112,6 +134,18 @@ export class Query {
       } else {
         return incomes;
       }
+    }, new Map<AccountType, number>());
+  });
+
+  public pendingIncomesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
+    return this.pendingIncomes().reduce((expenses, pending) => {
+      const accountType = this._getAccountTypeById(pending.originAccountId!);
+      if (expenses.has(accountType)) {
+        expenses.set(accountType, expenses.get(accountType)! + pending.amount);
+      } else {
+        expenses.set(accountType, pending.amount);
+      }
+      return expenses;
     }, new Map<AccountType, number>());
   });
 

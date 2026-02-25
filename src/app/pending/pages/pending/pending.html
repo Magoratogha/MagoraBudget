@@ -1,5 +1,85 @@
 <div class="d-flex flex-column gap-4">
-  <h1 class="fw-bold mb-3">Pendientes</h1>
+  <div>
+    <h1 class="fw-bold mb-3">Pendientes</h1>
+    <mat-card appearance="filled" class="content-wrapper mb-2">
+      <mat-card-content>
+        <div class="subtitle red">
+          <span class="icon"><mat-icon class="material-symbols-rounded">shopping_cart</mat-icon></span>
+          <h5 class="text">Gastos pendientes</h5>
+        </div>
+        <div class="items-container sm">
+          @for (expense of pendingExpensesPerAccountType(); track expense[0]) {
+            <div class="main-content less-radius">
+              <div class="d-flex align-items-center justify-content-center gap-2">
+                <mat-icon class="material-symbols-rounded"
+                          [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
+                </mat-icon>
+                <span
+                  [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
+              </div>
+              <span
+                class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card appearance="filled" class="content-wrapper">
+      <mat-card-content>
+        <div class="subtitle">
+          <span class="icon"><mat-icon class="material-symbols-rounded">savings</mat-icon></span>
+          <h5 class="text">Ingresos pendientes</h5>
+        </div>
+        <div class="items-container sm">
+          @for (income of pendingIncomesPerAccountType(); track income[0]) {
+            <div class="main-content less-radius">
+              <div class="d-flex align-items-center justify-content-center gap-2">
+                <mat-icon class="material-symbols-rounded"
+                          [class.text-red]="income[0] === AccountType.Deleted">{{ getAccountTypeIcon(income[0]) }}
+                </mat-icon>
+                <span
+                  [class.text-decoration-line-through]="income[0] === AccountType.Deleted">{{ getAccountTypeLabel(income[0]) }}</span>
+              </div>
+              <span
+                class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  @if (pendings().length) {
+    <div class="d-flex flex-column gap-2">
+      <div class="d-flex justify-content-end mb-2">
+        <button matButton="tonal" (click)="cleanAll()">
+          <mat-icon class="material-symbols-rounded">mop</mat-icon>
+          Limpiar todos
+        </button>
+      </div>
+      @for (pending of pendings(); track pending.id; let i = $index) {
+        <mat-card appearance="filled" class="content-wrapper">
+          <mat-card-content class="p-1">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+              <div class="d-flex align-items-center">
+                <mat-checkbox [checked]="pending.isDone"
+                              (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
+                <span>{{ pending.label }}</span>
+              </div>
+              <div class="d-flex align-items-center gap-1">
+                <small class="amount-label px-2">{{ pending.amount | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
+                @if (pending.hasAssociatedTransaction) {
+                  <mat-icon class="material-symbols-rounded transaction-icon ms-1">compare_arrows</mat-icon>
+                }
+                <button matIconButton>
+                  <mat-icon class="material-symbols-rounded" (click)="editPending(pending)">tune</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
   <button matButton="outlined" class="w-100" (click)="addNew()">
     <mat-icon class="material-symbols-rounded">add_circle</mat-icon>
     Agregar nuevo pendiente

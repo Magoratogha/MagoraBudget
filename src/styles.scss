@@ -195,6 +195,10 @@ mat-card.content-wrapper {
       border-radius: 0.5rem;
     }
 
+    &.red .icon {
+      background-color: colors.$red;
+    }
+
     .text {
       font-weight: 500;
       margin-bottom: 0;
@@ -256,18 +260,34 @@ mat-card.content-wrapper {
   .fw-bold span {
     font-weight: bolder !important;
     padding-block: 0.15rem;
+    padding-inline: 0.5rem;
   }
 }
 
 .hint,
 .hints .fw-bold span {
   background-color: var(--mat-sys-surface-container-highest);
-  padding-inline: 0.5rem;
   border-radius: 0.25rem;
 }
 
 .hint {
-  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  height: 24px;
+  max-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px !important;
+    max-width: 30px !important;
+    height: 30px !important;
+    max-height: 30px !important;
+    font-size: 20px !important;
+  }
 }
 
 /***
