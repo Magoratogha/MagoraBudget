@@ -21,33 +21,23 @@
                  mask="separator.0" thousandSeparator="." inputmode="numeric" pattern="[0-9]*">
           <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
         </mat-form-field>
-      </div>
-      <div class="d-flex gap-2 align-items-center justify-content-between w-100 mt-2 px-3">
-        <div class="d-flex gap-2 align-items-center">
-          <mat-icon class="material-symbols-rounded">compare_arrows</mat-icon>
-          <span>Establecer transacción</span>
-        </div>
-        <mat-slide-toggle formControlName="hasAssociatedTransaction"
-                          (change)="onToggleChange($event.checked)"></mat-slide-toggle>
-      </div>
-      @if (isTransactionEnabled()) {
-        <div class="w-100 d-flex flex-column gap-4 fields-container">
-          <div class="d-flex gap-2 align-items-center justify-content-between w-100">
-            <div class="d-flex gap-2 align-items-center">
-              <mat-icon class="material-symbols-rounded">category</mat-icon>
-              <span>Tipo</span>
-            </div>
-            <mat-button-toggle-group hideSingleSelectionIndicator formControlName="transactionType"
-                                     (change)="onTypeChange($event.value)">
-              @for (type of Object.keys(TransactionType); track type) {
-                @if (!isNaN(Number(type))) {
-                  <mat-button-toggle [value]="Number(type)">
-                    <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
-                  </mat-button-toggle>
-                }
-              }
-            </mat-button-toggle-group>
+        <div class="d-flex gap-2 align-items-center justify-content-between w-100">
+          <div class="d-flex gap-2 align-items-center">
+            <mat-icon class="material-symbols-rounded">category</mat-icon>
+            <span>Tipo</span>
           </div>
+          <mat-button-toggle-group hideSingleSelectionIndicator formControlName="transactionType"
+                                   (change)="onTypeChange($event.value)">
+            @for (type of Object.keys(TransactionType); track type) {
+              @if (!isNaN(Number(type))) {
+                <mat-button-toggle [value]="Number(type)">
+                  <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
+                </mat-button-toggle>
+              }
+            }
+          </mat-button-toggle-group>
+        </div>
+        @if (availableOriginAccounts().length) {
           <mat-form-field>
             <mat-label>{{ originAccountLabel() }}</mat-label>
             <mat-select placeholder="Selecciona una cuenta" formControlName="originAccountId">
@@ -74,8 +64,17 @@
               </mat-select>
             </mat-form-field>
           }
+        } @else {
+          <p class="text-center text-red">Para crear un pendiente primero debes agregar una o más cuentas.</p>
+        }
+      </div>
+      <div class="d-flex gap-2 align-items-center justify-content-between w-100 mt-2 px-3">
+        <div class="d-flex gap-2 align-items-center">
+          <mat-icon class="material-symbols-rounded">wand_stars</mat-icon>
+          <span>Transacción automática</span>
         </div>
-      }
+        <mat-slide-toggle formControlName="hasAssociatedTransaction"></mat-slide-toggle>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

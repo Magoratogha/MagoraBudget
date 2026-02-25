@@ -6,8 +6,8 @@ export interface Pending {
   amount: number;
   isDone: boolean;
   hasAssociatedTransaction: boolean;
-  transactionType?: TransactionType;
-  originAccountId?: string;
+  transactionType: TransactionType;
+  originAccountId: string;
   targetAccountId?: string;
   ownerId: string;
 }

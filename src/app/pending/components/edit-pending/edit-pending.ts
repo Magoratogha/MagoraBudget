@@ -55,8 +55,8 @@ export class EditPending implements OnInit {
     amount: new FormControl<number>(0, [Validators.required, Validators.min(1), onlyNumbersValidator(false)]),
     hasAssociatedTransaction: new FormControl<boolean>(false, [Validators.required]),
     isDone: new FormControl<boolean>(false, [Validators.required]),
-    transactionType: new FormControl<TransactionType>(TransactionType.Expense),
-    originAccountId: new FormControl<string>(''),
+    transactionType: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
+    originAccountId: new FormControl<string>('', [Validators.required]),
     targetAccountId: new FormControl<string>(''),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   });
@@ -90,27 +90,8 @@ export class EditPending implements OnInit {
         targetAccountId: this.pending()?.targetAccountId || '',
         ownerId: this.pending()?.ownerId || this._auth.getLoggedUser()!.uid,
       }, { emitEvent: true });
-      this.onToggleChange(this.pending()?.hasAssociatedTransaction || false);
       this.onTypeChange(this.pending()?.transactionType || TransactionType.Expense);
     }
-  }
-
-  onToggleChange(isEnabled: boolean) {
-    if (isEnabled) {
-      this.form.get('transactionType')?.setValidators([Validators.required]);
-      this.form.get('originAccountId')?.setValidators([Validators.required]);
-    } else {
-      this.form.get('transactionType')?.setValidators([]);
-      this.form.get('originAccountId')?.setValidators([]);
-      this.form.get('targetAccountId')?.setValidators([]);
-      this.form.get('transactionType')?.reset(TransactionType.Expense);
-      this.form.get('originAccountId')?.reset('');
-      this.form.get('targetAccountId')?.reset('');
-    }
-    this.form.get('transactionType')?.updateValueAndValidity();
-    this.form.get('originAccountId')?.updateValueAndValidity();
-    this.form.get('targetAccountId')?.updateValueAndValidity();
-    this.form.updateValueAndValidity();
   }
 
   onTypeChange(type: TransactionType) {
@@ -120,6 +101,7 @@ export class EditPending implements OnInit {
       this.form.get('targetAccountId')?.setValidators([]);
       this.form.get('targetAccountId')?.reset('');
     }
+
     this.form.get('targetAccountId')?.updateValueAndValidity();
     this.form.updateValueAndValidity();
   }

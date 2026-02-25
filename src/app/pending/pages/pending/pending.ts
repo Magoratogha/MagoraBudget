@@ -96,7 +96,6 @@ export class Pending {
         }
         return { valid: false, error: 'account' };
     }
-    return { valid: true };
   }
 
   private _getMaxIncomeAmount(account: Account) {

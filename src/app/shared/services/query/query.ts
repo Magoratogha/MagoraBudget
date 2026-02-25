@@ -60,7 +60,7 @@ export class Query {
   });
 
   public pendingIncomes = computed(() => {
-    return this.userPendings().filter((pending) => pending.hasAssociatedTransaction && !pending.isDone && pending.transactionType === TransactionType.Income);
+    return this.userPendings().filter((pending) => !pending.isDone && pending.transactionType === TransactionType.Income);
   });
 
   public monthExpenses = computed(() => {
@@ -74,7 +74,7 @@ export class Query {
   });
 
   public pendingExpenses = computed(() => {
-    return this.userPendings().filter((pending) => pending.hasAssociatedTransaction && !pending.isDone && pending.transactionType === TransactionType.Expense);
+    return this.userPendings().filter((pending) => !pending.isDone && pending.transactionType === TransactionType.Expense);
   });
 
   public expensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
