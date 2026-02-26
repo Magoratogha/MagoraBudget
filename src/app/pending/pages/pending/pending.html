@@ -2,7 +2,7 @@
   <div>
     <h1 class="fw-bold mb-3">Pendientes</h1>
     @if (!pendings().length) {
-      <div class="d-flex w-100 flex-column gap-3 pt-3 px-5 text-center">
+      <div class="d-flex w-100 flex-column gap-3 pt-3 px-5 text-center mb-4">
         <span>Aún no hay ningun pendiente. :c</span>
         <span>Toca en el botón de agregar para empezar a registrar algunos.</span>
       </div>
@@ -37,63 +37,63 @@
           <span>No tienes ningun pago pendiente :D</span>
         </div>
       }
-      @if (pendings().length) {
-        <div class="d-flex flex-column gap-2">
-          <div class="d-flex justify-content-end mb-2">
-            <button matButton="tonal" (click)="cleanAll()">
-              <mat-icon class="material-symbols-rounded">mop</mat-icon>
-              Limpiar todos
-            </button>
-          </div>
-          @for (pending of pendings(); track pending.id; let i = $index) {
-            <mat-card appearance="filled" class="content-wrapper">
-              <mat-card-content class="py-2 px-1">
-                <div class="d-flex flex-column w-100 gap-1">
-                  <div class="d-flex align-items-center justify-content-between gap-3">
-                    <div class="d-flex align-items-center">
-                      <mat-checkbox [checked]="pending.isDone"
-                                    (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
-                      <span>{{ pending.label }}</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-1">
-                      <small
-                        class="amount-label px-2">
-                        {{ pending.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
-                        <mat-icon
-                          class="material-symbols-rounded">{{ getTransactionTypeIcon(pending.transactionType) }}
-                        </mat-icon>
-                      </small>
-                      @if (pending.hasAssociatedTransaction) {
-                        <mat-icon class="material-symbols-rounded transaction-icon ms-1">wand_stars</mat-icon>
-                      }
-                      <button matIconButton>
-                        <mat-icon class="material-symbols-rounded" (click)="editPending(pending)">tune</mat-icon>
-                      </button>
-                    </div>
-                  </div>
-                  @if (pending.lastCompletionDate) {
-                    <div class="d-flex px-2 align-items-center gap-1">
-                      <small>
-                        @if (pending.isDone) {
-                          Completado el
-                        } @else {
-                          Completado por última vez el
-                        }
-                        <b class="fw-bolder">{{ pending.lastCompletionDate | date: 'longDate' }}</b>
-                      </small>
-                      <mat-icon class="material-symbols-rounded done-icon text-green">verified</mat-icon>
-                    </div>
-                  }
-                </div>
-              </mat-card-content>
-            </mat-card>
-          }
+    }
+    <button matButton="outlined" class="w-100" (click)="addNew()">
+      <mat-icon class="material-symbols-rounded">add_circle</mat-icon>
+      Agregar nuevo pendiente
+    </button>
+    @if (pendings().length) {
+      <div class="d-flex flex-column gap-2 mt-4">
+        <div class="d-flex justify-content-end mb-2">
+          <button matButton="tonal" (click)="cleanAll()">
+            <mat-icon class="material-symbols-rounded">mop</mat-icon>
+            Limpiar todos
+          </button>
         </div>
-      }
+        @for (pending of pendings(); track pending.id; let i = $index) {
+          <mat-card appearance="filled" class="content-wrapper">
+            <mat-card-content class="py-2 px-1">
+              <div class="d-flex flex-column w-100 gap-1">
+                <div class="d-flex align-items-center justify-content-between gap-3">
+                  <div class="d-flex align-items-center">
+                    <mat-checkbox [checked]="pending.isDone"
+                                  (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
+                    <span>{{ pending.label }}</span>
+                  </div>
+                  <div class="d-flex align-items-center gap-1">
+                    <small
+                      class="amount-label px-2">
+                      {{ pending.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
+                      <mat-icon
+                        class="material-symbols-rounded">{{ getTransactionTypeIcon(pending.transactionType) }}
+                      </mat-icon>
+                    </small>
+                    @if (pending.hasAssociatedTransaction) {
+                      <mat-icon class="material-symbols-rounded transaction-icon ms-1">wand_stars</mat-icon>
+                    }
+                    <button matIconButton>
+                      <mat-icon class="material-symbols-rounded" (click)="editPending(pending)">tune</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                @if (pending.lastCompletionDate) {
+                  <div class="d-flex px-2 align-items-center gap-1">
+                    <small>
+                      @if (pending.isDone) {
+                        Completado el
+                      } @else {
+                        Completado por última vez el
+                      }
+                      <b class="fw-bolder">{{ pending.lastCompletionDate | date: 'longDate' }}</b>
+                    </small>
+                    <mat-icon class="material-symbols-rounded done-icon text-green">verified</mat-icon>
+                  </div>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
     }
   </div>
-  <button matButton="outlined" class="w-100" (click)="addNew()">
-    <mat-icon class="material-symbols-rounded">add_circle</mat-icon>
-    Agregar nuevo pendiente
-  </button>
 </div>

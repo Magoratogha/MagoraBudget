@@ -46,14 +46,15 @@ export class EditPending implements OnInit {
   private _overlay = inject(Overlay);
   private _fireStore = inject(FireStore);
   private _destroyRef = inject(DestroyRef);
+  private _defaultAmountValidators = [Validators.required, onlyNumbersValidator(false)];
 
   pending = signal<Pending | undefined>(this._bottomSheetData?.pending);
   userAccounts: Signal<Account[]> = this._query.userAccounts;
 
   form = new FormGroup({
     label: new FormControl<string>('', [Validators.required]),
-    amount: new FormControl<number>(0, [Validators.required, Validators.min(1), onlyNumbersValidator(false)]),
-    hasAssociatedTransaction: new FormControl<boolean>(false, [Validators.required]),
+    amount: new FormControl<number>(0, [...this._defaultAmountValidators, Validators.min(1)]),
+    hasAssociatedTransaction: new FormControl<boolean>(true, [Validators.required]),
     isDone: new FormControl<boolean>(false, [Validators.required]),
     transactionType: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
     originAccountId: new FormControl<string>('', [Validators.required]),
@@ -84,7 +85,7 @@ export class EditPending implements OnInit {
         label: this.pending()?.label || '',
         amount: this.pending()?.amount || 0,
         isDone: this.pending()?.isDone || false,
-        hasAssociatedTransaction: this.pending()?.hasAssociatedTransaction || false,
+        hasAssociatedTransaction: this.pending()?.hasAssociatedTransaction || true,
         transactionType: this.pending()?.transactionType || TransactionType.Expense,
         originAccountId: this.pending()?.originAccountId || '',
         targetAccountId: this.pending()?.targetAccountId || '',
@@ -141,6 +142,17 @@ export class EditPending implements OnInit {
         this._overlay.closeBottomSheet(true);
       }
     }
+  }
+
+  onToggleChange(isChecked: boolean) {
+    if (isChecked) {
+      this.form.get('amount')?.setValidators([...this._defaultAmountValidators, Validators.min(1)]);
+    } else {
+      this.form.get('amount')?.setValidators([...this._defaultAmountValidators, Validators.min(0)]);
+    }
+
+    this.form.get('amount')?.updateValueAndValidity();
+    this.form.updateValueAndValidity();
   }
 
   cancel() {
