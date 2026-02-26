@@ -1,6 +1,6 @@
 <div class="d-flex flex-column gap-4">
   <div>
-    <h1 class="fw-bold mb-3">Resumen Mensual</h1>
+    <h1 class="fw-bold mb-3">Resumen</h1>
     <mat-card appearance="filled" class="content-wrapper mb-2">
       <mat-card-content>
         <div class="items-container">
@@ -26,7 +26,7 @@
   <div>
     <h1 class="fw-bold mb-3">Presupuestos</h1>
     <div class="d-flex flex-column gap-2">
-      @if (budgetPreference().id) {
+      @if (budgetPreference().id && enabledBudgets().length) {
         <mat-card appearance="filled" class="content-wrapper mb-2">
           <mat-card-content>
             <div class="items-container sm">
