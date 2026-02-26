@@ -22,12 +22,14 @@ app-transaction {
   width: 100%;
 }
 
-.month-label {
-  background-color: var(--mat-sys-secondary-container);
-  color: var(--mat-sys-on-secondary-container);
-  padding: 0.5rem 0.5rem;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.month-label-wrapper {
+  background-color: var(--mat-sys-surface-container-highest);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+
+  .child-wrapper {
+    background-color: var(--mat-sys-surface-container);
+    border-radius: 1rem;
+    padding: 0.75rem;
+  }
 }

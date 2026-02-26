@@ -18,11 +18,13 @@
 </div>
 
 <h1 class="text-capitalize fw-bold mb-4">Transacciones</h1>
-<div class="d-flex w-100 justify-content-center mb-3">
-  <h5 class="text-capitalize fw-bold month-label">
-    <mat-icon class="material-symbols-rounded">calendar_month</mat-icon>
-    {{ date() | date: 'MMMM y' }}
-  </h5>
+<div class="month-label-wrapper mb-3 w-100">
+  <div class="d-flex justify-content-center gap-2 child-wrapper">
+    <mat-icon class="material-symbols-rounded">today</mat-icon>
+    <h5 class="fw-bold"><span class=" fw-bold text-capitalize">{{ date() | date: 'MMMM' }}</span>
+      de {{ date() | date: 'y' }}
+    </h5>
+  </div>
 </div>
 <div class="pb-5 mb-4 d-flex flex-column gap-3">
   @if (monthTransactions().length) {
