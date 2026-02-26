@@ -9,5 +9,6 @@ export interface Pending {
   transactionType: TransactionType;
   originAccountId: string;
   targetAccountId?: string;
+  lastCompletionDate?: Date;
   ownerId: string;
 }

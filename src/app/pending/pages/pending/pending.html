@@ -7,58 +7,34 @@
         <span>Toca en el botón de agregar para empezar a registrar algunos.</span>
       </div>
     } @else {
-      @if (pendingExpensesPerAccountType().length || pendingIncomesPerAccountType().length) {
-        <div class="mb-4">
-          @if (pendingExpensesPerAccountType().length) {
-            <mat-card appearance="filled" class="content-wrapper mb-2">
-              <mat-card-content>
-                <div class="subtitle red">
-                  <span class="icon"><mat-icon class="material-symbols-rounded">shopping_cart</mat-icon></span>
-                  <h5 class="text">Gastos pendientes</h5>
+      @if (pendingExpensesPerAccountType().length) {
+        <mat-card appearance="filled" class="content-wrapper mb-4">
+          <mat-card-content>
+            <div class="subtitle red">
+              <span class="icon"><mat-icon class="material-symbols-rounded">shopping_cart</mat-icon></span>
+              <h5 class="text">Gastos pendientes</h5>
+            </div>
+            <div class="items-container sm">
+              @for (expense of pendingExpensesPerAccountType(); track expense[0]) {
+                <div class="main-content less-radius">
+                  <div class="d-flex align-items-center justify-content-center gap-2">
+                    <mat-icon class="material-symbols-rounded"
+                              [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
+                    </mat-icon>
+                    <span
+                      [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
+                  </div>
+                  <span
+                    class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
                 </div>
-                <div class="items-container sm">
-                  @for (expense of pendingExpensesPerAccountType(); track expense[0]) {
-                    <div class="main-content less-radius">
-                      <div class="d-flex align-items-center justify-content-center gap-2">
-                        <mat-icon class="material-symbols-rounded"
-                                  [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
-                        </mat-icon>
-                        <span
-                          [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
-                      </div>
-                      <span
-                        class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
-                    </div>
-                  }
-                </div>
-              </mat-card-content>
-            </mat-card>
-          }
-          @if (pendingIncomesPerAccountType().length) {
-            <mat-card appearance="filled" class="content-wrapper">
-              <mat-card-content>
-                <div class="subtitle">
-                  <span class="icon"><mat-icon class="material-symbols-rounded">savings</mat-icon></span>
-                  <h5 class="text">Ingresos pendientes</h5>
-                </div>
-                <div class="items-container sm">
-                  @for (income of pendingIncomesPerAccountType(); track income[0]) {
-                    <div class="main-content less-radius">
-                      <div class="d-flex align-items-center justify-content-center gap-2">
-                        <mat-icon class="material-symbols-rounded"
-                                  [class.text-red]="income[0] === AccountType.Deleted">{{ getAccountTypeIcon(income[0]) }}
-                        </mat-icon>
-                        <span
-                          [class.text-decoration-line-through]="income[0] === AccountType.Deleted">{{ getAccountTypeLabel(income[0]) }}</span>
-                      </div>
-                      <span
-                        class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
-                    </div>
-                  }
-                </div>
-              </mat-card-content>
-            </mat-card>
-          }
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <div class="d-flex flex-column w-100 pt-3 pb-4 mb-2 justify-content-center align-items-center gap-3">
+          <h4>¡Genial!</h4>
+          <span>No tienes ningun pago pendiente :D</span>
         </div>
       }
       @if (pendings().length) {
@@ -71,23 +47,43 @@
           </div>
           @for (pending of pendings(); track pending.id; let i = $index) {
             <mat-card appearance="filled" class="content-wrapper">
-              <mat-card-content class="p-1">
-                <div class="d-flex align-items-center justify-content-between gap-3">
-                  <div class="d-flex align-items-center">
-                    <mat-checkbox [checked]="pending.isDone"
-                                  (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
-                    <span>{{ pending.label }}</span>
+              <mat-card-content class="py-2 px-1">
+                <div class="d-flex flex-column w-100 gap-1">
+                  <div class="d-flex align-items-center justify-content-between gap-3">
+                    <div class="d-flex align-items-center">
+                      <mat-checkbox [checked]="pending.isDone"
+                                    (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
+                      <span>{{ pending.label }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <small
+                        class="amount-label px-2">
+                        {{ pending.amount | currency : 'COP' : 'symbol' : '1.0-0' }}
+                        <mat-icon
+                          class="material-symbols-rounded">{{ getTransactionTypeIcon(pending.transactionType) }}
+                        </mat-icon>
+                      </small>
+                      @if (pending.hasAssociatedTransaction) {
+                        <mat-icon class="material-symbols-rounded transaction-icon ms-1">wand_stars</mat-icon>
+                      }
+                      <button matIconButton>
+                        <mat-icon class="material-symbols-rounded" (click)="editPending(pending)">tune</mat-icon>
+                      </button>
+                    </div>
                   </div>
-                  <div class="d-flex align-items-center gap-1">
-                    <small
-                      class="amount-label px-2">{{ pending.amount | currency : 'COP' : 'symbol' : '1.0-0' }}</small>
-                    @if (pending.hasAssociatedTransaction) {
-                      <mat-icon class="material-symbols-rounded transaction-icon ms-1">wand_stars</mat-icon>
-                    }
-                    <button matIconButton>
-                      <mat-icon class="material-symbols-rounded" (click)="editPending(pending)">tune</mat-icon>
-                    </button>
-                  </div>
+                  @if (pending.lastCompletionDate) {
+                    <div class="d-flex px-2 align-items-center gap-1">
+                      <small>
+                        @if (pending.isDone) {
+                          Completado el
+                        } @else {
+                          Última vez completado el
+                        }
+                        <b class="fw-bolder">{{ pending.lastCompletionDate | date: 'longDate' }}</b>
+                      </small>
+                      <mat-icon class="material-symbols-rounded done-icon text-green">verified</mat-icon>
+                    </div>
+                  }
                 </div>
               </mat-card-content>
             </mat-card>

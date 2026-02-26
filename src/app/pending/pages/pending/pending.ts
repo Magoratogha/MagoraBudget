@@ -6,11 +6,11 @@ import { EditPending } from '../../components';
 import { Pending as IPending } from '../../models';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { TransactionType } from '../../../transactions/models';
 import { Account, AccountType } from '../../../accounts/models';
 import { WARNING_MODAL_PENDING_ACCOUNT_WORDING, WARNING_MODAL_PENDING_AMOUNT_WORDING } from '../../../shared/constants';
-import { getAccountTypeIcon, getAccountTypeLabel } from '../../../shared/utils';
+import { getAccountTypeIcon, getAccountTypeLabel, getTransactionTypeIcon } from '../../../shared/utils';
 
 @Component({
   selector: 'app-pending',
@@ -19,7 +19,8 @@ import { getAccountTypeIcon, getAccountTypeLabel } from '../../../shared/utils';
     MatIconModule,
     MatCardModule,
     MatCheckboxModule,
-    CurrencyPipe
+    CurrencyPipe,
+    DatePipe
   ],
   templateUrl: './pending.html',
   styleUrl: './pending.scss',
@@ -34,9 +35,6 @@ export class Pending {
   pendings: Signal<IPending[]> = this._query.userPendings;
   pendingExpensesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
     return [...this._query.pendingExpensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
-  });
-  pendingIncomesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
-    return [...this._query.pendingIncomesPerAccountType().entries()].sort((a, b) => b[1] - a[1]);
   });
 
   async onCheckboxChange(pending: IPending, isDone: boolean, checkboxIndex: number) {
@@ -140,4 +138,5 @@ export class Pending {
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
   protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly AccountType = AccountType;
+  protected readonly getTransactionTypeIcon = getTransactionTypeIcon;
 }

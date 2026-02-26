@@ -51,7 +51,7 @@ export class Query {
 
   public monthIncomes = computed(() => {
     return this.monthTransactions().reduce((total, transaction) => {
-      if (transaction.type === TransactionType.Income) {
+      if (transaction.type === TransactionType.Income || transaction.type === TransactionType.Transfer) {
         return total + transaction.amount;
       } else {
         return total;
@@ -59,13 +59,9 @@ export class Query {
     }, 0);
   });
 
-  public pendingIncomes = computed(() => {
-    return this.userPendings().filter((pending) => !pending.isDone && pending.transactionType === TransactionType.Income);
-  });
-
   public monthExpenses = computed(() => {
     return this.monthTransactions().reduce((total, transaction) => {
-      if (transaction.type === TransactionType.Expense) {
+      if (transaction.type === TransactionType.Expense || transaction.type === TransactionType.Transfer) {
         return total - transaction.amount;
       } else {
         return total;
@@ -74,12 +70,12 @@ export class Query {
   });
 
   public pendingExpenses = computed(() => {
-    return this.userPendings().filter((pending) => !pending.isDone && pending.transactionType === TransactionType.Expense);
+    return this.userPendings().filter((pending) => !pending.isDone && (pending.transactionType === TransactionType.Expense || pending.transactionType === TransactionType.Transfer));
   });
 
   public expensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
     return this.monthTransactions().reduce((expenses, transaction) => {
-      if (transaction.type === TransactionType.Expense) {
+      if (transaction.type === TransactionType.Expense || transaction.type === TransactionType.Transfer) {
         const accountType = this._getAccountTypeById(transaction.originAccountId);
         if (expenses.has(accountType)) {
           expenses.set(accountType, expenses.get(accountType)! - transaction.amount);
@@ -107,7 +103,7 @@ export class Query {
 
   public expensesPerAccount: Signal<Map<Account, number>> = computed(() => {
     return this.monthTransactions().reduce((expenses, transaction) => {
-      if (transaction.type === TransactionType.Expense) {
+      if (transaction.type === TransactionType.Expense || transaction.type === TransactionType.Transfer) {
         const account = this._getAccountById(transaction.originAccountId);
         if (expenses.has(account)) {
           expenses.set(account, expenses.get(account)! - transaction.amount);
@@ -123,7 +119,7 @@ export class Query {
 
   public incomesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
     return this.monthTransactions().reduce((incomes, transaction) => {
-      if (transaction.type === TransactionType.Income) {
+      if (transaction.type === TransactionType.Income || transaction.type === TransactionType.Transfer) {
         const accountType = this._getAccountTypeById(transaction.originAccountId);
         if (incomes.has(accountType)) {
           incomes.set(accountType, incomes.get(accountType)! + transaction.amount);
@@ -137,21 +133,9 @@ export class Query {
     }, new Map<AccountType, number>());
   });
 
-  public pendingIncomesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
-    return this.pendingIncomes().reduce((expenses, pending) => {
-      const accountType = this._getAccountTypeById(pending.originAccountId!);
-      if (expenses.has(accountType)) {
-        expenses.set(accountType, expenses.get(accountType)! + pending.amount);
-      } else {
-        expenses.set(accountType, pending.amount);
-      }
-      return expenses;
-    }, new Map<AccountType, number>());
-  });
-
   public incomesPerAccount: Signal<Map<Account, number>> = computed(() => {
     return this.monthTransactions().reduce((incomes, transaction) => {
-      if (transaction.type === TransactionType.Income) {
+      if (transaction.type === TransactionType.Income || transaction.type === TransactionType.Transfer) {
         const account = this._getAccountById(transaction.originAccountId);
         if (incomes.has(account)) {
           incomes.set(account, incomes.get(account)! + transaction.amount);

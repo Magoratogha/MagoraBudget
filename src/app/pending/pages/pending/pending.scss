@@ -1,21 +1,48 @@
 .amount-label,
 .transaction-icon {
   border-radius: 0.25rem;
-  height: 24px;
-  max-height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .amount-label {
+  gap: 0.25rem;
+  padding-block: 0.2rem;
+  padding-right: 0.1rem !important;
   background-color: var(--mat-sys-surface-container);
+  height: 28px;
+  max-height: 28px;
+  min-height: 28px;
+
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: auto;
+    max-width: none;
+    font-size: 1.25rem;
+  }
 }
 
 .transaction-icon {
   background-color: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
-  width: 30px;
-  max-width: 30px;
-  font-size: 20px;
+  width: auto;
+  max-width: none;
+  height: 26px;
+  max-height: 26px;
+  min-height: 26px;
+  font-size: 1.25rem;
+}
+
+.done-icon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  max-width: none;
+  height: auto;
+  max-height: none;
+  font-size: 1.25rem;
 }

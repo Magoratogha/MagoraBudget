@@ -193,19 +193,24 @@ export class FireStore {
 
   public async setPendingCompletion(pending: Pending, isDone: boolean): Promise<void> {
     try {
-      if (pending.hasAssociatedTransaction && isDone) {
-        const transaction: Transaction = {
-          type: pending.transactionType!,
-          amount: pending.amount,
-          date: new Date(),
-          originAccountId: pending.originAccountId!,
-          targetAccountId: pending.targetAccountId,
-          description: pending.label,
-          ownerId: pending.ownerId
+      const dataToUpdate: Partial<Pending> = { isDone };
+      if (isDone) {
+        const completionDate: Date = new Date();
+        if (pending.hasAssociatedTransaction) {
+          const transaction: Transaction = {
+            type: pending.transactionType!,
+            amount: pending.amount,
+            date: completionDate,
+            originAccountId: pending.originAccountId!,
+            targetAccountId: pending.targetAccountId,
+            description: pending.label,
+            ownerId: pending.ownerId
+          }
+          await this.addTransaction(transaction);
         }
-        await this.addTransaction(transaction);
+        dataToUpdate.lastCompletionDate = completionDate;
       }
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pending.id!), { isDone }));
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pending.id!), { ...dataToUpdate }));
     } catch (e) {
       this._logError(e);
       throw e;
@@ -311,6 +316,7 @@ export class FireStore {
         querySnapshot.forEach((doc) => {
           pendings.push({
             ...doc.data(),
+            lastCompletionDate: doc.data()['lastCompletionDate'] ? (doc.data()['lastCompletionDate'] as Timestamp).toDate() : undefined,
             id: doc.id,
           } as Pending);
         });
