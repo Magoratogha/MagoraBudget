@@ -1,7 +1,7 @@
 import { Component, computed, inject, Signal } from '@angular/core';
 import { Overlay, Query } from '../../../shared/services';
 import { MatCardModule } from '@angular/material/card';
-import { CurrencyPipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { Account, AccountType } from '../../../accounts/models';
 import { getAccountTypeIcon, getAccountTypeLabel } from '../../../shared/utils';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-home',
-  imports: [MatCardModule, CurrencyPipe, MatIconModule, MatButtonModule, MatProgressBarModule, PercentPipe],
+  imports: [MatCardModule, CurrencyPipe, MatIconModule, MatButtonModule, MatProgressBarModule, PercentPipe, DatePipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -22,6 +22,10 @@ export class Home {
   availableBalance = this._query.availableBalance;
   monthIncomes = this._query.monthIncomes;
   monthExpenses = this._query.monthExpenses;
+  startDay = this._query.startDayOfMonth;
+  endDay = this._query.endDayOfMonth;
+  isStartAndEndDaySameMonth = this._query.isStartAndEndDaySameMonth;
+  
   expensesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
     return [...this._query.expensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
   });

@@ -21,6 +21,48 @@ export class Query {
   public userPendings: Signal<Pending[]> = this._fireStore.getUserPendings();
   public isDarkModeEnabled = signal<boolean>(true);
 
+  public startDayOfMonth = computed(() => {
+    const startDay = this.userSettings().startDayOfMonth ?? 1;
+    const today = this._today();
+
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const currentDay = today.getDate();
+
+    const targetMonth = currentDay >= startDay ? month : month - 1;
+    const lastDayOfTargetMonth = new Date(year, targetMonth + 1, 0).getDate();
+
+    if (startDay > lastDayOfTargetMonth) {
+      return new Date(year, month, 1);
+    }
+
+    return new Date(year, targetMonth, startDay);
+  });
+
+  public endDayOfMonth = computed(() => {
+    const startDay = this.userSettings().startDayOfMonth ?? 1;
+    const today = this._today();
+
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const currentDay = today.getDate();
+
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const clampedStart = Math.min(startDay, lastDay);
+    const useLastDay = startDay > lastDay;
+
+    const targetMonth = currentDay >= clampedStart ? month + 1 : month;
+    const day = useLastDay ? clampedStart : clampedStart - 1;
+
+    return new Date(year, targetMonth, day);
+  });
+
+  public isStartAndEndDaySameMonth = computed(() => {
+    const startDay = this.startDayOfMonth();
+    const endDay = this.endDayOfMonth();
+    return startDay.getMonth() === endDay.getMonth();
+  });
+
   public globalBalance = computed(() => {
     return this.userAccounts().reduce((total, account) => total + account.balance, 0);
   });
@@ -44,9 +86,17 @@ export class Query {
   });
 
   public monthTransactions = computed<ITransaction[]>(() => {
-    return this.userTransactions().filter(transaction =>
-      transaction.date.getMonth() === this._today().getMonth() &&
-      transaction.date.getFullYear() === this._today().getFullYear())
+    return this.userTransactions().filter(transaction => {
+      const startDate = this.startDayOfMonth();
+      const endDate = this.endDayOfMonth();
+      const date = transaction.date;
+
+      const d = this._normalizeDate(date);
+      const s = this._normalizeDate(startDate);
+      const e = this._normalizeDate(endDate);
+
+      return d >= s && d <= e;
+    })
   });
 
   public monthIncomes = computed(() => {
@@ -164,5 +214,13 @@ export class Query {
 
   private _getAccountById(accountId: string): Account {
     return this._fireStore.getUserAccount(accountId) || DELETED_ACCOUNT_TEMPLATE;
+  }
+
+  private _normalizeDate(date: Date): number {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    ).getTime();
   }
 }
