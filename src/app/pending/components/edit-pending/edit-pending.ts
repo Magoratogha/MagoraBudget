@@ -93,6 +93,7 @@ export class EditPending implements OnInit {
         targetAccountId: this.pending()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
         ownerId: this.pending()?.ownerId ?? this._auth.getLoggedUser()!.uid,
       }, { emitEvent: true });
+      this.onToggleChange(this.pending()?.hasAssociatedTransaction ?? true,)
       this.onTypeChange(this.pending()?.transactionType ?? TransactionType.Expense);
     }
   }
