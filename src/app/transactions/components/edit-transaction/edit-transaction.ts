@@ -64,7 +64,7 @@ export class EditTransaction implements OnInit {
 
   form = new FormGroup({
     type: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
-    amount: new FormControl<number>(0, this._amountDefaultValidations),
+    amount: new FormControl<number>(NaN, this._amountDefaultValidations),
     date: new FormControl<Date>(new Date(), [Validators.required]),
     originAccountId: new FormControl<string>('', [Validators.required]),
     targetAccountId: new FormControl<string>(''),
@@ -199,15 +199,15 @@ export class EditTransaction implements OnInit {
   ngOnInit() {
     if (this.transaction()) {
       this.form.patchValue({
-        amount: this.transaction()?.amount || 0,
-        date: this.transaction()?.date || new Date(),
+        amount: this.transaction()?.amount ?? NaN,
+        date: this.transaction()?.date ?? new Date(),
         originAccountId: this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
         targetAccountId: this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
-        description: this.transaction()?.description || '',
-        ownerId: this.transaction()?.ownerId || this._auth.getLoggedUser()!.uid
+        description: this.transaction()?.description ?? '',
+        ownerId: this.transaction()?.ownerId ?? this._auth.getLoggedUser()!.uid
       }, { emitEvent: false });
 
-      this.form.controls.type.setValue(this.transaction()?.type || TransactionType.Expense);
+      this.form.controls.type.setValue(this.transaction()?.type ?? TransactionType.Expense);
     }
   }
 

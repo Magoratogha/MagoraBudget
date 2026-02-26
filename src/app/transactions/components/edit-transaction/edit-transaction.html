@@ -41,7 +41,7 @@
             <mat-label>Monto</mat-label>
             <input autocomplete="off" matInput mask="separator.0" thousandSeparator="." inputmode="numeric"
                    pattern="[0-9]*"
-                   placeholder="0" formControlName="amount">
+                   placeholder="350.000" formControlName="amount">
             <mat-icon class="material-symbols-rounded" matPrefix>attach_money</mat-icon>
             @if (form.controls.amount.hasError('max')) {
               <mat-error>{{ amountErrorLabel()[0] }}

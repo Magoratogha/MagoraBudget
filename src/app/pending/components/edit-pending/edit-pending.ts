@@ -18,6 +18,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Account } from '../../../accounts/models';
 import { WARNING_MODAL_DELETE_WORDING } from '../../../shared/constants';
 import { take } from 'rxjs';
+import { UserSettings } from '../../../shared/models';
 
 @Component({
   selector: 'app-edit-pending',
@@ -50,15 +51,16 @@ export class EditPending implements OnInit {
 
   pending = signal<Pending | undefined>(this._bottomSheetData?.pending);
   userAccounts: Signal<Account[]> = this._query.userAccounts;
+  userSettings: Signal<UserSettings> = this._query.userSettings;
 
   form = new FormGroup({
     label: new FormControl<string>('', [Validators.required]),
-    amount: new FormControl<number>(0, [...this._defaultAmountValidators, Validators.min(1)]),
+    amount: new FormControl<number>(NaN, [...this._defaultAmountValidators, Validators.min(1)]),
     hasAssociatedTransaction: new FormControl<boolean>(true, [Validators.required]),
     isDone: new FormControl<boolean>(false, [Validators.required]),
     transactionType: new FormControl<TransactionType>(TransactionType.Expense, [Validators.required]),
-    originAccountId: new FormControl<string>('', [Validators.required]),
-    targetAccountId: new FormControl<string>(''),
+    originAccountId: new FormControl<string>(this.userSettings().preferredExpensesAccountId || '', [Validators.required]),
+    targetAccountId: new FormControl<string>(this.userSettings().preferredIncomesAccountId || ''),
     ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
   });
 
@@ -82,27 +84,38 @@ export class EditPending implements OnInit {
   ngOnInit() {
     if (this.pending()) {
       this.form.patchValue({
-        label: this.pending()?.label || '',
-        amount: this.pending()?.amount || 0,
-        isDone: this.pending()?.isDone || false,
-        hasAssociatedTransaction: this.pending()?.hasAssociatedTransaction || true,
-        transactionType: this.pending()?.transactionType || TransactionType.Expense,
-        originAccountId: this.pending()?.originAccountId || '',
-        targetAccountId: this.pending()?.targetAccountId || '',
-        ownerId: this.pending()?.ownerId || this._auth.getLoggedUser()!.uid,
+        label: this.pending()?.label ?? '',
+        amount: this.pending()?.amount ?? NaN,
+        isDone: this.pending()?.isDone ?? false,
+        hasAssociatedTransaction: this.pending()?.hasAssociatedTransaction ?? true,
+        transactionType: this.pending()?.transactionType ?? TransactionType.Expense,
+        originAccountId: this.pending()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
+        targetAccountId: this.pending()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
+        ownerId: this.pending()?.ownerId ?? this._auth.getLoggedUser()!.uid,
       }, { emitEvent: true });
-      this.onTypeChange(this.pending()?.transactionType || TransactionType.Expense);
+      this.onTypeChange(this.pending()?.transactionType ?? TransactionType.Expense);
     }
   }
 
   onTypeChange(type: TransactionType) {
-    if (type === TransactionType.Transfer) {
-      this.form.get('targetAccountId')?.setValidators([Validators.required]);
-    } else {
-      this.form.get('targetAccountId')?.setValidators([]);
-      this.form.get('targetAccountId')?.reset('');
+    switch (type) {
+      case TransactionType.Transfer:
+        this.form.get('targetAccountId')?.setValidators([Validators.required]);
+        this.form.get('originAccountId')?.setValue(this.pending()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
+        this.form.get('targetAccountId')?.setValue(this.pending()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '');
+        if (this.form.get('originAccountId')?.value === this.form.get('targetAccountId')?.value) {
+          this.form.get('targetAccountId')?.setValue('');
+        }
+        break;
+      case TransactionType.Income:
+        this.form.get('targetAccountId')?.setValidators([]);
+        this.form.get('originAccountId')?.setValue(this.pending()?.originAccountId || this.userSettings().preferredIncomesAccountId || '');
+        break;
+      case TransactionType.Expense:
+        this.form.get('targetAccountId')?.setValidators([]);
+        this.form.get('originAccountId')?.setValue(this.pending()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
+        break;
     }
-
     this.form.get('targetAccountId')?.updateValueAndValidity();
     this.form.updateValueAndValidity();
   }

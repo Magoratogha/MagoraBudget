@@ -60,7 +60,7 @@ export class BudgetPreferences implements OnInit {
     for (const type of this.validAccountTypes) {
       this.form.controls.budgets.addControl(type.toString(), new FormGroup({
         enabled: new FormControl<boolean>(false, [Validators.required]),
-        amount: new FormControl<number | null>(null, [Validators.min(0)])
+        amount: new FormControl<number>(NaN, [Validators.min(0)])
       }));
     }
   }
@@ -68,8 +68,8 @@ export class BudgetPreferences implements OnInit {
   ngOnInit() {
     if (this.preference()) {
       this.form.patchValue({
-        ownerId: this.preference()?.ownerId || this._auth.getLoggedUser()!.uid,
-        budgets: this.preference()?.budgets || {}
+        ownerId: this.preference()?.ownerId ?? this._auth.getLoggedUser()!.uid,
+        budgets: this.preference()?.budgets ?? {}
       }, { emitEvent: false });
       for (const type of this.validAccountTypes) {
         const isEnabled = this.form.get(['budgets', type.toString(), 'enabled'])!.value;
@@ -85,7 +85,7 @@ export class BudgetPreferences implements OnInit {
       this.form.get(['budgets', type, 'amount'])?.addValidators([Validators.required]);
     } else {
       this.form.get(['budgets', type, 'amount'])?.removeValidators([Validators.required]);
-      this.form.get(['budgets', type, 'amount'])?.reset(null);
+      this.form.get(['budgets', type, 'amount'])?.reset(NaN);
     }
     this.form.get(['budgets', type, 'amount'])?.updateValueAndValidity();
     this.form.updateValueAndValidity();

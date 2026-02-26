@@ -97,13 +97,13 @@ export class EditAccount implements OnInit {
   ngOnInit(): void {
     if (this.account()) {
       this.form.patchValue({
-        label: this.account()?.label || '',
+        label: this.account()?.label ?? '',
         balance: typeof this.account()?.balance === 'number' ? Math.abs(this.account()!.balance) : NaN,
         quota: typeof this.account()?.quota === 'number' ? Math.abs(this.account()!.quota as number) : NaN,
-        ownerId: this.account()?.ownerId || this._auth.getLoggedUser()!.uid
+        ownerId: this.account()?.ownerId ?? this._auth.getLoggedUser()!.uid
       }, { emitEvent: false });
 
-      this.form.controls.type.setValue(this.account()?.type || AccountType.Cash);
+      this.form.controls.type.setValue(this.account()?.type ?? AccountType.Cash);
     }
   }
 
