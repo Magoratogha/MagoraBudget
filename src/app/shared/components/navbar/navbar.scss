@@ -13,6 +13,7 @@ nav {
   padding-inline: 1rem;
   padding-top: 1rem;
   z-index: 500;
+  view-transition-name: navbar;
 
   a {
     --width: 48px;

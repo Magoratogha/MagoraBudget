@@ -495,3 +495,34 @@ mat-drawer {
 @include mixins.generate-utility('gap', 'gap');
 @include mixins.generate-utility-with-directions('m', 'margin');
 @include mixins.generate-utility-with-directions('p', 'padding');
+
+
+::view-transition-old(root) {
+  animation: fade-out 240ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 240ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes fade-in {
+  from {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+}

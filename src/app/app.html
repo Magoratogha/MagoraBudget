@@ -3,7 +3,7 @@
     <app-side-panel [showNewVersionBadge]="newVersionAvailable()"/>
   </mat-drawer>
   <mat-drawer-content>
-    <div class="container">
+    <div class="container" id="scrollContainer">
       @if (auth.getLoggedUser()) {
         <app-profile-picture
           radius="50%"
@@ -19,3 +19,4 @@
     }
   </mat-drawer-content>
 </mat-drawer-container>
+

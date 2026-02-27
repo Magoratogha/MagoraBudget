@@ -26,8 +26,8 @@ export class Overlay {
     this._sidePanel?.open();
   }
 
-  public closeSidePanel() {
-    this._sidePanel?.close();
+  public async closeSidePanel() {
+    await this._sidePanel?.close();
   }
 
   public openBottomSheet(innerComponent: Type<any>, innerComponentInputs?: { [key: string]: any }) {

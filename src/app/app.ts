@@ -22,8 +22,8 @@ declare global {
 })
 export class App implements AfterViewInit {
   @ViewChild(MatDrawer) sidePanel!: MatDrawer;
-  overlay = inject(Overlay)
-  auth = inject(Auth)
+  overlay = inject(Overlay);
+  auth = inject(Auth);
   newVersionAvailable = signal(false);
   private _sw = inject(SwUpdate);
   private _platformId = inject(PLATFORM_ID);

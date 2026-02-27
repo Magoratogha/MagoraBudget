@@ -108,8 +108,9 @@ export class SidePanel {
     }
   }
 
-  reload() {
+  async reload() {
     if (isPlatformBrowser(this._providerId)) {
+      await this._overlay.closeSidePanel();
       window.location.reload();
     }
   }
@@ -129,5 +130,11 @@ export class SidePanel {
     }
   }
 
+  async logOut() {
+    this._overlay.showLoader();
+    await this._overlay.closeSidePanel();
+    await this.auth.logout();
+    this._overlay.hideLoader();
+  }
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }

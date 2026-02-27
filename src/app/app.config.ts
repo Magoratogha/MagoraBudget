@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  DOCUMENT,
   inject,
   isDevMode,
   LOCALE_ID,
@@ -7,7 +8,7 @@ import {
   provideBrowserGlobalErrorListeners,
   provideEnvironmentInitializer
 } from '@angular/core';
-import { PreloadAllModules, provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router';
+import { PreloadAllModules, provideRouter, withPreloading, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { FirebaseApp, initializeApp, initializeServerApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_CONFIG, RECAPTCHA_CONFIG } from '../../firebase-options';
@@ -35,7 +36,16 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes,
       withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+      withViewTransitions({
+        onViewTransitionCreated: ({ transition }) => {
+          const _document = inject(DOCUMENT);
+          transition.finished.then(() => {
+            const container = _document.querySelector('#scrollContainer');
+            container?.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      })
+    ),
     provideFirebaseApp(() => {
       if (isPlatformBrowser(inject(PLATFORM_ID))) {
         return initializeApp(FIREBASE_CONFIG);

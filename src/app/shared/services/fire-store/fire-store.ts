@@ -309,6 +309,7 @@ export class FireStore {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS),
         where('ownerId', "==", userId),
+        orderBy('isDone', 'asc'),
         orderBy('label', 'asc')
       );
       return onSnapshot(q, (querySnapshot) => {
