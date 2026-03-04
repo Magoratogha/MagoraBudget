@@ -48,7 +48,7 @@ export class BudgetPreferences implements OnInit {
   preference = signal<BudgetPreference | undefined>(this._bottomSheetData?.preference);
 
   validAccountTypes: AccountType[] = Object.keys(AccountType)
-    .filter(type => !isNaN(Number(type)) && (Number(type) !== AccountType.Deleted) && Number(type) !== AccountType.Debt)
+    .filter(type => !isNaN(Number(type)) && Number(type) !== AccountType.Debt)
     .map(type => Number(type) as AccountType);
 
   form = new FormGroup({

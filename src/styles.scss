@@ -498,16 +498,16 @@ mat-drawer {
 
 
 ::view-transition-old(root) {
-  animation: fade-out 240ms cubic-bezier(.22, 1, .36, 1) both;
+  animation: fade-out 350ms cubic-bezier(.22, 1, .36, 1) both;
 }
 
 ::view-transition-new(root) {
-  animation: fade-in 240ms cubic-bezier(.22, 1, .36, 1) both;
+  animation: fade-in 350ms cubic-bezier(.22, 1, .36, 1) both;
 }
 
 @keyframes fade-in {
   from {
-    transform: translateY(1rem);
+    transform: translateY(2rem);
     opacity: 0;
   }
   to {
@@ -522,7 +522,7 @@ mat-drawer {
     opacity: 1;
   }
   to {
-    transform: translateY(-1rem);
+    transform: translateY(-2rem);
     opacity: 0;
   }
 }

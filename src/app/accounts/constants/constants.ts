@@ -1,6 +1,4 @@
-import { Account, AccountType } from '../models';
-
-const DELETED_ACCOUNTS_LABEL = 'Cuentas eliminadas';
+import { AccountType } from '../models';
 
 export const ACCOUNT_TYPE_INFO_MAP: Partial<Record<AccountType, { iconClass: string, label: string }>> = {
   [AccountType.Cash]: { iconClass: 'payments', label: 'Efectivo' },
@@ -8,7 +6,6 @@ export const ACCOUNT_TYPE_INFO_MAP: Partial<Record<AccountType, { iconClass: str
   [AccountType.CreditCard]: { iconClass: 'credit_card', label: 'Tarjeta de Crédito' },
   [AccountType.Debt]: { iconClass: 'checkbook', label: 'Deuda' },
   [AccountType.SavingsGoal]: { iconClass: 'savings', label: 'Ahorro' },
-  [AccountType.Deleted]: { iconClass: 'delete', label: DELETED_ACCOUNTS_LABEL },
 };
 
 export const BALANCE_FIELD_WORDING_MAP: Partial<Record<AccountType, { label: string, placeholder: string }>> = {
@@ -32,10 +29,3 @@ export const LABEL_FIELD_WORDING_MAP: Partial<Record<AccountType, { label: strin
   [AccountType.Debt]: { placeholder: 'Libranza Banco de Bogotá', label: 'Nombre' },
   [AccountType.SavingsGoal]: { placeholder: 'Ahorro para viaje', label: 'Nombre' },
 };
-
-export const DELETED_ACCOUNT_TEMPLATE: Account = {
-  type: AccountType.Deleted,
-  balance: 0,
-  label: DELETED_ACCOUNTS_LABEL,
-  ownerId: '',
-}

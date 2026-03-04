@@ -20,23 +20,23 @@ export class Home {
   private _overlay = inject(Overlay);
   budgetPreference = this._query.budgetPreference;
   availableBalance = this._query.availableBalance;
-  monthIncomes = this._query.monthIncomes;
-  monthExpenses = this._query.monthExpenses;
-  startDay = this._query.startDayOfMonth;
-  endDay = this._query.endDayOfMonth;
-  isStartAndEndDaySameMonth = this._query.isStartAndEndDaySameMonth;
-  
+  monthIncomes = this._query.periodIncomes;
+  monthExpenses = this._query.periodExpenses;
+  startDay = this._query.startDayOfPeriod;
+  endDay = this._query.endDayOfPeriod;
+  isStartAndEndDaySameMonth = this._query.isPeriodStartAndEndDaySameMonth;
+
   expensesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
-    return [...this._query.expensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
+    return [...this._query.periodExpensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
   });
   expensesPerAccount: Signal<[Account, number][]> = computed(() => {
-    return [...this._query.expensesPerAccount().entries()].sort((a, b) => a[1] - b[1]);
+    return [...this._query.periodExpensesPerAccount().entries()].sort((a, b) => a[1] - b[1]);
   });
   incomesPerAccountType: Signal<[AccountType, number][]> = computed(() => {
-    return [...this._query.incomesPerAccountType().entries()].sort((a, b) => b[1] - a[1]);
+    return [...this._query.periodIncomesPerAccountType().entries()].sort((a, b) => b[1] - a[1]);
   });
   incomesPerAccount: Signal<[Account, number][]> = computed(() => {
-    return [...this._query.incomesPerAccount().entries()].sort((a, b) => b[1] - a[1]);
+    return [...this._query.periodIncomesPerAccount().entries()].sort((a, b) => b[1] - a[1]);
   });
   enabledBudgets = computed(() => {
     const budgets = this.budgetPreference().budgets;
@@ -48,7 +48,7 @@ export class Home {
   });
   budgetsBalance = computed(() => {
     const budgets = this.enabledBudgets();
-    const expensesPerAccountType = this._query.expensesPerAccountType();
+    const expensesPerAccountType = this._query.periodExpensesPerAccountType();
     return budgets.map(budget => {
       const balance = Math.abs(expensesPerAccountType.get(budget.accountType) || 0);
       const isOverPassed = balance > budget.limit;
@@ -62,7 +62,6 @@ export class Home {
   protected readonly Number = Number;
   protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
-  protected readonly AccountType = AccountType;
 
   openBudgetPreferences() {
     this._overlay.openBottomSheet(BudgetPreferences, { preference: this.budgetPreference() });

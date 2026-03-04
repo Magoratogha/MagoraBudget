@@ -18,11 +18,9 @@
               @for (expense of pendingExpensesPerAccountType(); track expense[0]) {
                 <div class="main-content less-radius">
                   <div class="d-flex align-items-center justify-content-center gap-2">
-                    <mat-icon class="material-symbols-rounded"
-                              [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
+                    <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(expense[0]) }}
                     </mat-icon>
-                    <span
-                      [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
+                    <span>{{ getAccountTypeLabel(expense[0]) }}</span>
                   </div>
                   <span
                     class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>

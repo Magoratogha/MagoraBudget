@@ -25,7 +25,7 @@ export class Accounts {
   private _overlay = inject(Overlay);
   private _query = inject(Query);
 
-  accounts: Signal<IAccount[]> = this._query.userAccounts;
+  accounts: Signal<IAccount[]> = this._query.currentUserAccounts;
   globalBalance = this._query.globalBalance;
   availableBalance = this._query.availableBalance;
 

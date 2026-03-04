@@ -3,7 +3,7 @@
   <mat-card-content>
     <div class="items-container">
       @for (type of Object.keys(AccountType); track type) {
-        @if (!isNaN(Number(type)) && (Number(type) !== AccountType.Deleted) && Number(type) !== AccountType.Debt) {
+        @if (!isNaN(Number(type)) && Number(type) !== AccountType.Debt) {
           <form [formGroup]="$any(form.controls.budgets.get(type)!)" class="d-flex w-100 flex-column gap-3">
             <div class="d-flex gap-2 align-items-center justify-content-between">
               <div class="d-flex gap-2 align-items-center">

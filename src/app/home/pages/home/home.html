@@ -89,11 +89,9 @@
             @for (expense of expensesPerAccountType(); track expense[0]) {
               <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
-                  <mat-icon class="material-symbols-rounded"
-                            [class.text-red]="expense[0] === AccountType.Deleted">{{ getAccountTypeIcon(expense[0]) }}
+                  <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(expense[0]) }}
                   </mat-icon>
-                  <span
-                    [class.text-decoration-line-through]="expense[0] === AccountType.Deleted">{{ getAccountTypeLabel(expense[0]) }}</span>
+                  <span>{{ getAccountTypeLabel(expense[0]) }}</span>
                 </div>
                 <span
                   class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
@@ -114,10 +112,10 @@
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon
                     class="material-symbols-rounded"
-                    [class.text-red]="expense[0].type === AccountType.Deleted">{{ getAccountTypeIcon(expense[0].type) }}
+                    [class.text-red]="expense[0].isDeleted">{{ expense[0].isDeleted ? 'delete' : getAccountTypeIcon(expense[0].type) }}
                   </mat-icon>
                   <span
-                    [class.text-decoration-line-through]="expense[0].type === AccountType.Deleted">{{ expense[0].label }}</span>
+                    [class.text-decoration-line-through]="expense[0].isDeleted">{{ expense[0].label }}</span>
                 </div>
                 <span
                   class="fw-bold text-red">{{ expense[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
@@ -141,11 +139,9 @@
             @for (income of incomesPerAccountType(); track income[0]) {
               <div class="main-content less-radius">
                 <div class="d-flex align-items-center justify-content-center gap-2">
-                  <mat-icon class="material-symbols-rounded"
-                            [class.text-red]="income[0] === AccountType.Deleted">{{ getAccountTypeIcon(income[0]) }}
+                  <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(income[0]) }}
                   </mat-icon>
-                  <span
-                    [class.text-decoration-line-through]="income[0] === AccountType.Deleted">{{ getAccountTypeLabel(income[0]) }}</span>
+                  <span>{{ getAccountTypeLabel(income[0]) }}</span>
                 </div>
                 <span
                   class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>
@@ -166,10 +162,10 @@
                 <div class="d-flex align-items-center justify-content-center gap-2">
                   <mat-icon
                     class="material-symbols-rounded"
-                    [class.text-red]="income[0].type === AccountType.Deleted">{{ getAccountTypeIcon(income[0].type) }}
+                    [class.text-red]="income[0].isDeleted">{{ income[0].isDeleted ? 'delete' : getAccountTypeIcon(income[0].type) }}
                   </mat-icon>
                   <span
-                    [class.text-decoration-line-through]="income[0].type === AccountType.Deleted">{{ income[0].label }}</span>
+                    [class.text-decoration-line-through]="income[0].isDeleted">{{ income[0].label }}</span>
                 </div>
                 <span
                   class="fw-bold text-green">{{ income[1] | currency : 'COP' : 'symbol' : '1.0-0' }}</span>

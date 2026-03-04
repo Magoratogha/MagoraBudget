@@ -7,4 +7,5 @@ export interface Account {
   balance: number;
   quota?: number;
   ownerId: string;
+  isDeleted?: boolean;
 }

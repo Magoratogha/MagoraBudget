@@ -5,8 +5,7 @@ import { Transaction as ITransaction, TransactionType } from '../../models';
 import { MatIconModule } from '@angular/material/icon';
 import { getAccountTypeIcon } from '../../../shared/utils';
 import { Account } from '../../../accounts/models';
-import { CurrencyPipe, NgTemplateOutlet } from '@angular/common';
-import { MatChipsModule } from '@angular/material/chips';
+import { CurrencyPipe } from '@angular/common';
 import { EditTransaction } from '../edit-transaction/edit-transaction';
 
 @Component({
@@ -15,9 +14,6 @@ import { EditTransaction } from '../edit-transaction/edit-transaction';
     MatCardModule,
     MatIconModule,
     CurrencyPipe,
-    MatChipsModule,
-    NgTemplateOutlet,
-
   ],
   templateUrl: './transaction.html',
   styleUrl: './transaction.scss',
@@ -48,14 +44,14 @@ export class Transaction {
   hasDeletedAccount = computed(() => {
     switch (this.transaction()?.type) {
       case TransactionType.Transfer:
-        return !this.getAccountDetails(this.transaction()!.originAccountId)
-          || !this.getAccountDetails(this.transaction()!.targetAccountId!);
+        return this.getAccountDetails(this.transaction()!.originAccountId).isDeleted
+          || this.getAccountDetails(this.transaction()!.targetAccountId!).isDeleted;
       default:
-        return !this.getAccountDetails(this.transaction()!.originAccountId);
+        return this.getAccountDetails(this.transaction()!.originAccountId).isDeleted;
     }
   });
 
-  getAccountDetails(accountId: string): Account | null {
+  getAccountDetails(accountId: string): Account {
     return this._fireStore.getUserAccount(accountId);
   }
 

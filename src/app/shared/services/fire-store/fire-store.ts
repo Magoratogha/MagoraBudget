@@ -60,7 +60,7 @@ export class FireStore {
   }
 
   public getUserAccount(accountId: string) {
-    return this._userAccounts().find(account => account.id === accountId) || null;
+    return this._userAccounts().find(account => account.id === accountId)!;
   }
 
   public getUserTransaction(transactionId: string) {
@@ -91,7 +91,7 @@ export class FireStore {
 
   public async deleteAccount(accountId: string): Promise<void> {
     try {
-      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId)));
+      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), { isDeleted: true }));
     } catch (e) {
       this._logError(e);
       throw e;

@@ -20,7 +20,7 @@
     <form class="items-container gap-0" [formGroup]="form">
       <mat-button-toggle-group formControlName="type" class="mb-2" hideSingleSelectionIndicator>
         @for (type of Object.keys(AccountType); track type) {
-          @if (!isNaN(Number(type)) && Number(type) !== AccountType.Deleted) {
+          @if (!isNaN(Number(type))) {
             <mat-button-toggle [value]="Number(type)">
               <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
             </mat-button-toggle>
