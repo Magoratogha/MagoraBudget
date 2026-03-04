@@ -45,4 +45,8 @@ export const WARNING_MODAL_DELETE_ACCOUNT_WORDING = {
     'Esta operación no se puede revertir.'],
 }
 
-export const DEFAULT_VIBRATION_PATTERN = [12, 20, 8];
+export const DEFAULT_VIBRATION_PATTERNS = {
+  TAP: 12,
+  PRIMARY_ACTION: [14, 20, 8],
+  ACTION_DONE: [20, 30, 20],
+};

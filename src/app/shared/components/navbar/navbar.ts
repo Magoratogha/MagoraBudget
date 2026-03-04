@@ -52,12 +52,12 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   onCreateClick() {
-    this._overlay.triggerVibration();
+    this._overlay.triggerVibration('PRIMARY_ACTION');
     this.createButtonClicked.emit();
   }
 
   updateQueryDate() {
-    this._overlay.triggerVibration();
+    this._overlay.triggerVibration('TAP');
     const currentDate = new Date();
     const queryDate = this._query.getCurrentDate();
 

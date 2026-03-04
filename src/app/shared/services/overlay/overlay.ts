@@ -5,7 +5,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { isPlatformBrowser } from '@angular/common';
-import { DEFAULT_VIBRATION_PATTERN } from '../../constants';
+import { DEFAULT_VIBRATION_PATTERNS } from '../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -89,9 +89,10 @@ export class Overlay {
     this._matLoaderDialogRef = undefined;
   }
 
-  public triggerVibration() {
+  public triggerVibration(vibrationPattern: keyof typeof DEFAULT_VIBRATION_PATTERNS) {
     if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(DEFAULT_VIBRATION_PATTERN);
+      navigator.vibrate(0);
+      navigator.vibrate(DEFAULT_VIBRATION_PATTERNS[vibrationPattern]);
     }
   }
 }
