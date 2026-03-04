@@ -51,13 +51,13 @@ export class Navbar implements OnInit, OnDestroy {
     this._unsubscribeFunctions.forEach((unsubscribe) => unsubscribe());
   }
 
-  onCreateClick() {
-    this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
+  async onCreateClick() {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this.createButtonClicked.emit();
   }
 
   updateQueryDate() {
-    this._overlay.triggerVibration('TAP');
+    this._overlay.triggerVibration('PRIMARY_ACTION');
     const currentDate = new Date();
     const queryDate = this._query.getCurrentDate();
 

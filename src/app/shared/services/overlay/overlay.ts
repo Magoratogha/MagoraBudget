@@ -91,7 +91,15 @@ export class Overlay {
 
   public triggerVibration(vibrationPattern: keyof typeof DEFAULT_VIBRATION_PATTERNS) {
     if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(DEFAULT_VIBRATION_PATTERNS[vibrationPattern]);
+      const vibration = DEFAULT_VIBRATION_PATTERNS[vibrationPattern];
+      const vibrationDuration = Array.isArray(vibration) ? vibration.reduce((step, duration) => {
+        return step + duration;
+      }) : vibration;
+      navigator.vibrate(vibration);
+      return new Promise<void>((resolve) => {
+        setTimeout(() => resolve(), vibrationDuration);
+      });
     }
+    return Promise.resolve();
   }
 }
