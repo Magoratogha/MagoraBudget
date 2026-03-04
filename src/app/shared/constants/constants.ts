@@ -45,4 +45,4 @@ export const WARNING_MODAL_DELETE_ACCOUNT_WORDING = {
     'Esta operación no se puede revertir.'],
 }
 
-export const DEFAULT_VIBRATION_PATTERN = [50, 0, 100];
+export const DEFAULT_VIBRATION_PATTERN = [12, 20, 8];

@@ -5,8 +5,6 @@ import { Auth, FireStore, Overlay, Query } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { isPlatformBrowser } from '@angular/common';
-import { DEFAULT_VIBRATION_PATTERN } from '../../constants';
 
 @Component({
   selector: 'app-navbar',
@@ -59,9 +57,7 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   updateQueryDate() {
-    if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(DEFAULT_VIBRATION_PATTERN);
-    }
+    this._overlay.triggerVibration();
     const currentDate = new Date();
     const queryDate = this._query.getCurrentDate();
 
