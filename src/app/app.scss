@@ -28,3 +28,47 @@ mat-drawer-content {
 .router-outlet-container {
   margin-top: -1rem;
 }
+
+.new-version-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 500;
+}
+
+.enter-animation {
+  animation: fade-in-version 350ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.leave-animation {
+  animation: fade-out-version 350ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes fade-in-version {
+  from {
+    transform: translateY(-2rem);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out-version {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-2rem);
+    opacity: 0;
+  }
+}

@@ -9,6 +9,8 @@ import { SwUpdate } from '@angular/service-worker';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -16,7 +18,7 @@ declare global {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, SidePanel, ProfilePicture, MatSidenavModule],
+  imports: [RouterOutlet, Navbar, SidePanel, ProfilePicture, MatSidenavModule, MatButtonModule, MatIconModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -46,6 +48,15 @@ export class App implements AfterViewInit {
 
   ngAfterViewInit() {
     this._overlay.initOverlays(this.sidePanel);
+  }
+
+  async reload() {
+    if (isPlatformBrowser(this._platformId)) {
+      this._overlay.triggerVibration('TAP');
+      await this._overlay.closeSidePanel();
+      this.newVersionAvailable.set(false);
+      window.location.reload();
+    }
   }
 
   onCreateButtonClick() {

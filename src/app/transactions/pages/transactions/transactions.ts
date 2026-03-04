@@ -63,7 +63,7 @@ export class Transactions {
   }
 
   async nextMonth() {
-    await this.overlay.triggerVibration('TOGGLE');
+    await this.overlay.triggerVibration('TAP');
     if (this.date().getMonth() === 11) {
       this.date.set(new Date(this.date().getFullYear() + 1, 0));
       return;
@@ -72,7 +72,7 @@ export class Transactions {
   }
 
   async prevMonth() {
-    await this.overlay.triggerVibration('TOGGLE');
+    await this.overlay.triggerVibration('TAP');
     if (this.date().getMonth() === 0) {
       this.date.set(new Date(this.date().getFullYear() - 1, 11));
       return;

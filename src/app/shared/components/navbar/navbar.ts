@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnDestroy, OnInit, output, PLATFORM_ID } from '@angular/core';
+import { Component, computed, inject, input, OnDestroy, OnInit, output } from '@angular/core';
 import { NavbarItem } from '../../models';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Auth, FireStore, Overlay, Query } from '../../services';
@@ -23,7 +23,6 @@ export class Navbar implements OnInit, OnDestroy {
   private _auth = inject(Auth);
   private _overlay = inject(Overlay);
   private _unsubscribeFunctions: Unsubscribe[] = [];
-  private _platformId = inject(PLATFORM_ID);
 
   items = input<NavbarItem[]>([]);
   leftSideItems = computed(() => {

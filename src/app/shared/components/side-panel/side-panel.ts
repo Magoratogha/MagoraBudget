@@ -1,4 +1,4 @@
-import { Component, DOCUMENT, effect, inject, input, PLATFORM_ID, Renderer2, signal, Signal } from '@angular/core';
+import { Component, DOCUMENT, effect, inject, PLATFORM_ID, Renderer2, signal, Signal } from '@angular/core';
 import { Auth, FireStore, Overlay, Query } from '../../services';
 import { ProfilePicture } from '../profile-picture/profile-picture';
 import { APP_VERSION_STRING } from '../../../../../version-info';
@@ -35,10 +35,9 @@ export class SidePanel {
   private _fireStore = inject(FireStore);
   private _query = inject(Query);
   private _overlay = inject(Overlay);
-  private _providerId = inject(PLATFORM_ID);
+  private _platformId = inject(PLATFORM_ID);
   private _renderer = inject(Renderer2);
   private _document = inject(DOCUMENT);
-  showNewVersionBadge = input(false);
 
   userSettings: Signal<UserSettings> = this._query.userSettings;
   availableExpensesAccounts = this._query.availableExpensesAccounts;
@@ -71,7 +70,7 @@ export class SidePanel {
       this._setTheme(darkMode);
     });
 
-    if (isPlatformBrowser(this._providerId)) {
+    if (isPlatformBrowser(this._platformId)) {
       const isDarkModeEnabled = localStorage.getItem('isDarkModeEnabled') !== 'false';
       this.isDarkModeEnabled.set(isDarkModeEnabled);
     }
@@ -108,14 +107,6 @@ export class SidePanel {
     }
   }
 
-  async reload() {
-    if (isPlatformBrowser(this._providerId)) {
-      this._overlay.triggerVibration('TAP');
-      await this._overlay.closeSidePanel();
-      window.location.reload();
-    }
-  }
-
   private _setTheme(isDarkModeEnabled: boolean) {
     if (isDarkModeEnabled) {
       this._renderer.removeClass(this._document.body, 'light-mode');
@@ -126,7 +117,7 @@ export class SidePanel {
     this._renderer.setAttribute(themeColorTag, 'content', isDarkModeEnabled ? "#11150d" : "#f8fbee");
     this._query.isDarkModeEnabled.set(isDarkModeEnabled);
 
-    if (isPlatformBrowser(this._providerId)) {
+    if (isPlatformBrowser(this._platformId)) {
       localStorage.setItem('isDarkModeEnabled', String(isDarkModeEnabled));
     }
   }
