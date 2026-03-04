@@ -91,7 +91,6 @@ export class Overlay {
 
   public triggerVibration(vibrationPattern: keyof typeof DEFAULT_VIBRATION_PATTERNS) {
     if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(0);
       navigator.vibrate(DEFAULT_VIBRATION_PATTERNS[vibrationPattern]);
     }
   }
