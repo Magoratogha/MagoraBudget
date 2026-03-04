@@ -110,6 +110,7 @@ export class SidePanel {
 
   async reload() {
     if (isPlatformBrowser(this._providerId)) {
+      this._overlay.triggerVibration('TAP');
       await this._overlay.closeSidePanel();
       window.location.reload();
     }
@@ -136,5 +137,10 @@ export class SidePanel {
     await this.auth.logout();
     this._overlay.hideLoader();
   }
+
+  onToggleClick() {
+    this._overlay.triggerVibration('TOGGLE');
+  }
+
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
 }

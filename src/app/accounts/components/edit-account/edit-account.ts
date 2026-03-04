@@ -134,6 +134,7 @@ export class EditAccount implements OnInit {
   }
 
   async deleteAccount() {
+    await this._overlay.triggerVibration('DANGER');
     this._overlay.openModal(WARNING_MODAL_DELETE_ACCOUNT_WORDING.title, WARNING_MODAL_DELETE_ACCOUNT_WORDING.description)
       ?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldDelete) => {
@@ -153,6 +154,10 @@ export class EditAccount implements OnInit {
 
   cancel() {
     this._overlay.closeBottomSheet();
+  }
+
+  onToggleClick() {
+    this._overlay.triggerVibration('TAP');
   }
 
   protected readonly getAccountTypeLabel = getAccountTypeLabel;

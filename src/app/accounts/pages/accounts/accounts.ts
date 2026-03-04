@@ -29,7 +29,8 @@ export class Accounts {
   globalBalance = this._query.globalBalance;
   availableBalance = this._query.availableBalance;
 
-  addNewAccount() {
+  async addNewAccount() {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this._overlay.openBottomSheet(EditAccount);
   }
 }

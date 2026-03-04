@@ -10,7 +10,7 @@
                 <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(Number(type)) }}</mat-icon>
                 <span>{{ getAccountTypeLabel(Number(type)) }}</span>
               </div>
-              <mat-slide-toggle formControlName="enabled"
+              <mat-slide-toggle formControlName="enabled" (click)="onToggleClick()"
                                 (change)="onToggleChange(type, $event.checked)"></mat-slide-toggle>
             </div>
             @if (form.get(['budgets', type, 'enabled'])!.value) {

@@ -63,7 +63,8 @@ export class Home {
   protected readonly getAccountTypeLabel = getAccountTypeLabel;
   protected readonly getAccountTypeIcon = getAccountTypeIcon;
 
-  openBudgetPreferences() {
+  async openBudgetPreferences() {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this._overlay.openBottomSheet(BudgetPreferences, { preference: this.budgetPreference() });
   }
 }

@@ -22,12 +22,12 @@ declare global {
 })
 export class App implements AfterViewInit {
   @ViewChild(MatDrawer) sidePanel!: MatDrawer;
-  overlay = inject(Overlay);
   auth = inject(Auth);
   newVersionAvailable = signal(false);
   private _sw = inject(SwUpdate);
   private _platformId = inject(PLATFORM_ID);
   private _fireStore = inject(FireStore);
+  private _overlay = inject(Overlay);
 
   constructor() {
     if (isPlatformBrowser(this._platformId) && location.hostname === 'localhost') {
@@ -45,22 +45,27 @@ export class App implements AfterViewInit {
   NAVBAR_ITEMS = NAVBAR_ITEMS;
 
   ngAfterViewInit() {
-    this.overlay.initOverlays(this.sidePanel);
+    this._overlay.initOverlays(this.sidePanel);
   }
 
   onCreateButtonClick() {
-    this.overlay.openBottomSheet(EditTransaction);
+    this._overlay.openBottomSheet(EditTransaction);
+  }
+
+  openSidePanel() {
+    this._overlay.triggerVibration('TAP');
+    this._overlay.openSidePanel();
   }
 
   @HostListener('window:offline')
   onOfflineConnection(): void {
     this._fireStore.isOnline.set(false);
-    this.overlay.showSnackBar('Se perdió la conexión a internet', 'globe_2_cancel')
+    this._overlay.showSnackBar('Se perdió la conexión a internet', 'globe_2_cancel')
   }
 
   @HostListener('window:online')
   onOnlineConnection(): void {
     this._fireStore.isOnline.set(true);
-    this.overlay.showSnackBar('Se restableció la conexión a internet', 'mobiledata_arrows')
+    this._overlay.showSnackBar('Se restableció la conexión a internet', 'mobiledata_arrows')
   }
 }

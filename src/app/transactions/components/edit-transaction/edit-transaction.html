@@ -25,7 +25,7 @@
         <mat-button-toggle-group formControlName="type" class="mb-2" hideSingleSelectionIndicator>
           @for (type of Object.keys(TransactionType); track type) {
             @if (!isNaN(Number(type))) {
-              <mat-button-toggle [value]="Number(type)">
+              <mat-button-toggle [value]="Number(type)" (click)="onToggleChange()">
                 <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
               </mat-button-toggle>
             }

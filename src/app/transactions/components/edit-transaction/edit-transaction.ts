@@ -233,7 +233,8 @@ export class EditTransaction implements OnInit {
     }
   }
 
-  delete() {
+  async delete() {
+    await this._overlay.triggerVibration('DANGER');
     this._overlay.openModal(WARNING_MODAL_DELETE_WORDING.title, WARNING_MODAL_DELETE_WORDING.description)
       ?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldDelete) => {
@@ -249,6 +250,10 @@ export class EditTransaction implements OnInit {
           }
         }
       });
+  }
+
+  onToggleChange() {
+    this._overlay.triggerVibration('TAP');
   }
 
   cancel() {

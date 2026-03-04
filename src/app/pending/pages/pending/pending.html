@@ -54,7 +54,7 @@
               <div class="d-flex flex-column w-100 gap-1">
                 <div class="d-flex align-items-center justify-content-between gap-3">
                   <div class="d-flex align-items-center">
-                    <mat-checkbox [checked]="pending.isDone"
+                    <mat-checkbox [checked]="pending.isDone" (click)="onCheckboxClick()"
                                   (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
                     <span>{{ pending.label }}</span>
                   </div>

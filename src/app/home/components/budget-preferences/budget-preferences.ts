@@ -91,6 +91,10 @@ export class BudgetPreferences implements OnInit {
     this.form.updateValueAndValidity();
   }
 
+  onToggleClick() {
+    this._overlay.triggerVibration('TOGGLE');
+  }
+
   async save() {
     if (this.form.valid) {
       try {

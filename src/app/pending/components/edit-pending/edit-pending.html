@@ -30,7 +30,7 @@
                                    (change)="onTypeChange($event.value)">
             @for (type of Object.keys(TransactionType); track type) {
               @if (!isNaN(Number(type))) {
-                <mat-button-toggle [value]="Number(type)">
+                <mat-button-toggle [value]="Number(type)" (click)="onToggleClick()">
                   <mat-icon class="material-symbols-rounded">{{ getTransactionTypeIcon(Number(type)) }}</mat-icon>
                 </mat-button-toggle>
               }
@@ -73,7 +73,7 @@
           <mat-icon class="material-symbols-rounded">wand_stars</mat-icon>
           <span>Transacción automática</span>
         </div>
-        <mat-slide-toggle formControlName="hasAssociatedTransaction"
+        <mat-slide-toggle formControlName="hasAssociatedTransaction" (click)="onToggleClick()"
                           (change)="onToggleChange($event.checked)"></mat-slide-toggle>
       </div>
     </form>

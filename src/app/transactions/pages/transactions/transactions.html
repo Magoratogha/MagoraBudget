@@ -9,7 +9,7 @@
   <button matIconButton class="position-fixed left">
     <mat-icon class="material-symbols-rounded" (click)="prevMonth()">arrow_back</mat-icon>
   </button>
-  <button matButton="tonal" class="text-capitalize" (click)="picker.open()">
+  <button matButton="tonal" class="text-capitalize" (click)="overlay.triggerVibration('TAP'); picker.open()">
     {{ date() | date: 'MMMM yyyy' }}
   </button>
   <button matIconButton class="position-fixed right">

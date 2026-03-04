@@ -69,7 +69,8 @@ export class Account {
   });
   parsedBalancePercent = computed(() => (this.balancePercent() || 0) * 100);
 
-  edit() {
+  async edit() {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this._overlay.openBottomSheet(EditAccount, { account: this.account() });
   }
 

@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal, Signal, ViewChild } from '@angular/core';
-import { Query } from '../../../shared/services';
+import { Overlay, Query } from '../../../shared/services';
 import { Transaction as ITransaction } from '../../models';
 import { Transaction } from '../../components';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
@@ -35,6 +35,7 @@ export class Transactions {
   @ViewChild(MatDatepicker) picker!: MatDatepicker<Date>;
   private _query = inject(Query);
 
+  overlay = inject(Overlay);
   date = signal(new Date());
   transactions: Signal<ITransaction[]> = this._query.userTransactions;
 
@@ -62,6 +63,7 @@ export class Transactions {
   }
 
   nextMonth() {
+    this.overlay.triggerVibration('TAP');
     if (this.date().getMonth() === 11) {
       this.date.set(new Date(this.date().getFullYear() + 1, 0));
       return;
@@ -70,6 +72,7 @@ export class Transactions {
   }
 
   prevMonth() {
+    this.overlay.triggerVibration('TAP');
     if (this.date().getMonth() === 0) {
       this.date.set(new Date(this.date().getFullYear() - 1, 11));
       return;

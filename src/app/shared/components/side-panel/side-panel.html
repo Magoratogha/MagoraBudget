@@ -55,7 +55,7 @@
     </form>
     <div class="d-flex align-items-center justify-content-center gap-2">
       <mat-icon class="material-symbols-rounded">light_mode</mat-icon>
-      <mat-slide-toggle [(ngModel)]="isDarkModeEnabled"></mat-slide-toggle>
+      <mat-slide-toggle [(ngModel)]="isDarkModeEnabled" (click)="onToggleClick()"></mat-slide-toggle>
       <mat-icon class="material-symbols-rounded">dark_mode</mat-icon>
     </div>
   </div>

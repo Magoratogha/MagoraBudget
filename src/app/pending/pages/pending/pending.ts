@@ -37,6 +37,10 @@ export class Pending {
     return [...this._query.pendingExpensesPerAccountType().entries()].sort((a, b) => a[1] - b[1]);
   });
 
+  onCheckboxClick() {
+    this._overlay.triggerVibration('TOGGLE');
+  }
+
   async onCheckboxChange(pending: IPending, isDone: boolean, checkboxIndex: number) {
     const validationResults = this._validateCheckboxChange(pending, isDone);
     if (validationResults.valid) {
@@ -116,6 +120,7 @@ export class Pending {
   }
 
   async cleanAll() {
+    await this._overlay.triggerVibration('MAIN_ACTION');
     const completedPendings = this.pendings().filter(p => p.isDone);
     try {
       this._overlay.showLoader();
@@ -127,11 +132,13 @@ export class Pending {
     }
   }
 
-  editPending(pending: IPending) {
+  async editPending(pending: IPending) {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this._overlay.openBottomSheet(EditPending, { pending });
   }
 
-  addNew() {
+  async addNew() {
+    await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
     this._overlay.openBottomSheet(EditPending);
   }
 
