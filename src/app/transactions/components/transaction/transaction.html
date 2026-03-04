@@ -1,7 +1,7 @@
 <div class="main-content less-radius" [class.read-only]="hasDeletedAccount()" (click)="edit()">
   <div class="d-flex flex-column gap-2 w-100">
     @if (transaction()?.description) {
-      <small class="hint d-flex align-items-center ps-0 contained-text text-capitalize">
+      <small class="hint d-flex align-items-center justify-content-start px-0 contained-text text-capitalize">
         <mat-icon class="material-symbols-rounded">label</mat-icon>
         {{ transaction()?.description }}
       </small>
