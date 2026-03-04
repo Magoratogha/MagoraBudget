@@ -44,3 +44,5 @@ export const WARNING_MODAL_DELETE_ACCOUNT_WORDING = {
     'Si aun así quieres eliminarla, te recomendamos eliminar primero sus transacciones asociadas.',
     'Esta operación no se puede revertir.'],
 }
+
+export const DEFAULT_VIBRATION_PATTERN = [50, 0, 100];

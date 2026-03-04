@@ -1,11 +1,12 @@
 import { Component, computed, inject, input, OnDestroy, OnInit, output, PLATFORM_ID } from '@angular/core';
 import { NavbarItem } from '../../models';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Auth, FireStore, Query } from '../../services';
+import { Auth, FireStore, Overlay, Query } from '../../services';
 import { Unsubscribe } from '@firebase/firestore';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { isPlatformBrowser } from '@angular/common';
+import { DEFAULT_VIBRATION_PATTERN } from '../../constants';
 
 @Component({
   selector: 'app-navbar',
@@ -22,6 +23,7 @@ export class Navbar implements OnInit, OnDestroy {
   private _fireStore = inject(FireStore);
   private _query = inject(Query);
   private _auth = inject(Auth);
+  private _overlay = inject(Overlay);
   private _unsubscribeFunctions: Unsubscribe[] = [];
   private _platformId = inject(PLATFORM_ID);
 
@@ -52,15 +54,13 @@ export class Navbar implements OnInit, OnDestroy {
   }
 
   onCreateClick() {
-    if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(1000);
-    }
+    this._overlay.triggerVibration();
     this.createButtonClicked.emit();
   }
 
   updateQueryDate() {
     if (isPlatformBrowser(this._platformId)) {
-      navigator.vibrate(1000);
+      navigator.vibrate(DEFAULT_VIBRATION_PATTERN);
     }
     const currentDate = new Date();
     const queryDate = this._query.getCurrentDate();

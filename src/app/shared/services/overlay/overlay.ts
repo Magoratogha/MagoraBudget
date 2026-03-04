@@ -1,15 +1,17 @@
-import { inject, Injectable, Type } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, Type } from '@angular/core';
 import { Loader, Modal, SnackBar } from '../../components';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Overlay {
   private _sidePanel: MatDrawer | null = null;
+  private _platformId = inject(PLATFORM_ID);
   private _matBottomSheet = inject(MatBottomSheet);
   private _matDialog = inject(MatDialog);
   private _snackBar = inject(MatSnackBar);
@@ -84,5 +86,14 @@ export class Overlay {
   public hideLoader() {
     this._matLoaderDialogRef?.close();
     this._matLoaderDialogRef = undefined;
+  }
+
+  public triggerVibration() {
+    if (isPlatformBrowser(this._platformId)) {
+      navigator.vibrate(0);
+      navigator.vibrate(50);
+      navigator.vibrate(0);
+      navigator.vibrate(100);
+    }
   }
 }
