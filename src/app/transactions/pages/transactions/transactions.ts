@@ -62,8 +62,8 @@ export class Transactions {
     this.date.set(date);
   }
 
-  nextMonth() {
-    this.overlay.triggerVibration('TAP');
+  async nextMonth() {
+    await this.overlay.triggerVibration('TOGGLE');
     if (this.date().getMonth() === 11) {
       this.date.set(new Date(this.date().getFullYear() + 1, 0));
       return;
@@ -71,13 +71,18 @@ export class Transactions {
     this.date.set(new Date(this.date().getFullYear(), this.date().getMonth() + 1));
   }
 
-  prevMonth() {
-    this.overlay.triggerVibration('TAP');
+  async prevMonth() {
+    await this.overlay.triggerVibration('TOGGLE');
     if (this.date().getMonth() === 0) {
       this.date.set(new Date(this.date().getFullYear() - 1, 11));
       return;
     }
     this.date.set(new Date(this.date().getFullYear(), this.date().getMonth() - 1));
+  }
+
+  async openDatePicker() {
+    await this.overlay.triggerVibration('TOGGLE');
+    this.picker.open();
   }
 
   getDateByDay(day: string): Date {
