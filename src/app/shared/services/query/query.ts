@@ -21,7 +21,7 @@ export class Query {
   public isDarkModeEnabled = signal<boolean>(true);
 
   public currentUserAccounts = computed(() => {
-    return this.userAccounts().filter(account => !account.isDeleted);
+    return this.userAccounts().filter((account) => !account.isDeleted);
   });
 
   public startDayOfPeriod = computed(() => {
@@ -85,7 +85,7 @@ export class Query {
   });
 
   public periodTransactions = computed<ITransaction[]>(() => {
-    return this.userTransactions().filter(transaction => {
+    return this.userTransactions().filter((transaction) => {
       const startDate = this.startDayOfPeriod();
       const endDate = this.endDayOfPeriod();
       const date = transaction.date;
@@ -95,40 +95,62 @@ export class Query {
       const e = this._normalizeDate(endDate);
 
       return d >= s && d <= e;
-    })
+    });
   });
 
   public pendingExpenses = computed(() => {
-    return this.userPendings().filter((pending) => !pending.isDone && (pending.transactionType === TransactionType.Expense || pending.transactionType === TransactionType.Transfer));
+    return this.userPendings().filter(
+      (pending) =>
+        !pending.isDone &&
+        (pending.transactionType === TransactionType.Expense ||
+          pending.transactionType === TransactionType.Transfer),
+    );
   });
 
   periodExpensesTransactions = computed(() => {
-    return this.periodTransactions().filter(transaction => {
+    return this.periodTransactions().filter((transaction) => {
       const originAccountType = this._getAccountTypeById(transaction.originAccountId);
-      const targetAccountType = transaction.targetAccountId ? this._getAccountTypeById(transaction.targetAccountId) : undefined;
-      return transaction.type === TransactionType.Expense || (transaction.type === TransactionType.Transfer && (
-        (this._isAvailableAccountType(originAccountType) && !this._isAvailableAccountType(targetAccountType)) ||
-        (!this._isAvailableAccountType(originAccountType) && this._isAvailableAccountType(targetAccountType))
-      ));
+      const targetAccountType = transaction.targetAccountId
+        ? this._getAccountTypeById(transaction.targetAccountId)
+        : undefined;
+      return (
+        transaction.type === TransactionType.Expense ||
+        (transaction.type === TransactionType.Transfer &&
+          ((this._isAvailableAccountType(originAccountType) &&
+            !this._isAvailableAccountType(targetAccountType)) ||
+            (!this._isAvailableAccountType(originAccountType) &&
+              this._isAvailableAccountType(targetAccountType))))
+      );
     });
   });
 
   periodIncomesTransactions = computed(() => {
-    return this.periodTransactions().filter(transaction => {
+    return this.periodTransactions().filter((transaction) => {
       const originAccountType = this._getAccountTypeById(transaction.originAccountId);
-      const targetAccountType = transaction.targetAccountId ? this._getAccountTypeById(transaction.targetAccountId) : undefined;
-      return transaction.type === TransactionType.Income || (transaction.type === TransactionType.Transfer && (
-        (!this._isAvailableAccountType(originAccountType) && this._isAvailableAccountType(targetAccountType))
-      ));
+      const targetAccountType = transaction.targetAccountId
+        ? this._getAccountTypeById(transaction.targetAccountId)
+        : undefined;
+      return (
+        transaction.type === TransactionType.Income ||
+        (transaction.type === TransactionType.Transfer &&
+          !this._isAvailableAccountType(originAccountType) &&
+          this._isAvailableAccountType(targetAccountType))
+      );
     });
   });
 
   public periodIncomes = computed(() => {
-    return this.periodIncomesTransactions().reduce((total, transaction) => total + transaction.amount, 0);
+    return this.periodIncomesTransactions().reduce(
+      (total, transaction) => total + transaction.amount,
+      0,
+    );
   });
 
   public periodExpenses = computed(() => {
-    return this.periodExpensesTransactions().reduce((total, transaction) => total - transaction.amount, 0);
+    return this.periodExpensesTransactions().reduce(
+      (total, transaction) => total - transaction.amount,
+      0,
+    );
   });
 
   public periodExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
@@ -138,6 +160,20 @@ export class Query {
         expenses.set(accountType, expenses.get(accountType)! - transaction.amount);
       } else {
         expenses.set(accountType, -transaction.amount);
+      }
+      return expenses;
+    }, new Map<AccountType, number>());
+  });
+
+  public periodBudgetExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
+    return this.periodExpensesTransactions().reduce((expenses, transaction) => {
+      if (transaction.includedInBudget) {
+        const accountType = this._getAccountTypeById(transaction.originAccountId);
+        if (expenses.has(accountType)) {
+          expenses.set(accountType, expenses.get(accountType)! - transaction.amount);
+        } else {
+          expenses.set(accountType, -transaction.amount);
+        }
       }
       return expenses;
     }, new Map<AccountType, number>());
@@ -209,14 +245,10 @@ export class Query {
   }
 
   private _normalizeDate(date: Date): number {
-    return new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    ).getTime();
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
   }
 
   private _isAvailableAccountType(accountType?: AccountType): boolean {
-    return accountType === AccountType.Savings || accountType === AccountType.Cash
+    return accountType === AccountType.Savings || accountType === AccountType.Cash;
   }
 }

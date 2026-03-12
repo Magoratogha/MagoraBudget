@@ -48,7 +48,7 @@ export class Home {
   });
   budgetsBalance = computed(() => {
     const budgets = this.enabledBudgets();
-    const expensesPerAccountType = this._query.periodExpensesPerAccountType();
+    const expensesPerAccountType = this._query.periodBudgetExpensesPerAccountType();
     return budgets.map(budget => {
       const balance = Math.abs(expensesPerAccountType.get(budget.accountType) || 0);
       const isOverPassed = balance > budget.limit;

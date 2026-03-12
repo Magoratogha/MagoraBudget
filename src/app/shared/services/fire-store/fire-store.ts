@@ -204,8 +204,9 @@ export class FireStore {
             originAccountId: pending.originAccountId!,
             targetAccountId: pending.targetAccountId,
             description: pending.label,
-            ownerId: pending.ownerId
-          }
+            ownerId: pending.ownerId,
+            includedInBudget: true,
+          };
           await this.addTransaction(transaction);
         }
         dataToUpdate.lastCompletionDate = completionDate;

@@ -8,5 +8,6 @@ export interface Transaction {
   originAccountId: string;
   targetAccountId?: string;
   description?: string;
+  includedInBudget: boolean;
   ownerId: string;
 }

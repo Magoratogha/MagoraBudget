@@ -24,12 +24,23 @@ app-transaction {
 
 .month-label-wrapper {
   background-color: var(--mat-sys-surface-container-highest);
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem;
+  padding-right: 0.75rem;
   border-radius: 0.75rem;
 
-  .child-wrapper {
-    background-color: var(--mat-sys-surface-container);
-    border-radius: 1rem;
-    padding: 0.75rem;
+  mat-icon {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    border-radius: 0.5rem;
   }
+}
+
+mat-card.content-wrapper .subtitle .icon {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
 }

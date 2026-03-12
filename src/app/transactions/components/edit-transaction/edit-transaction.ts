@@ -25,6 +25,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CurrencyPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-edit-transaction',
@@ -41,7 +42,8 @@ import { MatCardModule } from '@angular/material/card';
     MatChipsModule,
     NgxMaskDirective,
     CurrencyPipe,
-    MatCardModule
+    MatCardModule,
+    MatSlideToggleModule,
   ],
   host: { class: 'inner-bottom-sheet-component' },
   templateUrl: './edit-transaction.html',
@@ -54,7 +56,11 @@ export class EditTransaction implements OnInit {
   private _overlay = inject(Overlay);
   private _destroyRef = inject(DestroyRef);
   private _bottomSheetData = inject(MAT_BOTTOM_SHEET_DATA);
-  private _amountDefaultValidations = [Validators.required, Validators.min(1), onlyNumbersValidator(false)]
+  private _amountDefaultValidations = [
+    Validators.required,
+    Validators.min(1),
+    onlyNumbersValidator(false),
+  ];
 
   TransactionType = TransactionType;
   transaction = signal<Transaction | undefined>(this._bottomSheetData?.transaction);
@@ -69,19 +75,32 @@ export class EditTransaction implements OnInit {
     originAccountId: new FormControl<string>('', [Validators.required]),
     targetAccountId: new FormControl<string>(''),
     description: new FormControl<string>(''),
-    ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required])
+    includedInBudget: new FormControl<boolean>(true, [Validators.required]),
+    ownerId: new FormControl<string>(this._auth.getLoggedUser()!.uid, [Validators.required]),
   });
 
-  selectedTransactionType = toSignal(this.form.controls.type.valueChanges, { initialValue: this.form.controls.type.value });
-  selectedOriginAccountId = toSignal(this.form.controls.originAccountId.valueChanges, { initialValue: this.form.controls.originAccountId.value });
-  selectedTargetAccountId = toSignal(this.form.controls.targetAccountId.valueChanges, { initialValue: this.form.controls.targetAccountId.value });
+  selectedTransactionType = toSignal(this.form.controls.type.valueChanges, {
+    initialValue: this.form.controls.type.value,
+  });
+  selectedOriginAccountId = toSignal(this.form.controls.originAccountId.valueChanges, {
+    initialValue: this.form.controls.originAccountId.value,
+  });
+  selectedTargetAccountId = toSignal(this.form.controls.targetAccountId.valueChanges, {
+    initialValue: this.form.controls.targetAccountId.value,
+  });
 
-  availableOriginAccounts = computed(() => this.selectedTransactionType() === TransactionType.Income ? this.userAccounts() : this._query.availableExpensesAccounts());
-  availableTargetAccounts = computed(() => this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId()));
+  availableOriginAccounts = computed(() =>
+    this.selectedTransactionType() === TransactionType.Income
+      ? this.userAccounts()
+      : this._query.availableExpensesAccounts(),
+  );
+  availableTargetAccounts = computed(() =>
+    this.userAccounts().filter((account) => account.id !== this.selectedOriginAccountId()),
+  );
 
   originAccountLabel = computed(() => {
     return this.selectedTransactionType() === TransactionType.Transfer ? 'De la cuenta' : 'Cuenta';
-  })
+  });
 
   maxExpenseAmount = signal<number | null>(null);
   maxIncomeAmount = signal<number | null>(null);
@@ -93,7 +112,7 @@ export class EditTransaction implements OnInit {
       case TransactionType.Transfer:
         const maxAmount = Math.min(
           this.maxExpenseAmount() ?? Infinity,
-          this.maxIncomeAmount() ?? Infinity
+          this.maxIncomeAmount() ?? Infinity,
         );
         if (maxAmount === this.maxIncomeAmount()) {
           return incomeLabel;
@@ -107,7 +126,7 @@ export class EditTransaction implements OnInit {
       default:
         return ['', null];
     }
-  })
+  });
 
   protected readonly Object = Object;
   protected readonly isNaN = isNaN;
@@ -118,19 +137,37 @@ export class EditTransaction implements OnInit {
       switch (this.selectedTransactionType()) {
         case TransactionType.Transfer:
           this.form.controls.targetAccountId.setValidators([Validators.required]);
-          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
-          this.form.controls.targetAccountId.setValue(this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '');
-          if (this.form.controls.originAccountId.value === this.form.controls.targetAccountId.value) {
+          this.form.controls.originAccountId.setValue(
+            this.transaction()?.originAccountId ||
+              this.userSettings().preferredExpensesAccountId ||
+              '',
+          );
+          this.form.controls.targetAccountId.setValue(
+            this.transaction()?.targetAccountId ||
+              this.userSettings().preferredIncomesAccountId ||
+              '',
+          );
+          if (
+            this.form.controls.originAccountId.value === this.form.controls.targetAccountId.value
+          ) {
             this.form.controls.targetAccountId.setValue('');
           }
           break;
         case TransactionType.Income:
           this.form.controls.targetAccountId.setValidators([]);
-          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredIncomesAccountId || '');
+          this.form.controls.originAccountId.setValue(
+            this.transaction()?.originAccountId ||
+              this.userSettings().preferredIncomesAccountId ||
+              '',
+          );
           break;
         case TransactionType.Expense:
           this.form.controls.targetAccountId.setValidators([]);
-          this.form.controls.originAccountId.setValue(this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '');
+          this.form.controls.originAccountId.setValue(
+            this.transaction()?.originAccountId ||
+              this.userSettings().preferredExpensesAccountId ||
+              '',
+          );
           break;
       }
       this.form.controls.targetAccountId.updateValueAndValidity();
@@ -138,8 +175,12 @@ export class EditTransaction implements OnInit {
     });
 
     effect(() => {
-      const originAccount = this.userAccounts().find(account => account.id === this.selectedOriginAccountId());
-      const targetAccount = this.userAccounts().find(account => account.id === this.selectedTargetAccountId());
+      const originAccount = this.userAccounts().find(
+        (account) => account.id === this.selectedOriginAccountId(),
+      );
+      const targetAccount = this.userAccounts().find(
+        (account) => account.id === this.selectedTargetAccountId(),
+      );
       const transactionType = this.selectedTransactionType();
 
       this.form.controls.amount.setValidators(this._amountDefaultValidations);
@@ -157,55 +198,74 @@ export class EditTransaction implements OnInit {
             }
             const maxAmount = Math.min(
               this.maxExpenseAmount() ?? Infinity,
-              this.maxIncomeAmount() ?? Infinity
+              this.maxIncomeAmount() ?? Infinity,
             );
-            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(maxAmount)]);
+            this.form.controls.amount.setValidators([
+              ...this._amountDefaultValidations,
+              Validators.max(maxAmount),
+            ]);
           }
           break;
         case TransactionType.Income:
           if (originAccount && originAccount.quota) {
             this._setMaxIncomeAmount(originAccount);
-            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(this.maxIncomeAmount() as number)]);
+            this.form.controls.amount.setValidators([
+              ...this._amountDefaultValidations,
+              Validators.max(this.maxIncomeAmount() as number),
+            ]);
           }
           break;
         case TransactionType.Expense:
           if (originAccount) {
             this._setMaxExpenseAmount(originAccount);
-            this.form.controls.amount.setValidators([...this._amountDefaultValidations, Validators.max(this.maxExpenseAmount() as number)]);
+            this.form.controls.amount.setValidators([
+              ...this._amountDefaultValidations,
+              Validators.max(this.maxExpenseAmount() as number),
+            ]);
           }
           break;
       }
       this.form.controls.amount.updateValueAndValidity();
       this.form.updateValueAndValidity();
-    })
+    });
   }
 
   private _setMaxExpenseAmount(account: Account): void {
     this.maxExpenseAmount.set(
-      account.type === AccountType.CreditCard ?
-        Math.abs(account.quota!) - Math.abs(account.balance)
-        : account.balance
+      account.type === AccountType.CreditCard
+        ? Math.abs(account.quota!) - Math.abs(account.balance)
+        : account.balance,
     );
   }
 
   private _setMaxIncomeAmount(account: Account): void {
     this.maxIncomeAmount.set(
-      account.type === AccountType.SavingsGoal ?
-        account.quota! - account.balance
-        : Math.abs(account.balance)
+      account.type === AccountType.SavingsGoal
+        ? account.quota! - account.balance
+        : Math.abs(account.balance),
     );
   }
 
   ngOnInit() {
     if (this.transaction()) {
-      this.form.patchValue({
-        amount: this.transaction()?.amount ?? NaN,
-        date: this.transaction()?.date ?? new Date(),
-        originAccountId: this.transaction()?.originAccountId || this.userSettings().preferredExpensesAccountId || '',
-        targetAccountId: this.transaction()?.targetAccountId || this.userSettings().preferredIncomesAccountId || '',
-        description: this.transaction()?.description ?? '',
-        ownerId: this.transaction()?.ownerId ?? this._auth.getLoggedUser()!.uid
-      }, { emitEvent: false });
+      this.form.patchValue(
+        {
+          amount: this.transaction()?.amount ?? NaN,
+          date: this.transaction()?.date ?? new Date(),
+          originAccountId:
+            this.transaction()?.originAccountId ||
+            this.userSettings().preferredExpensesAccountId ||
+            '',
+          targetAccountId:
+            this.transaction()?.targetAccountId ||
+            this.userSettings().preferredIncomesAccountId ||
+            '',
+          description: this.transaction()?.description ?? '',
+          includedInBudget: this.transaction()?.includedInBudget ?? true,
+          ownerId: this.transaction()?.ownerId ?? this._auth.getLoggedUser()!.uid,
+        },
+        { emitEvent: false },
+      );
 
       this.form.controls.type.setValue(this.transaction()?.type ?? TransactionType.Expense);
     }
@@ -220,7 +280,11 @@ export class EditTransaction implements OnInit {
           transactionToSave.targetAccountId = '';
         }
         if (this.transaction()?.id) {
-          await this._fireStore.editTransaction(this.transaction()!.id!, transactionToSave, this.transaction()!);
+          await this._fireStore.editTransaction(
+            this.transaction()!.id!,
+            transactionToSave,
+            this.transaction()!,
+          );
         } else {
           await this._fireStore.addTransaction(transactionToSave);
         }
@@ -235,7 +299,8 @@ export class EditTransaction implements OnInit {
 
   async delete() {
     await this._overlay.triggerVibration('DANGER');
-    this._overlay.openModal(WARNING_MODAL_DELETE_WORDING.title, WARNING_MODAL_DELETE_WORDING.description)
+    this._overlay
+      .openModal(WARNING_MODAL_DELETE_WORDING.title, WARNING_MODAL_DELETE_WORDING.description)
       ?.pipe(take(1), takeUntilDestroyed(this._destroyRef))
       .subscribe(async (shouldDelete) => {
         if (shouldDelete) {
