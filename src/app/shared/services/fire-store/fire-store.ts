@@ -1,37 +1,45 @@
-import { effect, inject, Injectable, signal } from '@angular/core';
-import { User } from "@angular/fire/auth";
+import { effect, inject, Injectable, signal, WritableSignal } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import {
   collection,
   deleteDoc,
   disableNetwork,
   doc,
+  DocumentChange,
   enableNetwork,
   Firestore,
   onSnapshot,
   orderBy,
   query,
+  QueryDocumentSnapshot,
   setDoc,
   Timestamp,
+  Unsubscribe,
   updateDoc,
-  where
+  where,
 } from '@angular/fire/firestore';
-import { FIREBASE_COLLECTION_NAMES } from '../../constants';
 import { Account } from '../../../accounts/models';
-import { Transaction, TransactionType } from '../../../transactions/models';
-import { UserSettings } from '../../models';
 import { BudgetPreference } from '../../../home/models';
 import { Pending } from '../../../pending/models';
+import { Transaction, TransactionType } from '../../../transactions/models';
+import { FIREBASE_COLLECTION_NAMES } from '../../constants';
+import { UserSettings } from '../../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FireStore {
   private _db = inject(Firestore);
-  private _userAccounts = signal<Account[]>([]);
-  private _userTransactions = signal<Transaction[]>([]);
-  private _userPendings = signal<Pending[]>([]);
+  private _userAccountsById = signal<Record<string, Account>>({});
+  private _userAccountSortedIds = signal<string[]>([]);
+  private _userTransactionsById = signal<Record<string, Transaction>>({});
+  private _userTransactionSortedIds = signal<string[]>([]);
+  private _userPendingsById = signal<Record<string, Pending>>({});
+  private _userPendingsSortedIds = signal<string[]>([]);
   private _userSettings = signal<UserSettings>({} as UserSettings);
   private _userBudgetPreference = signal<BudgetPreference>({} as BudgetPreference);
+  private _unsubscribeFunctions: Unsubscribe[] = [];
+
   public isOnline = signal<boolean>(true);
 
   constructor() {
@@ -41,7 +49,22 @@ export class FireStore {
       } else {
         await disableNetwork(this._db);
       }
-    })
+    });
+  }
+
+  public initListeners(userId: string): void {
+    this._unsubscribeFunctions.push(
+      this._listenToUserAccounts(userId),
+      this._listenToUserTransactions(userId),
+      this._listenToUserSettings(userId),
+      this._listenToUserBudgetPreference(userId),
+      this._listenToUserPendings(userId),
+    );
+  }
+
+  public cleanListeners(): void {
+    this._unsubscribeFunctions.forEach((unsubscribe) => unsubscribe());
+    this._unsubscribeFunctions = [];
   }
 
   public async addNewUser(user: User) {
@@ -51,8 +74,10 @@ export class FireStore {
         mail: user.email,
         provider: user.providerId,
         pictureUrl: user.photoURL || null,
-      }
-      await this._performOperation(() => setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USERS, user.uid), data));
+      };
+      await this._performOperation(() =>
+        setDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USERS, user.uid), data),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -60,11 +85,11 @@ export class FireStore {
   }
 
   public getUserAccount(accountId: string) {
-    return this._userAccounts().find(account => account.id === accountId)!;
+    return this._userAccountsById()[accountId]!;
   }
 
   public getUserTransaction(transactionId: string) {
-    return this._userTransactions().find(transaction => transaction.id === transactionId) || null;
+    return this._userTransactionsById()[transactionId] || null;
   }
 
   public async addAccount(account: Account): Promise<string> {
@@ -82,7 +107,9 @@ export class FireStore {
   public async editAccount(accountId: string, account: Partial<Account>): Promise<void> {
     try {
       this._cleanWhiteSpaces(account);
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), account),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -91,7 +118,11 @@ export class FireStore {
 
   public async deleteAccount(accountId: string): Promise<void> {
     try {
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), { isDeleted: true }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS, accountId), {
+          isDeleted: true,
+        }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -111,12 +142,20 @@ export class FireStore {
     }
   }
 
-  public async editTransaction(transactionId: string, transactionToSave: Transaction, currentTransaction: Transaction): Promise<void> {
+  public async editTransaction(
+    transactionId: string,
+    transactionToSave: Transaction,
+    currentTransaction: Transaction,
+  ): Promise<void> {
     try {
       this._cleanWhiteSpaces(transactionToSave);
       this._cleanWhiteSpaces(currentTransaction);
       await this._updateAccountsByTransaction(transactionToSave, currentTransaction);
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), { ...transactionToSave }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId), {
+          ...transactionToSave,
+        }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -128,7 +167,9 @@ export class FireStore {
       const transactionToDelete = this.getUserTransaction(transactionId)!;
       this._cleanWhiteSpaces(transactionToDelete);
       await this._rollbackTransaction(transactionToDelete);
-      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId)));
+      await this._performOperation(() =>
+        deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS, transactionId)),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -159,10 +200,17 @@ export class FireStore {
     }
   }
 
-  public async editBudgetPreferences(preferenceId: string, preference: BudgetPreference): Promise<void> {
+  public async editBudgetPreferences(
+    preferenceId: string,
+    preference: BudgetPreference,
+  ): Promise<void> {
     try {
       this._cleanWhiteSpaces(preference);
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES, preferenceId), { ...preference }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES, preferenceId), {
+          ...preference,
+        }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -184,7 +232,9 @@ export class FireStore {
   public async editPending(pendingId: string, pending: Pending): Promise<void> {
     try {
       this._cleanWhiteSpaces(pending);
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId), { ...pending }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId), { ...pending }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -211,7 +261,11 @@ export class FireStore {
         }
         dataToUpdate.lastCompletionDate = completionDate;
       }
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pending.id!), { ...dataToUpdate }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pending.id!), {
+          ...dataToUpdate,
+        }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -220,7 +274,9 @@ export class FireStore {
 
   public async deletePending(pendingId: string): Promise<void> {
     try {
-      await this._performOperation(() => deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId)));
+      await this._performOperation(() =>
+        deleteDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS, pendingId)),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
@@ -230,19 +286,31 @@ export class FireStore {
   public async editUserSettings(settingsId: string, settings: UserSettings): Promise<void> {
     try {
       this._cleanWhiteSpaces(settings);
-      await this._performOperation(() => updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), { ...settings }));
+      await this._performOperation(() =>
+        updateDoc(doc(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS, settingsId), {
+          ...settings,
+        }),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
     }
   }
 
-  public getUserAccounts() {
-    return this._userAccounts.asReadonly();
+  public getUserAccountsById() {
+    return this._userAccountsById.asReadonly();
   }
 
-  public getUserTransactions() {
-    return this._userTransactions.asReadonly();
+  public getUserAccountSortedIds() {
+    return this._userAccountSortedIds.asReadonly();
+  }
+
+  public getUserTransactionsById() {
+    return this._userTransactionsById.asReadonly();
+  }
+
+  public getUserTransactionSortedIds() {
+    return this._userTransactionSortedIds.asReadonly();
   }
 
   public getUserSettings() {
@@ -253,88 +321,144 @@ export class FireStore {
     return this._userBudgetPreference.asReadonly();
   }
 
-  public getUserPendings() {
-    return this._userPendings.asReadonly();
+  public getUserPendingsById() {
+    return this._userPendingsById.asReadonly();
   }
 
-  public listenToUserAccounts(userId: string) {
+  public getUserPendingsSortedIds() {
+    return this._userPendingsSortedIds.asReadonly();
+  }
+
+  private _updateListenedDoc<T>(
+    parseFn: (doc: QueryDocumentSnapshot) => T,
+    byIdSignal: WritableSignal<Record<string, T>>,
+    sortedIdsSignal: WritableSignal<string[]>,
+    changes: DocumentChange[],
+  ) {
+    const entities = { ...byIdSignal() };
+    const ids = [...sortedIdsSignal()];
+
+    for (const change of changes) {
+      const entity = parseFn(change.doc);
+
+      switch (change.type) {
+        case 'added':
+          entities[change.doc.id] = entity;
+          ids.splice(change.newIndex, 0, change.doc.id);
+          break;
+        case 'removed':
+          delete entities[change.doc.id];
+          ids.splice(change.oldIndex, 1);
+          break;
+        case 'modified':
+          entities[change.doc.id] = entity;
+          if (change.oldIndex !== change.newIndex) {
+            ids.splice(change.oldIndex, 1);
+            ids.splice(change.newIndex, 0, change.doc.id);
+          }
+          break;
+      }
+    }
+
+    byIdSignal.set(entities);
+    sortedIdsSignal.set(ids);
+  }
+
+  private _parseAccount(doc: QueryDocumentSnapshot): Account {
+    return {
+      ...(doc.data() as Account),
+      id: doc.id,
+    };
+  }
+
+  private _parseTransaction(doc: QueryDocumentSnapshot): Transaction {
+    return {
+      ...(doc.data() as Transaction),
+      date: (doc.data()['date'] as Timestamp).toDate(),
+      id: doc.id,
+    };
+  }
+
+  private _parsePending(doc: QueryDocumentSnapshot): Pending {
+    return {
+      ...(doc.data() as Pending),
+      lastCompletionDate: doc.data()['lastCompletionDate']
+        ? (doc.data()['lastCompletionDate'] as Timestamp).toDate()
+        : undefined,
+      id: doc.id,
+    };
+  }
+
+  private _listenToUserAccounts(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.ACCOUNTS),
-        where('ownerId', "==", userId),
+        where('ownerId', '==', userId),
         orderBy('type', 'asc'),
-        orderBy('label', 'asc')
+        orderBy('label', 'asc'),
       );
-      return onSnapshot(q, (querySnapshot) => {
-        const accounts: Account[] = [];
-        querySnapshot.forEach((doc) => {
-          accounts.push({
-            ...doc.data(),
-            id: doc.id,
-          } as Account);
-        });
-        this._userAccounts.set(accounts);
-      });
+      return onSnapshot(q, (snapshot) =>
+        this._updateListenedDoc(
+          this._parseAccount,
+          this._userAccountsById,
+          this._userAccountSortedIds,
+          snapshot.docChanges(),
+        ),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
     }
   }
 
-  public listenToUserTransactions(userId: string) {
+  private _listenToUserTransactions(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.TRANSACTIONS),
-        where('ownerId', "==", userId),
-        orderBy('date', 'desc')
+        where('ownerId', '==', userId),
+        orderBy('date', 'desc'),
       );
-      return onSnapshot(q, (querySnapshot) => {
-        const transactions: Transaction[] = [];
-        querySnapshot.forEach((doc) => {
-          transactions.push({
-            ...doc.data(),
-            date: (doc.data()['date'] as Timestamp).toDate(),
-            id: doc.id,
-          } as Transaction);
-        });
-        this._userTransactions.set(transactions);
-      });
+      return onSnapshot(q, (snapshot) =>
+        this._updateListenedDoc(
+          this._parseTransaction,
+          this._userTransactionsById,
+          this._userTransactionSortedIds,
+          snapshot.docChanges(),
+        ),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
     }
   }
 
-  public listenToUserPendings(userId: string) {
+  private _listenToUserPendings(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.PENDINGS),
-        where('ownerId', "==", userId),
+        where('ownerId', '==', userId),
         orderBy('isDone', 'asc'),
-        orderBy('label', 'asc')
+        orderBy('label', 'asc'),
       );
-      return onSnapshot(q, (querySnapshot) => {
-        const pendings: Pending[] = [];
-        querySnapshot.forEach((doc) => {
-          pendings.push({
-            ...doc.data(),
-            lastCompletionDate: doc.data()['lastCompletionDate'] ? (doc.data()['lastCompletionDate'] as Timestamp).toDate() : undefined,
-            id: doc.id,
-          } as Pending);
-        });
-        this._userPendings.set(pendings);
-      });
+      return onSnapshot(q, (snapshot) =>
+        this._updateListenedDoc(
+          this._parsePending,
+          this._userPendingsById,
+          this._userPendingsSortedIds,
+          snapshot.docChanges(),
+        ),
+      );
     } catch (e) {
       this._logError(e);
       throw e;
     }
   }
 
-  public listenToUserSettings(userId: string) {
+  private _listenToUserSettings(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.USER_SETTINGS),
-        where('ownerId', "==", userId)
+        where('ownerId', '==', userId),
       );
       return onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -350,11 +474,11 @@ export class FireStore {
     }
   }
 
-  public listenToUserBudgetPreference(userId: string) {
+  private _listenToUserBudgetPreference(userId: string) {
     try {
       const q = query(
         collection(this._db, FIREBASE_COLLECTION_NAMES.BUDGET_PREFERENCES),
-        where('ownerId', "==", userId)
+        where('ownerId', '==', userId),
       );
       return onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
@@ -371,12 +495,13 @@ export class FireStore {
   }
 
   private _cleanWhiteSpaces(obj: any): void {
-    Object.keys(obj).map(
-      (k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k])
-    );
+    Object.keys(obj).map((k) => (obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]));
   }
 
-  private async _updateAccountsByTransaction(transactionToPerform: Transaction, previousTransaction?: Transaction) {
+  private async _updateAccountsByTransaction(
+    transactionToPerform: Transaction,
+    previousTransaction?: Transaction,
+  ) {
     await this._performTransaction(transactionToPerform);
     if (previousTransaction) {
       await this._rollbackTransaction(previousTransaction);
@@ -404,7 +529,7 @@ export class FireStore {
           }),
           this.editAccount(targetAccount.id!, {
             balance: targetAccount.balance + transaction.amount,
-          })
+          }),
         ]);
         break;
     }

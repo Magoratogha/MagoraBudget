@@ -12,17 +12,43 @@ import { Pending } from '../../../pending/models';
 export class Query {
   private _fireStore = inject(FireStore);
   private _today = signal(new Date());
+  private _userTransactionSortedIds: Signal<string[]> =
+    this._fireStore.getUserTransactionSortedIds();
+  private _userTransactionsById: Signal<Record<string, Transaction>> =
+    this._fireStore.getUserTransactionsById();
+  private _userAccountSortedIds: Signal<string[]> = this._fireStore.getUserAccountSortedIds();
+  private _userAccountsById: Signal<Record<string, IAccount>> =
+    this._fireStore.getUserAccountsById();
+  private _userPendingsSortedIds: Signal<string[]> = this._fireStore.getUserPendingsSortedIds();
+  private _userPendingsById: Signal<Record<string, Pending>> =
+    this._fireStore.getUserPendingsById();
 
   public userSettings: Signal<UserSettings> = this._fireStore.getUserSettings();
+
+  public userTransactions = computed(() => {
+    const sortedIds = this._userTransactionSortedIds();
+    const entities = this._userTransactionsById();
+    return sortedIds.map((id) => entities[id]);
+  });
+
+  public userAccounts = computed(() => {
+    const sortedIds = this._userAccountSortedIds();
+    const entities = this._userAccountsById();
+    return sortedIds.map((id) => entities[id]);
+  });
+
+  public userPendings: Signal<Pending[]> = computed(() => {
+    const sortedIds = this._userPendingsSortedIds();
+    const entities = this._userPendingsById();
+    return sortedIds.map((id) => entities[id]);
+  });
+
   public budgetPreference: Signal<BudgetPreference> = this._fireStore.getUserBudgetPreference();
-  public userAccounts: Signal<IAccount[]> = this._fireStore.getUserAccounts();
-  public userTransactions: Signal<Transaction[]> = this._fireStore.getUserTransactions();
-  public userPendings: Signal<Pending[]> = this._fireStore.getUserPendings();
   public isDarkModeEnabled = signal<boolean>(true);
 
-  public currentUserAccounts = computed(() => {
-    return this.userAccounts().filter((account) => !account.isDeleted);
-  });
+  public currentUserAccounts = computed(() =>
+    this.userAccounts().filter((account) => !account.isDeleted),
+  );
 
   public startDayOfPeriod = computed(() => {
     const startDay = this.userSettings().startDayOfMonth ?? 1;
@@ -60,55 +86,55 @@ export class Query {
     return new Date(year, targetMonth, day);
   });
 
-  public isPeriodStartAndEndDaySameMonth = computed(() => {
-    const startDay = this.startDayOfPeriod();
-    const endDay = this.endDayOfPeriod();
-    return startDay.getMonth() === endDay.getMonth();
-  });
+  public isPeriodStartAndEndDaySameMonth = computed(
+    () => this.startDayOfPeriod().getMonth() === this.endDayOfPeriod().getMonth(),
+  );
 
-  public globalBalance = computed(() => {
-    return this.currentUserAccounts().reduce((total, account) => total + account.balance, 0);
-  });
+  public globalBalance = computed(() =>
+    this.currentUserAccounts().reduce((total, account) => total + account.balance, 0),
+  );
 
-  public availableBalance = computed(() => {
-    return this.currentUserAccounts().reduce((total, account) => {
+  public availableBalance = computed(() =>
+    this.currentUserAccounts().reduce((total, account) => {
       return this._isAvailableAccountType(account.type) ? total + account.balance : total;
-    }, 0);
-  });
+    }, 0),
+  );
 
-  public availableExpensesAccounts = computed(() => {
-    return this.currentUserAccounts().filter((account) => account.type !== AccountType.Debt);
-  });
+  public availableExpensesAccounts = computed(() =>
+    this.currentUserAccounts().filter((account) => account.type !== AccountType.Debt),
+  );
 
-  public availableIncomesAccounts = computed(() => {
-    return this.currentUserAccounts();
-  });
+  public availableIncomesAccounts = computed(() => this.currentUserAccounts());
 
   public periodTransactions = computed<ITransaction[]>(() => {
-    return this.userTransactions().filter((transaction) => {
-      const startDate = this.startDayOfPeriod();
-      const endDate = this.endDayOfPeriod();
-      const date = transaction.date;
+    const sortedIds = this._userTransactionSortedIds();
+    const entities = this._userTransactionsById();
+    const startDate = this._normalizeDate(this.startDayOfPeriod());
+    const endDate = this._normalizeDate(this.endDayOfPeriod());
+    const result: Transaction[] = [];
 
-      const d = this._normalizeDate(date);
-      const s = this._normalizeDate(startDate);
-      const e = this._normalizeDate(endDate);
+    for (const id of sortedIds) {
+      const transaction = entities[id];
+      const date = this._normalizeDate(transaction.date);
 
-      return d >= s && d <= e;
-    });
+      if (date < startDate) break;
+      if (date <= endDate) result.push(transaction);
+    }
+
+    return result;
   });
 
-  public pendingExpenses = computed(() => {
-    return this.userPendings().filter(
+  public pendingExpenses = computed(() =>
+    this.userPendings().filter(
       (pending) =>
         !pending.isDone &&
         (pending.transactionType === TransactionType.Expense ||
           pending.transactionType === TransactionType.Transfer),
-    );
-  });
+    ),
+  );
 
-  periodExpensesTransactions = computed(() => {
-    return this.periodTransactions().filter((transaction) => {
+  periodExpensesTransactions = computed(() =>
+    this.periodTransactions().filter((transaction) => {
       const originAccountType = this._getAccountTypeById(transaction.originAccountId);
       const targetAccountType = transaction.targetAccountId
         ? this._getAccountTypeById(transaction.targetAccountId)
@@ -121,11 +147,11 @@ export class Query {
             (!this._isAvailableAccountType(originAccountType) &&
               this._isAvailableAccountType(targetAccountType))))
       );
-    });
-  });
+    }),
+  );
 
-  periodIncomesTransactions = computed(() => {
-    return this.periodTransactions().filter((transaction) => {
+  periodIncomesTransactions = computed(() =>
+    this.periodTransactions().filter((transaction) => {
       const originAccountType = this._getAccountTypeById(transaction.originAccountId);
       const targetAccountType = transaction.targetAccountId
         ? this._getAccountTypeById(transaction.targetAccountId)
@@ -136,25 +162,19 @@ export class Query {
           !this._isAvailableAccountType(originAccountType) &&
           this._isAvailableAccountType(targetAccountType))
       );
-    });
-  });
+    }),
+  );
 
-  public periodIncomes = computed(() => {
-    return this.periodIncomesTransactions().reduce(
-      (total, transaction) => total + transaction.amount,
-      0,
-    );
-  });
+  public periodIncomes = computed(() =>
+    this.periodIncomesTransactions().reduce((total, transaction) => total + transaction.amount, 0),
+  );
 
-  public periodExpenses = computed(() => {
-    return this.periodExpensesTransactions().reduce(
-      (total, transaction) => total - transaction.amount,
-      0,
-    );
-  });
+  public periodExpenses = computed(() =>
+    this.periodExpensesTransactions().reduce((total, transaction) => total - transaction.amount, 0),
+  );
 
-  public periodExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
-    return this.periodExpensesTransactions().reduce((expenses, transaction) => {
+  public periodExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() =>
+    this.periodExpensesTransactions().reduce((expenses, transaction) => {
       const accountType = this._getAccountTypeById(transaction.originAccountId);
       if (expenses.has(accountType)) {
         expenses.set(accountType, expenses.get(accountType)! - transaction.amount);
@@ -162,11 +182,11 @@ export class Query {
         expenses.set(accountType, -transaction.amount);
       }
       return expenses;
-    }, new Map<AccountType, number>());
-  });
+    }, new Map<AccountType, number>()),
+  );
 
-  public periodBudgetExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
-    return this.periodExpensesTransactions().reduce((expenses, transaction) => {
+  public periodBudgetExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() =>
+    this.periodExpensesTransactions().reduce((expenses, transaction) => {
       if (transaction.includedInBudget) {
         const accountType = this._getAccountTypeById(transaction.originAccountId);
         if (expenses.has(accountType)) {
@@ -176,11 +196,11 @@ export class Query {
         }
       }
       return expenses;
-    }, new Map<AccountType, number>());
-  });
+    }, new Map<AccountType, number>()),
+  );
 
-  public periodIncomesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
-    return this.periodIncomesTransactions().reduce((incomes, transaction) => {
+  public periodIncomesPerAccountType: Signal<Map<AccountType, number>> = computed(() =>
+    this.periodIncomesTransactions().reduce((incomes, transaction) => {
       const accountType = this._getAccountTypeById(transaction.originAccountId);
       if (incomes.has(accountType)) {
         incomes.set(accountType, incomes.get(accountType)! + transaction.amount);
@@ -188,11 +208,11 @@ export class Query {
         incomes.set(accountType, transaction.amount);
       }
       return incomes;
-    }, new Map<AccountType, number>());
-  });
+    }, new Map<AccountType, number>()),
+  );
 
-  public periodExpensesPerAccount: Signal<Map<Account, number>> = computed(() => {
-    return this.periodExpensesTransactions().reduce((expenses, transaction) => {
+  public periodExpensesPerAccount: Signal<Map<Account, number>> = computed(() =>
+    this.periodExpensesTransactions().reduce((expenses, transaction) => {
       const account = this._getAccountById(transaction.originAccountId);
       if (expenses.has(account)) {
         expenses.set(account, expenses.get(account)! - transaction.amount);
@@ -200,11 +220,11 @@ export class Query {
         expenses.set(account, -transaction.amount);
       }
       return expenses;
-    }, new Map<Account, number>());
-  });
+    }, new Map<Account, number>()),
+  );
 
-  public periodIncomesPerAccount: Signal<Map<Account, number>> = computed(() => {
-    return this.periodIncomesTransactions().reduce((incomes, transaction) => {
+  public periodIncomesPerAccount: Signal<Map<Account, number>> = computed(() =>
+    this.periodIncomesTransactions().reduce((incomes, transaction) => {
       const account = this._getAccountById(transaction.originAccountId);
       if (incomes.has(account)) {
         incomes.set(account, incomes.get(account)! + transaction.amount);
@@ -212,11 +232,11 @@ export class Query {
         incomes.set(account, transaction.amount);
       }
       return incomes;
-    }, new Map<Account, number>());
-  });
+    }, new Map<Account, number>()),
+  );
 
-  public pendingExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() => {
-    return this.pendingExpenses().reduce((expenses, pending) => {
+  public pendingExpensesPerAccountType: Signal<Map<AccountType, number>> = computed(() =>
+    this.pendingExpenses().reduce((expenses, pending) => {
       const accountType = this._getAccountTypeById(pending.originAccountId!);
       if (expenses.has(accountType)) {
         expenses.set(accountType, expenses.get(accountType)! - pending.amount);
@@ -224,8 +244,8 @@ export class Query {
         expenses.set(accountType, -pending.amount);
       }
       return expenses;
-    }, new Map<AccountType, number>());
-  });
+    }, new Map<AccountType, number>()),
+  );
 
   public updateCurrentDate(date: Date) {
     this._today.set(date);
@@ -236,8 +256,7 @@ export class Query {
   }
 
   private _getAccountTypeById(accountId: string): AccountType {
-    const account = this._fireStore.getUserAccount(accountId);
-    return account.type;
+    return this._fireStore.getUserAccount(accountId).type;
   }
 
   private _getAccountById(accountId: string): Account {

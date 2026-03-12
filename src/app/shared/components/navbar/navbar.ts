@@ -1,54 +1,30 @@
-import { Component, computed, inject, input, OnDestroy, OnInit, output } from '@angular/core';
-import { NavbarItem } from '../../models';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { Auth, FireStore, Overlay, Query } from '../../services';
-import { Unsubscribe } from '@firebase/firestore';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavbarItem } from '../../models';
+import { Overlay, Query } from '../../services';
 
 @Component({
   selector: 'app-navbar',
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [RouterLink, RouterLinkActive, MatButtonModule, MatIconModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar implements OnInit, OnDestroy {
-  private _fireStore = inject(FireStore);
+export class Navbar {
   private _query = inject(Query);
-  private _auth = inject(Auth);
   private _overlay = inject(Overlay);
-  private _unsubscribeFunctions: Unsubscribe[] = [];
 
   items = input<NavbarItem[]>([]);
   leftSideItems = computed(() => {
-    const halfwayThrough = Math.floor(this.items().length / 2)
+    const halfwayThrough = Math.floor(this.items().length / 2);
     return this.items().slice(0, halfwayThrough);
   });
   rightSideItems = computed(() => {
-    const halfwayThrough = Math.floor(this.items().length / 2)
+    const halfwayThrough = Math.floor(this.items().length / 2);
     return this.items().slice(halfwayThrough, this.items().length);
-  })
+  });
   createButtonClicked = output();
-
-  ngOnInit(): void {
-    const userId = this._auth.getLoggedUser()!.uid;
-    this._unsubscribeFunctions.push(
-      this._fireStore.listenToUserAccounts(userId),
-      this._fireStore.listenToUserTransactions(userId),
-      this._fireStore.listenToUserSettings(userId),
-      this._fireStore.listenToUserBudgetPreference(userId),
-      this._fireStore.listenToUserPendings(userId)
-    );
-  }
-
-  ngOnDestroy(): void {
-    this._unsubscribeFunctions.forEach((unsubscribe) => unsubscribe());
-  }
 
   async onCreateClick() {
     await this._overlay.triggerVibration('OPEN_BOTTOM_SHEET');
@@ -60,7 +36,10 @@ export class Navbar implements OnInit, OnDestroy {
     const currentDate = new Date();
     const queryDate = this._query.getCurrentDate();
 
-    if (currentDate.getMonth() !== queryDate.getMonth() || currentDate.getFullYear() !== queryDate.getFullYear()) {
+    if (
+      currentDate.getMonth() !== queryDate.getMonth() ||
+      currentDate.getFullYear() !== queryDate.getFullYear()
+    ) {
       this._query.updateCurrentDate(currentDate);
     }
   }
