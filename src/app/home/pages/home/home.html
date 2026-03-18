@@ -172,7 +172,7 @@
                     class="material-symbols-rounded"
                     [class.text-red]="income[0].isDeleted">{{ income[0].isDeleted ? 'delete' : getAccountTypeIcon(income[0].type) }}
                   </mat-icon>
-                  <span
+                  <span class="text-capitalize"
                     [class.text-decoration-line-through]="income[0].isDeleted">{{ income[0].label }}</span>
                 </div>
                 <span
