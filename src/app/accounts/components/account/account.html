@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between align-items-center w-100 gap-3">
         <div class="d-flex align-items-center gap-2">
           <mat-icon class="material-symbols-rounded">{{ getAccountTypeIcon(account()!.type) }}</mat-icon>
-          <span class="contained-text">{{ account()?.label }}</span>
+          <span class="contained-text text-capitalize">{{ account()?.label }}</span>
         </div>
         <span class="fw-bold number-text" [class.text-green]="account()!.balance > 0"
               [class.text-red]="account()!.balance < 0">{{ this.account()!.balance | currency : 'COP' : 'symbol' : '1.0-0' }}</span>

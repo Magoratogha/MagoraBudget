@@ -52,9 +52,10 @@ export class Home {
     return budgets.map(budget => {
       const balance = Math.abs(expensesPerAccountType.get(budget.accountType) || 0);
       const isOverPassed = balance > budget.limit;
+      const overPassedAmount = isOverPassed ? balance - budget.limit : 0;
       const percentage = balance / budget.limit;
       const progressBarPercentage = isOverPassed ? budget.limit / balance * 100 : percentage * 100;
-      return { ...budget, isOverPassed, percentage, progressBarPercentage, balance }
+      return { ...budget, isOverPassed, overPassedAmount, percentage, progressBarPercentage, balance }
     });
   });
 

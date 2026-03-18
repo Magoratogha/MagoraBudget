@@ -430,6 +430,11 @@ mat-drawer {
   display: block;
 }
 
+.mat-mdc-select-value-text,
+.mdc-list-item__primary-text {
+  text-transform: capitalize !important;
+}
+
 /***
 ### Utilities ###
 ***/

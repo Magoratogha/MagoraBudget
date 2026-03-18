@@ -56,7 +56,7 @@
                   <div class="d-flex align-items-center">
                     <mat-checkbox [checked]="pending.isDone" (click)="onCheckboxClick()"
                                   (change)="onCheckboxChange(pending, $event.checked, i)"></mat-checkbox>
-                    <span>{{ pending.label }}</span>
+                    <span class="text-capitalize">{{ pending.label }}</span>
                   </div>
                   <div class="d-flex align-items-center gap-1">
                     <small
